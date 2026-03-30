@@ -7,7 +7,8 @@
     "strict": true,                      // Enable strict type checking
     "esModuleInterop": true,             // Better compatibility with CommonJS modules
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "allowArbitraryExtensions": true,
   },
   "include": ["src/**/*"],                // Files to compile
   "exclude": ["node_modules"]             // Exclude dependencies
