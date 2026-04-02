@@ -1,5 +1,4 @@
 import app from "./app";
-import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import { database } from "./config/database";
 dotenv.config();
