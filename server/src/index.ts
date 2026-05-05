@@ -25,37 +25,9 @@ app.get("/",(req, res)=>{
 
 
 async function main() {
-  // Create a user - fully typed!
-  const newUser = await prisma.user.create({
-    data: {
-      email: 'alice@example.com',
-      name: 'Alice',
-    },
-  })
-  console.log('Created user:', newUser)
 
-  // Create a post linked to that user
-  const post = await prisma.post.create({
-    data: {
-      title: 'Hello Prisma',
-      content: 'This is my first post with TypeScript',
-      authorId: newUser.id,
-    },
-  })
-  console.log('Created post:', post)
-
-  // Query with relations - IntelliSense and type checking
-  const usersWithPosts = await prisma.user.findMany({
-    where: {
-      email: {
-        contains: 'example.com',
-      },
-    },
-    include: {
-      posts: true,
-    },
-  })
-  console.log('Users with posts:', usersWithPosts)
+const users = await prisma.user.findMany();
+console.log("user",users)
 }
 
 main()

@@ -62,7 +62,7 @@ const userModel = {
         const fields = [];
         const values = [];
 
-        Object.keys(updateData).forEach((key)=>{
+        Object.keys(updateData).forEach((key:any)=>{
             if(updateData[key] !== undefined){
                 fields.push(`${key} = ?`);
                 values.push(updateData[key]);
