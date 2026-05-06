@@ -25,11 +25,10 @@ app.get("/",(req, res)=>{
 
 
 async function main() {
-
-const users = await prisma.user.findMany();
-console.log("user",users)
-}
-
+  console.log("Database connected successfully!")
+// const users = await prisma.user.findMany();
+// console.log("user",users)
+};
 main()
   .catch((e) => {
     console.error(e)

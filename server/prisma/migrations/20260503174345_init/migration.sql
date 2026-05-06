@@ -14,3 +14,4 @@ CREATE TABLE "User" (
   "createdAt" TIMESTAMP DEFAULT NOW(),
   "updatedAt" TIMESTAMP DEFAULT NOW()
 );
+

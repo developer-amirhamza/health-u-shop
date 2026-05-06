@@ -2,10 +2,13 @@
 import { Response, Request } from "express";
 import { v4 as uuidv4 } from "uuid"
 import bcrypt from "bcrypt";
-import { prisma } from "../lib/prisma";
+
 import { errorHandler } from "../utils/errorHandler";
 import { sendEmail } from "../config/sendEmail";
-import { verifyEmailTemplate } from "../utils/verifyEmailTemplate";
+import { prisma } from "../lib/prisma";
+import generateRefreshToken from "../utils/refreshToken";
+import generateAccessToken from "../utils/accessToken";
+import verifyEmailTemplate from "../utils/verifyEmailTemplate";
 
 interface CreateUserInput {
     id?: string | number,
@@ -18,7 +21,8 @@ interface CreateUserInput {
 
 const SignUp = async (req: Request, res: Response) => {
     try {
-        const { name, email, phone, password, } = req.body;
+        const { name, email, mobile, password, } = req.body;
+
         const id = uuidv4();
         if (!name || !email || !password) {
             return res.status(400).json({
@@ -36,12 +40,13 @@ const SignUp = async (req: Request, res: Response) => {
         const hashPassword = await bcrypt.hash(password, salt);
         const user = await prisma.user.create({
             data: {
+                id,
                 name,
                 email,
                 password: hashPassword,
                 verify_email: false,
                 status: "ACTIVE",
-                mobile: phone?.toString(),
+                mobile: mobile?.toString(),
             },
         });
         const verifyEmailUrl = `${process.env.CLIENT}/verify-email?code=${user.id}`;
@@ -53,6 +58,8 @@ const SignUp = async (req: Request, res: Response) => {
                 url: verifyEmailUrl,
             }),
         });
+
+
         res.status(200).json({
             success: true,
             error: false,
@@ -68,19 +75,70 @@ const SignUp = async (req: Request, res: Response) => {
     }
 };
 
+
+export const verifyEmail = async (req:Request,res:Response)=>{
+    try {
+        const {code} = req.body;
+        const user = await prisma.user.findUnique({where:{id:code}});
+        if(!user){
+            return errorHandler(res,400,"Invalid code entered!");
+        }
+        const updateUser = await prisma.user.update({
+            where:{id:code},
+            data:{verify_email:true}
+        })
+
+        res.status(200).json({
+            success:true,
+            error:false,
+            message:"Your email verified successfully!",
+            data:updateUser,
+        })
+    } catch (error:any) {
+        errorHandler(res,500,`${error.message} || "Internal server error!"`)
+    }
+};
+
 const SignIn = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
             return errorHandler(res, 404, "Please provide the email or password", true);
         };
+        const user: any = await prisma.user.findUnique({ where: { email} });
+        if (!user) {
+            return errorHandler(res, 404, "User not found!", true);
+        };
+        // password verify
+        const matchPassword = await bcrypt.compare(password, user.password);
+        if (!matchPassword) {
+            return errorHandler(res, 400, "Incorrect Password", true);
+        };
 
+        const refreshToken = await generateRefreshToken(user.id);
+        const accessToken = await generateAccessToken(user.id);
 
+        // update user status
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                last_login_date: new Date(),
+                refresh_token: refreshToken
+            }
+        });
+
+        const cookiesOption:any = {
+            httpOnly:true,
+            secure:true,
+            sameSite:"None" as const,
+        }
+        res.cookie("accessToken",accessToken,cookiesOption);
+        res.cookie("refreshToken",refreshToken,cookiesOption);
         res.status(200).json({
             success: true,
             error: false,
             message: "User signed in successfully",
-            
+            data:{accessToken,refreshToken}
         });
     } catch (error: any) {
         res.status(500).json({
