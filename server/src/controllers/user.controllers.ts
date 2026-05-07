@@ -173,7 +173,7 @@ export const refreshToken = async (req:AuthRequest, res:Response)=>{
             secure:true,
             sameSite: "None" as const,
         };
-        res.cookie("accessToken",newAccessToken, cookiesOption)
+        res.cookie("accessToken", newAccessToken, cookiesOption)
     } catch (error:any) {
         errorHandler(res,500,error.message || "Internal server error!",true);
     }
@@ -343,4 +343,4 @@ const deleteUser = async (req: Request, res: Response) => {
     }
 };
 
-export { SignIn, SignOut, SignUp, GetUserDetails, getAllUsers, updateUserDetails, deleteUser };
+export { SignIn, SignOut, SignUp, GetUserDetails, getAllUsers, updateUserDetails, deleteUser, };
