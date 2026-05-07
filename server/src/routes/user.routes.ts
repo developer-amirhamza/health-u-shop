@@ -1,12 +1,15 @@
 import { Router } from "express";
-import { SignUp, SignIn, SignOut, GetUserDetails, getAllUsers, updateUserDetails, deleteUser } from "../controllers/user.controllers";
+import { SignUp, SignIn, SignOut, GetUserDetails, getAllUsers, updateUserDetails, deleteUser, verifyEmail } from "../controllers/user.controllers";
+import { auth } from "../middlewares/auth";
 
 const router = Router();
 
 // User authentication routes
 router.post("/signup", SignUp);
 router.post("/signin", SignIn);
-router.post("/signout", SignOut);
+router.get("/signout",auth, SignOut);
+router.post("/verify-email",verifyEmail);
+// router.post("/refresh-token", refresh )
 
 // User management routes
 router.get("/all", getAllUsers);

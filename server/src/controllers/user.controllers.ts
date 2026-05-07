@@ -9,7 +9,7 @@ import { prisma } from "../lib/prisma";
 import generateRefreshToken from "../utils/refreshToken";
 import generateAccessToken from "../utils/accessToken";
 import verifyEmailTemplate from "../utils/verifyEmailTemplate";
-
+import jwt from "jsonwebtoken";
 interface CreateUserInput {
     id?: string | number,
     fullName?: string,
@@ -17,6 +17,9 @@ interface CreateUserInput {
     phone?: number,
     password?: string,
     image?: string,
+}
+interface AuthRequest extends Request {
+  userId?: string;
 }
 
 const SignUp = async (req: Request, res: Response) => {
@@ -149,20 +152,56 @@ const SignIn = async (req: Request, res: Response) => {
     }
 };
 
-const SignOut = async (req: Request, res: Response) => {
+// refresh token
+
+export const refreshToken = async (req:AuthRequest, res:Response)=>{
     try {
+        const refreshToken = req.cookies.refreshToken || req?.headers?.authorization?.split(" ")[1];
+        if(!refreshToken) return errorHandler(res,401,"No refresh token provided",true);
+
+        const decoded = jwt.verify(refreshToken, process.env.SECRET_KEY_REFRESH_TOKEN as string) as {_id:string};
+        if(!decoded){
+            return errorHandler(res,401,"Invalid or expired refresh token");
+        };
+
+        const userId = decoded._id;
+        const newAccessToken = await generateAccessToken(userId);
+
+        const cookiesOption:any = {
+            httpOnly:true,
+            secure:true,
+            sameSite: "None" as const,
+        };
+        res.cookie("accessToken",newAccessToken, cookiesOption)
+    } catch (error:any) {
+        errorHandler(res,500,error.message || "Internal server error!",true);
+    }
+};
+
+const SignOut = async (req: AuthRequest, res: Response) => {
+     const userId = req.userId; // get from auth
+     console.log(userId,"userid")
+     if(!userId){
+        return errorHandler(res,400,"Unauthorized",true);
+     }
+        const cookiesOption = {
+            httpOnly:true,
+            secure:true,
+            sameSite:"None",
+        };
+
+        res.cookie("accessToken", cookiesOption);
+        res.cookie("refreshToken", cookiesOption);
+
+        await prisma.user.update({
+            where:{id:userId},
+            data:{refresh_token:""}
+        });
         res.status(200).json({
             success: true,
             error: false,
             message: "User signed out successfully",
         });
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            error: true,
-            message: error.message || "Internal server error!"
-        });
-    }
 };
 
 const GetUserDetails = async (req: Request, res: Response) => {
