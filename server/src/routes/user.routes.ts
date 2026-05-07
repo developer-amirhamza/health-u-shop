@@ -12,9 +12,9 @@ router.post("/verify-email",verifyEmail);
 // router.post("/refresh-token", refresh )
 
 // User management routes
-router.get("/all", getAllUsers);
-router.get("/:id", GetUserDetails);
-router.put("/:id", updateUserDetails);
-router.delete("/:id", deleteUser);
+router.get("/all-user", getAllUsers);
+router.get("/get-user-details",auth, GetUserDetails);
+router.put("/update-user",auth, updateUserDetails);
+router.delete("/delete-user", deleteUser);
 
 export default router;

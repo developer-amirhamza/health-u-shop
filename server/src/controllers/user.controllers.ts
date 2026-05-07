@@ -10,6 +10,7 @@ import generateRefreshToken from "../utils/refreshToken";
 import generateAccessToken from "../utils/accessToken";
 import verifyEmailTemplate from "../utils/verifyEmailTemplate";
 import jwt from "jsonwebtoken";
+import { uploadImageCloudinary } from "../config/cloudinary";
 interface CreateUserInput {
     id?: string | number,
     fullName?: string,
@@ -141,7 +142,7 @@ const SignIn = async (req: Request, res: Response) => {
             success: true,
             error: false,
             message: "User signed in successfully",
-            data:{accessToken,refreshToken}
+            data:{accessToken,refreshToken,user}
         });
     } catch (error: any) {
         res.status(500).json({
@@ -204,13 +205,23 @@ const SignOut = async (req: AuthRequest, res: Response) => {
         });
 };
 
-const GetUserDetails = async (req: Request, res: Response) => {
+const GetUserDetails = async (req: AuthRequest, res: Response) => {
     try {
-        const userId = req.params.id || (req as any).user?.id;
-        if (!userId) {
-            return errorHandler(res, 400, "User ID is required", false);
+        const id:any = req.userId;
+        if (!id) {
+            return errorHandler(res, 400, "User ID is required", true);
         };
-        const user = await prisma.user.findUnique({ where: { id: userId } });
+        const user = await prisma.user.findUnique({
+             where: { id: id },
+            select:{
+                id:true,
+                name:true,
+                email:true,
+                mobile:true,
+                avatar:true,
+                refresh_token:true,
+            }
+            });
         if (!user) {
             return errorHandler(res, 404, "User not found", false);
         };
@@ -230,7 +241,16 @@ const GetUserDetails = async (req: Request, res: Response) => {
 
 const getAllUsers = async (req: Request, res: Response) => {
     try {
-        const users = await prisma.user.findMany();
+        const users = await prisma.user.findMany({
+            select:{
+                id:true,
+                name:true,
+                email:true,
+                mobile:true,
+                avatar:true,
+                refresh_token:true,
+            }
+        });
         res.status(200).json({
             success: true,
             error: false,
@@ -245,16 +265,48 @@ const getAllUsers = async (req: Request, res: Response) => {
     }
 };
 
-const updateUserDetails = async (req: Request, res: Response) => {
+// upload images with cloudinary
+export const uploadAvatar = async (req:AuthRequest,res:Response)=>{
     try {
-        const userId = req.params.id || (req as any).user?.id;
-        if (!userId) {
-            return errorHandler(res, 400, "User ID is required", false);
+        const userId:any = req.userId;
+        const image:any = req.file;
+        if(!userId){
+            errorHandler(res,404,"Unauthorized User",true);
         };
-        const updatedUser = await prisma.user.update({
-            where: { id: userId },
-            data: req.body
+
+        const upload:any = await uploadImageCloudinary(image);
+        if(!upload?.url){
+            errorHandler(res,404,"Image uploading failed!",true);
+        }
+
+        const updateUser = await prisma.user.update({
+            where:{id:userId},
+            data:{avatar:upload?.url},
+            select:{id:true, avatar:true}
         });
+        return errorHandler(res,200,"The image uploaded successfully!",false,updateUser);
+    } catch (error:any) {
+        errorHandler(res,500,error.message || "Internal server error!");
+    }
+};
+
+const updateUserDetails = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId:any = req.userId;
+        if (!userId) {
+            return errorHandler(res, 400, "User ID is required", true);
+        };
+        const {name,email,password,mobile} = req.body;
+        let hashPassword = "";
+        if(password){
+            const salt = await bcrypt.genSalt(10);
+            hashPassword = await bcrypt.hash(password,salt);
+        };
+        const updatedUser:any = {};
+        if(name) updatedUser.name = name;
+        if(email) updatedUser.email = email;
+        if(mobile) updatedUser.mobile = mobile;
+        if(password) updatedUser.password = hashPassword;
         res.status(200).json({
             success: true,
             error: false,
@@ -272,11 +324,11 @@ const updateUserDetails = async (req: Request, res: Response) => {
 
 const deleteUser = async (req: Request, res: Response) => {
     try {
-        const userId = req.params.id || (req as any).user?.id;
-        if (!userId) {
+        const {id} = req.body;
+        if (!id) {
             return errorHandler(res, 400, "User ID is required", false);
         };
-        await prisma.user.delete({ where: { id: userId } });
+        await prisma.user.delete({ where: { id: id } });
         res.status(200).json({
             success: true,
             error: false,
