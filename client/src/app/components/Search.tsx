@@ -1,7 +1,9 @@
+"use client"
 import React, { useEffect, useState } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import { FaArrowLeft, FaSearch } from "react-icons/fa";
 import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
 
 
 const Search = () => {
@@ -9,20 +11,21 @@ const Search = () => {
     // const location = useLocation()
     const [isSearchPage, setIsSearchPage] = useState(false);
     // const isMobile = useMobile();
-    // const params = useLocation();
+    const router = useRouter()
+    const params = useParams();
     const searchText = params?.search?.slice(7);
 
     const handleOnChange = (e:any)=>{
         const value = e.target.value;
         const url = `/search?query=${value}`
-        // navigate(url)
+        router.push(url)
     }
     useEffect(() => {
         const isSearch = location.pathname === "/search"
         setIsSearchPage(isSearch)
     }, [location])
     return (
-        <Link onClick={() => navigate("/search")} className='flex w-full border gap-2 group lg:min-w-[420px] bg-slate-100 focus-within:bg-amber-50 h-11 items-center
+        <div onClick={() => router.push("/search")} className='flex w-full border gap-2 group lg:min-w-[420px] bg-slate-100 focus-within:bg-amber-50 h-11 items-center
          min-w-75 rounded-md border-neutral-300  focus-within:border-primary'>
 
             {isSearchPage && isMobile ?
@@ -75,7 +78,7 @@ const Search = () => {
                     placeholder="Search like egg, sugar and more.. " />
 
             )}
-        </Link>
+        </div>
     )
 }
 

@@ -1,3 +1,4 @@
+"use client"
 import { baseUrl, SummeryApi } from "@/app/common/SummeryApi";
 import axios from "axios";
 

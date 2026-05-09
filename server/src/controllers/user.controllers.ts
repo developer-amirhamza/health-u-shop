@@ -107,6 +107,7 @@ const SignIn = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
+            console.log("Please provide the email or password")
             return errorHandler(res, 404, "Please provide the email or password", true);
         };
         const user: any = await prisma.user.findUnique({ where: { email} });

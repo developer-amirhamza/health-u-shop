@@ -1,18 +1,20 @@
+"use client"
 import React, { FormEvent, useState } from 'react'
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-import AxiosToastError from '../utils/AxiosToastError';
-import { SummeryApi } from '../common/SummeryApi';
 import toast from 'react-hot-toast';
-import Axios from '../utils/Axios';
-import fetchUserDetails from '../utils/fetchUserDetails';
-import { setUserDetails } from '../redux/slices/userSlice';
 import { useDispatch } from 'react-redux';
-import image from "../assets/images/login-bg.png"
+
 import { useRouter } from 'next/navigation';
+import Axios from '@/utils/Axios';
+import { SummeryApi } from '@/app/common/SummeryApi';
+import fetchUserDetails from '@/utils/fetchUserDetaills';
+import { setUserDetails } from '@/redux/slices/userSlices';
+import AxiosToastError from '@/utils/AxiosToastError';
+import Link from 'next/link';
 
 const initialFormData = {
-    username: "",
+    name: "",
     email: "",
     password: "",
 }
@@ -36,11 +38,13 @@ const SingUp = () => {
                 ...SummeryApi.signup,
                 data: formData,
             });
+
             const responseData = response.data;
+            console.log(responseData.success,"test")
             if (responseData.success) {
                 toast.success(responseData.message);
                 const response = await Axios({
-                    ...SummeryApi.login,
+                    ...SummeryApi.signin,
                     data: formData,
                 })
                 if (response.data?.success) {
@@ -49,6 +53,7 @@ const SingUp = () => {
                     dispatch(setUserDetails(userDetails?.data))
                     setFormData(initialFormData)
                     router.push("/")
+
                 }
             } else {
                 toast.error(responseData.message)
@@ -59,16 +64,18 @@ const SingUp = () => {
     }
     const validInput = Object.values(formData).every(el => el);
     return (
-        <section className=' flex w-full h-full  ' style={{ backgroundImage: `url(${image})` }}>
+        <section className=' flex w-full h-full bg-amber-50  '
+         //style={{ backgroundImage: `url(${image})` }}
+         >
             <div className="container px-5 mx-auto flex w-full justify-center py-10">
-                <div className="bg-blue-200/40 shadow-2xl p-5 flex justify-center items-center w-full max-w-md h-full flex-col
+                <div className="bg-amber-100 shadow-2xl p-5 flex justify-center items-center w-full max-w-md h-full flex-col
             rounded-md gap-5  ">
                     <h1 className="text-2xl text-slate-900 text-center uppercase font-semibold">Create your account</h1>
                     <form onSubmit={handleSubmit} className="grid gap-5 w-full text-lg">
                         <div className="grid gap-2 place-items-start">
-                            <label htmlFor="username" className="font-medium text-slate-800">Username:</label>
+                            <label htmlFor="name" className="font-medium text-slate-800">Full Name:</label>
                             <input className='w-full font-medium text-neutral-700 p-2 outline-none border-2 border-slate-500 rounded focus-within:border-blue-900'
-                                value={formData.username} type="text" onChange={handleOnChange} name="username" id="username" placeholder='Enter your username' />
+                                value={formData.name} type="text" onChange={handleOnChange} name="name" id="name" placeholder='Enter your name' />
                         </div>
                         <div className="grid gap-2 place-items-start">
                             <label htmlFor="email" className="font-medium text-slate-800">Email:</label>
@@ -98,7 +105,7 @@ const SingUp = () => {
                             text-xl font-semibold rounded   `} >Signup</button>
                         <div className="flex justify-between w-full px-1">
                             <h1 className="text-neutral-600 font-medium">Already have an account?</h1>
-                            <Link to={'/login'} className='text-xl font-bold text-amber-600'>Login</Link>
+                            <Link href={"/signin"} className='text-xl font-bold text-amber-600'>Login</Link>
                         </div>
                     </form>
                 </div>

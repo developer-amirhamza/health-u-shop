@@ -19,7 +19,7 @@ export const SummeryApi = {
     },
     getUserDetails: {
         url: "/api/user/get-user-details",
-        method: "post",
+        method: "get",
     },
     signout:{
         url:"/api/user/signout",
