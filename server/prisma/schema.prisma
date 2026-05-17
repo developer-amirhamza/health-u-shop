@@ -19,6 +19,67 @@ model User {
   refresh_token          String?
   forgot_password_otp    String?
   forgot_password_expire DateTime? @db.Timestamp(6)
+  cart                   Cart?
   createdAt              DateTime? @default(now()) @db.Timestamp(6)
   updatedAt              DateTime? @default(now()) @db.Timestamp(6)
+}
+
+
+
+model Product {
+  id                   String    @id @default(dbgenerated("gen_random_uuid()"))
+  title                String
+  images               String[]
+  description          String?
+  price                Float
+  discount             Float
+  stock                Int      @default(0)
+  colors               String[]
+  sized                String[]
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  more_details         String[]
+  cartItems            CartItem[]
+  reviews              Reviews[]
+  isFeatured  Boolean    @default(false)
+  isActive             Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model Reviews {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()"))
+  product             Product[]
+}
+
+model Category {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()"))
+  title               String   @unique
+  slug                String   @unique
+  product             Product[]
+}
+
+model Cart {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()"))
+  token               String?    @unique
+  userId              String?    @unique
+  user                User?     @relation(fields: [userId], references:[id], onDelete:Cascade)
+  items               CartItem[]
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+
+model CartItem {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()"))
+  cartId              String
+  cart                Cart     @relation(fields:[cartId], references:[id], onDelete:Cascade)
+  productId           String
+  product             Product   @relation(fields:[productId], references:[id])
+  quantity            Int      @default(1)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+
+  @@unique([cartId, productId])
 }

@@ -297,17 +297,24 @@ const updateUserDetails = async (req: AuthRequest, res: Response) => {
         if (!userId) {
             return errorHandler(res, 400, "User ID is required", true);
         };
-        const {name,email,password,mobile} = req.body;
+        const {name,email,password,mobile,avatar} = req.body;
         let hashPassword = "";
         if(password){
             const salt = await bcrypt.genSalt(10);
             hashPassword = await bcrypt.hash(password,salt);
         };
-        const updatedUser:any = {};
-        if(name) updatedUser.name = name;
-        if(email) updatedUser.email = email;
-        if(mobile) updatedUser.mobile = mobile;
-        if(password) updatedUser.password = hashPassword;
+        const updatedData:any = {};
+        if(name) updatedData.name = name;
+        if(email) updatedData.email = email;
+        if(mobile) updatedData.mobile = mobile;
+        if(password) updatedData.password = hashPassword;
+        if(avatar) updatedData.avatar = avatar;
+
+        const updatedUser = await prisma.user.update({
+            where : {id:userId},
+            data:updatedData
+        })
+
         res.status(200).json({
             success: true,
             error: false,

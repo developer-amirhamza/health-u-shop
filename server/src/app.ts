@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser"
 import helmet from "helmet"
 import morgan from "morgan";
 import userRouter from "./routes/user.routes";
+import productRouter from "./routes/products.routes";
+import cartRouter from "./routes/cart.routes";
 
 config();
 const app = express();
@@ -23,7 +25,9 @@ app.use(helmet({
     crossOriginEmbedderPolicy:false,
 }));
 
-app.use("/api/user", userRouter)
+app.use("/api/user", userRouter);
+app.use("/api/product", productRouter);
+app.use("/api/cart",cartRouter);
 
 
 
