@@ -20,6 +20,7 @@ model User {
   forgot_password_otp    String?
   forgot_password_expire DateTime? @db.Timestamp(6)
   cart                   Cart?
+  order                  Order[]
   createdAt              DateTime? @default(now()) @db.Timestamp(6)
   updatedAt              DateTime? @default(now()) @db.Timestamp(6)
 }
@@ -41,6 +42,7 @@ model Product {
   more_details         String[]
   cartItems            CartItem[]
   reviews              Reviews[]
+  orderItems  OrderItem[]
   isFeatured  Boolean    @default(false)
   isActive             Boolean  @default(true)
   createdAt            DateTime @default(now())
@@ -82,4 +84,52 @@ model CartItem {
 
 
   @@unique([cartId, productId])
+}
+
+
+
+
+// After CartItem model
+
+model Order {
+  id              String      @id @default(dbgenerated("gen_random_uuid()" ))
+  orderNumber     String      @unique           // human-readable, e.g., "ORD-20250518-001"
+  userId          String?                       // null for guest orders
+  user            User?       @relation(fields: [userId], references: [id])
+  guestEmail      String?                       // for guest checkout
+  guestPhone      String?
+  guestAddress    String?
+  shippingAddress String      @map("shipping_address") // full address (for both guest & user)
+  phone           String                         // contact phone
+  email           String                     // contact email
+  items           OrderItem[]
+  subtotal        Float
+  shippingCost    Float       @default(0)
+  tax             Float       @default(0)
+  total           Float
+  paymentMethod   String      @default("COD")    // "COD", "Stripe", "PayPal"
+  paymentStatus   String      @default("Pending") // "Pending", "Paid", "Failed"
+  orderStatus     String      @default("Pending") // "Pending", "Processing", "Shipped", "Delivered", "Cancelled"
+  statusHistory   Json?                          // optional: track status changes
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id            String   @id @default(dbgenerated("gen_random_uuid()" ))
+  orderId       String
+  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id])
+  productName   String    // snapshot: product name at order time
+  productImage  String?   // snapshot: primary image URL
+  price         Float     // snapshot: price at order time
+  quantity      Int
+  total         Float     // price * quantity
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("order_items")
 }
