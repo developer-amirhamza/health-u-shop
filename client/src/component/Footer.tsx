@@ -1,15 +1,14 @@
 "use client"
 import React from 'react';
-import logo from "@/assets/footer-logo-img.png";
-import ndis_logo from "@/assets/ndis-logo-img.png"
-import google_review from "@/assets/google-reviews-img.png"
+import logo from "assets/footer-logo-img.png";
+import ndis_logo from "assets/ndis-logo-img.png"
+import google_review from "assets/google-reviews-img.png"
 import Image from 'next/image';
 
 import Link from 'next/link';
 import { PiMapPinAreaFill } from 'react-icons/pi';
 import { FaFacebookF, FaInstagramSquare, FaLinkedinIn } from 'react-icons/fa';
 import { nav_items } from '@/config/page';
-
 
 const Footer = () => {
     return (

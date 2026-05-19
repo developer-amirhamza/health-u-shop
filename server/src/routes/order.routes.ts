@@ -10,7 +10,7 @@ router.post("/place-order",auth, placeOrder);
 router.get("/my-orders", auth, getMyOrders);
 router.get("/lookup", getOrdersByOrderNumber);
 router.get("/admin/get-all-orders",auth, getAllOrdersByAdmin);
-router.put("/admin/update-order/:orderId",auth,updateOrderByAdmin);
+router.put("/admin/update-order",auth,updateOrderByAdmin);
 
 
 

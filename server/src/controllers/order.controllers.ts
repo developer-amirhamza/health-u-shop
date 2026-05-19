@@ -146,7 +146,7 @@ export const getAllOrdersByAdmin = async(req:Request, res:Response)=>{
 
 export const updateOrderByAdmin = async(req:AuthRequest,res:Response)=>{
     try {
-        const { orderId} = req.params;
+        const { orderId} = req.query;
         // const order = await prisma.order.findFirst({where:{orderId:orderId}})
         // if(!order)return errorHandler(res,404,"Order not found!");
         const {orderStatus, paymentStatus} = req.body;
