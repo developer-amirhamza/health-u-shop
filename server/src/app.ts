@@ -8,6 +8,7 @@ import userRouter from "./routes/user.routes";
 import productRouter from "./routes/products.routes";
 import cartRouter from "./routes/cart.routes";
 import orderRouter from "./routes/order.routes";
+import paymentRouter from "./routes/payment.route";
 
 config();
 const app = express();
@@ -27,9 +28,10 @@ app.use(helmet({
 }));
 
 app.use("/api/user", userRouter);
-app.use("/api/product", productRouter);
+app.use("/api/products", productRouter);
 app.use("/api/cart",cartRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/payment",paymentRouter);
 
 
 

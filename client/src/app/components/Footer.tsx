@@ -13,8 +13,8 @@ import { nav_items } from '@/config/page';
 
 const Footer = () => {
     return (
-        <footer className='w-full h-max flex flex-col items-center justify-center bg-black '>
-            <div className="container w-full flex flex-col items-center justify-center  pt-16 gap-y-10  ">
+        <footer className='w-full h-max flex flex-col items-center justify-center bg-black pt-16 '>
+            <div className="container w-full flex flex-col items-center justify-center   gap-y-10  ">
                 <div className=" flex w-full items-center justify-center gap-10 flex-wrap  h-full">
                     <Image src={logo} alt='Health U Australia' className='  max-w-52 max-h-40 h-full p-0 m-0 w-full  flex  ' />
                     <Image src={ndis_logo} alt='Health U Australia ' className='  max-w-52 max-h-40 h-full p-0 m-0 w-full  flex  ' />

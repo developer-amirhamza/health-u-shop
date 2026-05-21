@@ -8,7 +8,7 @@ export const createProduct = async (req: Request, res: Response) => {
     try {
         console.log("controllers works", req.body)
         const { title, price, description, colors, sized, discount, more_details, category, stock, images } = req.body;
-        if (!title || !price || !discount || !stock) {
+        if (!title || !price || !discount ) {
             return errorHandler(res, 400, "Please provide the required fields", true)
         }
 

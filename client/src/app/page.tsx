@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Hero from "./components/Hero";
+import ProductGrid from "./components/ProductGrid";
 
 export default function Home() {
 
@@ -16,6 +17,7 @@ const {user,status} = useSelector((state: any) => state.userSlice);
   return (
     <div className="">
       <Hero/>
+      <ProductGrid/>
     </div>
   );
 }

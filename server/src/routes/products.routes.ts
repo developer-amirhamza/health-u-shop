@@ -1,16 +1,16 @@
 
 import { Router } from "express";
-import { createProduct, deleteProduct, getProductDetails, searchProducts, updateProduct } from "../controllers/products.controllers";
+import { createProduct, deleteProduct, getAllProductDetails, getProductDetails, searchProducts, updateProduct } from "../controllers/products.controllers";
 
 
 const router = Router();
 
-router.post("/get-product-details", getProductDetails);
-router.post("/create-product",  createProduct);
-router.put("/update-product", updateProduct);
-router.delete("/delete-product", deleteProduct);
+router.post("/get-details", getProductDetails);
+router.post("/create",  createProduct);
+router.put("/update", updateProduct);
+router.delete("/delete", deleteProduct);
 router.get("/search", searchProducts);
-
+router.get("/all", getAllProductDetails);
 
 
 

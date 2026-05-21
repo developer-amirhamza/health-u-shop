@@ -45,4 +45,24 @@ export const SummeryApi = {
         url: "/api/user/delete-user",
         method: "delete",
     },
+    fetchProducts:{
+        url:"/api/products/all",
+        method:"get"
+    },
+    fetchProductDetails:{
+        url:"/api/products/get-details",
+        method:"post"
+    },
+    addProduct:{
+        url:"/api/products/create",
+        method:"post"
+    },
+    updateProduct:{
+        url:"/api/products/update",
+        method:"put"
+    },
+    deleteProduct:{
+        url:"/api/products/delete",
+        method:"delete"
+    }
 }
