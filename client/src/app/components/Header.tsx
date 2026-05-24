@@ -6,44 +6,66 @@ import logo from "@/assets/logo-img.png"
 import { IoMdCart } from 'react-icons/io'
 import { TiShoppingCart } from 'react-icons/ti'
 import { FaSearch } from 'react-icons/fa'
-import Link from 'next/link'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchUser, setLogout } from '@/redux/slices/userSlices'
-import { AppDispatch } from '@/redux/store'
+
+
 import { useRouter } from 'next/navigation'
 import { VscSignIn, VscSignOut } from 'react-icons/vsc'
 import AxiosToastError from '@/utils/AxiosToastError'
 import Axios from '@/utils/Axios'
 import { SummeryApi } from '../common/SummeryApi'
 import toast from 'react-hot-toast'
+import { fetchCart } from '@/redux/slices/cartSlice'
+import CartMenu from './CartMenu'
+import { DisplayPriceInAud } from '@/utils/DisplayPriceInAud'
+import { BsCart4 } from 'react-icons/bs'
+import { fetchUser, setLogout } from '@/redux/slices/userSlices'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '@/redux/store'
+import Search from './Search'
 
 
 const Header = () => {
-    const { status } = useSelector((state: any) => state.userSlice);
+    const dispatch = useDispatch<AppDispatch>();
+    const { cart, status, error } = useSelector((state: RootState) => state.cartSlice);
+    const user = useSelector((state: RootState) => state.userSlice);
     const router = useRouter()
-    const dispatch = useDispatch<AppDispatch>()
-    const [accessToken,setAccessToken] =  useState<string | null>(null)
-// Get token from localStorage after mount (client-side only)
-    useEffect(()=>{
-        if(typeof window !== 'undefined'){
-            setAccessToken(localStorage.getItem("accessToken"));
-        }
-    },[])
-    // Fetch user if token exists and status is idle
-    useEffect(() => {
-        if(accessToken && status === "idle"){
-            dispatch(fetchUser())
-        }
-    }, [accessToken, status, dispatch]);
 
-    const handleSignout = async()=>{
+    const accessToken = localStorage.getItem("accessToken");
+    const [openCartMenu, setOpenCartMenu] = useState(false)
+    const [showUserMenu, setShowUserMenu] = useState(false);
+    //   const { totalQty, totalPrice } = useGlobalContext()
+    const handleCloseUserMenu = () => {
+        setShowUserMenu(false)
+    }
+
+    useEffect(() => {
+        if (status === "idle") {
+            dispatch(fetchCart())
+        }
+    }, [status, dispatch])
+
+    const subtotal = cart?.items?.reduce((sum, item) => sum + (item.product.price * item.quantity), 0) ?? 0;
+    // Get token from localStorage after mount (client-side only)
+    // useEffect(() => {
+    //     const token = localStorage.getItem("accessToken");
+    //     setAccessToken(token);
+    // }, [])
+    // // Fetch user if token exists and status is idle
+
+    useEffect(() => {
+        if (user.status)
+            if (accessToken && user.status === "idle") {
+                dispatch(fetchUser())
+            }
+    }, [accessToken, user.status, dispatch]);
+    console.log(accessToken, "accessToken")
+    const handleSignout = async () => {
         try {
             const response = await Axios({
                 ...SummeryApi.signout,
             });
             dispatch(setLogout());
             localStorage.clear();
-            setAccessToken(null);
             toast.success(response?.data?.message);
         } catch (error) {
             AxiosToastError(error);
@@ -72,20 +94,19 @@ const Header = () => {
                         <Image src={logo} className='object-scale-down h-14 ' alt='Health U Shop' />
                     </div>
                     {/* search bar */}
-                    <div className="w-full min-w-2xl  flex items-center justify-between group  ">
-                        <input type="text" className="outline-none flex border w-full  border-neutral-400 focus-within:border-secondary py-2 px-5 rounded-md text-lg " placeholder='' />
-                        {/* <span className="text-neutral-500 w-full flex absolute justify-self-center ml-20 font-medium ">Search Products Like: "T-Shirt"</span> */}
-                        <FaSearch className='absolute ml-4 flex group-focus-within:hidden text-2xl text-neutral-400 ' />
+                    <div className=" hidden  lg:flex">
+                        <Search />
                     </div>
                     {/* left side */}
                     <div className="w-full flex gap-3 items-center justify-end  ">
                         {/* login */}
-                        {status === "succeeded" && accessToken ? (
+                        {user.status == "succeeded" && accessToken ? (
                             <div className="relative z-100">
                                 <button onClick={handleSignout}
                                     className="text-md font-medium hover:bg-amber-100 cursor-pointer px-3 py-2 rounded hover:text-secondary bg-amber-50 flex items-center gap-2 t text-neutral-800">
                                     <VscSignOut size={24} /> <span className="text-xl font-bold  ">Signout</span>
                                 </button>
+
                                 {/* <button onClick={() => setShowUserMenu(!showUserMenu)}
                                 className="text-md flex items-center font-medium cursor-pointer hover:bg-neutral-200 px-3 py-2 rounded  text-neutral-800">
                                 <p>Account</p>
@@ -102,19 +123,36 @@ const Header = () => {
                                 className="text-md font-medium hover:bg-amber-100 cursor-pointer px-3 py-2 rounded hover:text-secondary bg-amber-50 flex items-center gap-2 t text-neutral-800">
                                 <VscSignIn size={24} /> <span className="text-xl font-bold ">Signin</span>
                             </button>
+
+
                         )
                         }
+                        {/* cart */}
+                        <div className=" flex gap-1.5 bg-primary items-center justify-between py-2.5 px-2 rounded-md text-white">
+                            <div className=" animate-bounce">
+                                <BsCart4 size={28} />
+                            </div>
+                            <div className=" font-bold text-sm cursor-pointer">
+                                {cart?.items[0] ? (
+                                    <div onClick={() => setOpenCartMenu(true)}>
+                                        {/* <p>{totalQty} Items</p> */}
+                                        <p>{DisplayPriceInAud(subtotal)}</p>
+                                    </div>
+                                ) : (<p>My Cart</p>)}
+                            </div>
+                        </div>
+                        {openCartMenu && <CartMenu close={() => setOpenCartMenu(false)} />}
 
-                        {/* <Link href={"/signin"} className="text-xl font-medium text-neutral-800 z-50 cursor-pointer hover:text-secondary transition-colors duration-300 ">Login</Link> */}
+                        {/* <Link href={"/signin"} className="text-xl font-medium text-neutral-800 z-50 cursor-pointer hover:text-secondary transition-colors duration-300 ">Login</Link>
                         <div className="flex gap-1.5 bg-primary items-center justify-between py-2.5 px-2 rounded-md text-white ">
                             <TiShoppingCart size={25} className=' animate-bounce ' />
                             <p className="font-medium  ">My Cart</p>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
-            </div>
+            </div >
 
-        </div>
+        </div >
     )
 }
 

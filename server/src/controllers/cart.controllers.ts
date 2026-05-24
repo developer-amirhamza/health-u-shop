@@ -61,7 +61,7 @@ export const addToCart = async (req: AuthRequest, res: Response) => {
         const existingItem = await prisma.cartItem.findUnique({
             where: { cartId_productId: { cartId: cart.id, productId } },
         });
-        if (!existingItem) errorHandler(res, 404, "The cart item not found")
+        // if (!existingItem) errorHandler(res, 404, "The cart item not found")
 
         if (existingItem) {
             await prisma.cartItem.update({

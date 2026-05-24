@@ -5,7 +5,7 @@ export const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL
 
 
 export const SummeryApi = {
-     signup: {
+    signup: {
         url: "/api/user/signup",
         method: "post",
     },
@@ -21,48 +21,94 @@ export const SummeryApi = {
         url: "/api/user/get-user-details",
         method: "get",
     },
-    signout:{
-        url:"/api/user/signout",
-        method:"get",
+    signout: {
+        url: "/api/user/signout",
+        method: "get",
     },
-    imageUpload:{
-        url:"/api/image/upload",
-        method:"post",
+    imageUpload: {
+        url: "/api/image/upload",
+        method: "post",
     },
-    updateUserDetails:{
-        url:"/api/user/update-user",
-        method:"put",
+    updateUserDetails: {
+        url: "/api/user/update-user",
+        method: "put",
     },
-    getAllUser:{
+    getAllUser: {
         url: "/api/user/all-users",
-        method:"get",
+        method: "get",
     },
-    updateUserByAdmin:{
+    updateUserByAdmin: {
         url: "/api/user/update-user-by-admin",
-        method:"put",
+        method: "put",
     },
     deleteUser: {
         url: "/api/user/delete-user",
         method: "delete",
     },
-    fetchProducts:{
-        url:"/api/products/all",
-        method:"get"
+    fetchProducts: {
+        url: "/api/products/all",
+        method: "get"
     },
-    fetchProductDetails:{
-        url:"/api/products/get-details",
-        method:"post"
+    fetchProductDetails: {
+        url: "/api/products/get-details",
+        method: "post"
     },
-    addProduct:{
-        url:"/api/products/create",
-        method:"post"
+    addProduct: {
+        url: "/api/products/create",
+        method: "post"
     },
-    updateProduct:{
-        url:"/api/products/update",
-        method:"put"
+    updateProduct: {
+        url: "/api/products/update",
+        method: "put"
     },
-    deleteProduct:{
-        url:"/api/products/delete",
-        method:"delete"
-    }
-}
+    deleteProduct: {
+        url: "/api/products/delete",
+        method: "delete"
+    },
+    searchProduct: {
+        url: "/api/products/search",
+        method: "get",  // GET request
+    },
+
+    fetchCart: {
+        url: "/api/cart/get-cart",
+        method: "get"
+    },
+    addCart: {
+        url: "/api/cart/add-cart",
+        method: "post"
+    },
+    updateCart: {
+        url: "/api/cart/update-cart",
+        method: "put"
+    },
+    deleteCart: {
+        url: "/api/cart/delete-cart",
+        method: "delete"
+    },
+    mergeCart: {
+        url: "/api/cart/merge",
+        method: "post",
+    },
+
+
+    // Orders
+    placeOrder: {
+        url: "/api/orders/place-order",
+        method: "post",
+    },
+    fetchMyOrders: {
+        url: "/api/orders/my-orders",
+        method: "get",
+    },
+    fetchOrderByNumber: {
+        url: "/api/orders/lookup",
+        method: "get",
+    },
+
+    // Payment (Stripe)
+    createCheckoutSession: {
+        url: "/api/payment/create-checkout-session",
+        method: "post",
+    },
+};

@@ -15,7 +15,7 @@ const ProductGrid = () => {
     },[status,dispatch])
     console.log("Products", products)
   return (
-    <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 container py-10 lg:grid-cols-5 place-items-center">
+    <div className="w-full grid grid-cols-2 sm:grid-cols-3 py-12 md:grid-cols-4 container h-full gap-y-10 pb-10 lg:grid-cols-5 place-items-center">
         {products?.map((product,index)=>(
             <ProductCard data={product} key={index}/>
         ))}

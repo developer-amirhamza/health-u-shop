@@ -5,9 +5,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 interface Product {
     id: number,
-    email: string,
-    name: string,
-    mobile: string,
+    title: string,
+    description: string,
+    price: number,
 }
 
 interface productState {

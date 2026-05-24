@@ -32,8 +32,7 @@ const ProductCard:React.FC<Type> = ({data}) => {
         <div className="p-1 bg-blue-100/80 rounded  ">
          {DisplayPriceInAud(PriceWithDiscount(data?.price, data?.discount ))}
         </div>
-        {/* {data?.stock ==0 ? ( <p className="text-orange-600 text-sm font-light ">Stock Out!</p>
-      ) : (<AddToCartButton data={data}/>)} */}
+        <AddToCartButton data={data}/>
         </div>
     </Link>
   )

@@ -27,7 +27,7 @@ const initialState: userState = {
 export const fetchUser = createAsyncThunk("/userDetails/fetchUser",
     async () => {
         const response = await fetchUserDetails();
-        return response;
+        return response?.data;
     }
 );
 

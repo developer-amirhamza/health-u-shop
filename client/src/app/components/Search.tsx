@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import { FaArrowLeft, FaSearch } from "react-icons/fa";
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 
 
 const Search = () => {
@@ -14,6 +14,7 @@ const Search = () => {
     const router = useRouter()
     const params = useParams();
     const searchText = params?.search?.slice(7);
+    const pathname = usePathname()
 
     const handleOnChange = (e:any)=>{
         const value = e.target.value;
@@ -21,14 +22,14 @@ const Search = () => {
         router.push(url)
     }
     useEffect(() => {
-        const isSearch = location.pathname === "/search"
+        const isSearch = pathname === "/search"
         setIsSearchPage(isSearch)
-    }, [location])
+    }, [pathname])
     return (
-        <div onClick={() => router.push("/search")} className='flex w-full border gap-2 group lg:min-w-[420px] bg-slate-100 focus-within:bg-amber-50 h-11 items-center
+        <div onClick={() => router.push("/search")} className='flex w-full border gap-2 group lg:min-w-105 bg-slate-100 focus-within:bg-amber-50 h-11 items-center
          min-w-75 rounded-md border-neutral-300  focus-within:border-primary'>
 
-            {isSearchPage && isMobile ?
+            {/* {isSearchPage && isMobile ?
                 (
                     <Link href={'/'}
                     onClick={(e)=> e.stopPropagation()}
@@ -40,28 +41,29 @@ const Search = () => {
                         <FaSearch size={22} />
                     </button>
                 )
-            }
+            } */}
+
+            <button className=' p-3 text-neutral-500 group-focus-within:text-primary'>
+                        <FaSearch size={22} />
+            </button>
+
+
+
             {!isSearchPage ? (
                 <TypeAnimation
                     sequence={[
                         // Same substring at the start will only be typed out once, initially
-                        'Search "Oil Filter"',
+                        'Search "Pad"',
                         1000, // wait 1s before replacing "Mice" with "Hamsters"
-                        'Search "Brakes"',
+                        'Search "Underwear"',
                         1000,
-                        'Search "Horns"',
+                        'Search "MoliCare"',
                         1000,
-                        'Search "Spark Plugs"',
+                        'Search "Body Wipes"',
                         1000,
-                        'Search "Wiper blade"',
+                        'Search "Sleepy Nights"',
                         1000,
-                        'Search "Additive"',
-                        1000,
-                        'Search "Air filter"',
-                        1000,
-                        'Search "Air Freshener"',
-                        1000,
-                        'Search "Batteries"',
+                        'Search "PediaSure Powder"',
                         1000,
                     ]}
                     wrapper="span"

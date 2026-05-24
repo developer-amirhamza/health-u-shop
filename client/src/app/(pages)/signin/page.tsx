@@ -1,5 +1,6 @@
 "use client"
 import { baseUrl, SummeryApi } from '@/app/common/SummeryApi';
+import { fetchCart } from '@/redux/slices/cartSlice';
 import { fetchUser } from '@/redux/slices/userSlices';
 import { AppDispatch } from '@/redux/store';
 import Axios from '@/utils/Axios';
@@ -45,9 +46,11 @@ const SignIn = () => {
             if (response.data.success) {
                 toast.success(response.data.message);
                 // Store tokens in localStorage
-                localStorage.setItem("accessToken", response?.data?.accessToken);
-                localStorage.setItem("refreshToken", response?.data?.refreshToken);
+                localStorage.setItem("accessToken", response?.data?.data?.accessToken);
+                localStorage.setItem("refreshToken", response?.data?.data?.refreshToken);
+                console.log(response?.data.data.accessToken,"login")
                 dispatch(fetchUser())
+                dispatch(fetchCart())
                 setFormData(initialFormData);
                 router.push("/")
             }
