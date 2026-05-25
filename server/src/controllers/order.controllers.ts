@@ -26,7 +26,7 @@ const generateOrderNumber = async () => {
 
 export const placeOrder = async (req: AuthRequest, res: Response) => {
     try {
-        const { phone, shippingAddress, paymentMethod = "COD", } = req.body;
+        const { name, phone, shippingAddress, paymentMethod = "COD", } = req.body;
         const token = await getCartToken(req, res);
         const userId = req.userId;
 
@@ -73,6 +73,7 @@ export const placeOrder = async (req: AuthRequest, res: Response) => {
             data: {
                 orderNumber,
                 shippingAddress,
+                name,
                 phone,
                 email,                           // snapshot (user's email or guest's email)
                 subtotal,

@@ -44,7 +44,7 @@ const CartMenu: React.FC<Type> = ({ close }) => {
     if (cart?.items?.length) {
         for (const item of cart.items) {
             const price = item.product.price;
-            const discount = item.product?.discount || 0;
+            const discount = item?.product?.discount || 0;
             const discountedPrice = price - (price * discount) / 100;
             const itemTotal = discountedPrice * item.quantity;
             const itemOriginalTotal = price * item.quantity;
@@ -71,20 +71,20 @@ const CartMenu: React.FC<Type> = ({ close }) => {
                     </div>
                 </div>
 
-                <div className="min-h-[75vh] lg:min-h-[80vh] h-full max-h-[calc(100vh-150px)] flex flex-col px-2">
-                    {cart?.items?.length ? (
+                <div className="min-h-[75vh] lg:min-h-[80vh] h-full max-h-[calc(100vh-150px)]  flex flex-col px-2">
+                    {cart?.items?.[0] ? (
                         <>
                             <div className="flex items-center justify-between px-4 py-2 mt-2 bg-blue-100 rounded-full text-sm text-blue-400 font-semibold">
                                 <p>Your total savings</p>
                                 <p>{DisplayPriceInAud(totalDiscount)}</p>
                             </div>
                             <div className="grid gap-4 overflow-y-scroll p-4">
-                                {cart.items.map((item: any) => (
+                                {cart?.items?.map((item: any) => (
                                     <div key={item.id} className="flex w-full gap-2 justify-between">
                                         <div className="min-w-16 max-w-16 h-16 bg-white rounded border-neutral-400 border-dotted border">
                                             <img
                                                 className="object-scale-down rounded-md"
-                                                src={item.product.images?.[0] || "/placeholder.png"}
+                                                src={item.product?.images?.[0] || "/placeholder.png"}
                                                 alt={item.product.title}
                                             />
                                         </div>
@@ -139,7 +139,7 @@ const CartMenu: React.FC<Type> = ({ close }) => {
                         </div>
                     )}
                 </div>
-                {cart?.items?.length > 0 && (
+                {cart?.items?.[0] && (
                     <div className="p-2 mx-auto">
                         <div className="flex items-center rounded px-2 justify-between text-neutral-100 bg-green-700 py-4 static bottom-3">
                             <div>{DisplayPriceInAud(grandTotal)}</div>

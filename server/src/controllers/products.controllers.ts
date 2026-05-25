@@ -49,6 +49,15 @@ export const deleteProduct = async (req: Request, res: Response) => {
         const existingProduct = await prisma.product.findUnique({ where: { id: id } });
         if (!existingProduct) return errorHandler(res, 404, "The product not found!",)
         await prisma.product.delete({ where: { id: id } });
+        await prisma.product.update({
+        where: { id },
+        data: { deletedAt: new Date(), isActive: false },
+        });
+        // Example: get all products
+        const products = await prisma.product.findMany({
+        where: { deletedAt: null, isActive: true },
+        // ...
+        });
         return errorHandler(res, 200, "The product has been deleted!", false);
     } catch (error: any) {
         errorHandler(res, 500, error.message || "Internal server error!", true);
@@ -58,7 +67,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
 export const getProductDetails = async (req: Request, res: Response) => {
     try {
-        const { id } = req.body;
+        const id:any  = req.params;
         if (!id) return errorHandler(res, 404, "Product id is required!");
         const existingProduct = await prisma.product.findUnique({ where: { id: id } });
         if (!existingProduct) return errorHandler(res, 404, "The product not found!",)
@@ -93,7 +102,7 @@ export const searchProducts = async (req: Request, res: Response) => {
         // Full-text search on name and description
         if (q && typeof q === "string") {
             where.OR = [
-                { name: { contains: q, mode: "insensitive" } },
+                { title: { contains: q, mode: "insensitive" } },
                 { description: { contains: q, mode: "insensitive" } }
             ]
         };

@@ -29,7 +29,7 @@ const SearchPage = () => {
     const [hasMore, setHasMore] = useState(true);
 
     const loadingArrayCard = new Array(10).fill(null);
-
+console.log(textSearch, "search products")
     const fetchSearchProduct = useCallback(async () => {
         if (!textSearch) return;
         try {
@@ -37,13 +37,14 @@ const SearchPage = () => {
             const response = await Axios({
                 ...SummeryApi.searchProduct,
                 params: {
-                    search: textSearch,
+                    q: textSearch,
                     page: page,
                     limit: 20, // adjust as needed
                 },
             });
             // Assuming response structure: { data: { data: products, totalNoPage: number } }
             const newProducts = response.data?.data || [];
+
             if (page === 1) {
                 setData(newProducts);
             } else {

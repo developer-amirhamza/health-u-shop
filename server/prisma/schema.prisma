@@ -41,6 +41,7 @@ model Product {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   isFeatured   Boolean     @default(false)
+  deletedAt    DateTime?
   cartItems    CartItem[]
   category     Category?   @relation(fields: [categoryId], references: [id])
   orderItems   OrderItem[]
@@ -77,7 +78,7 @@ model CartItem {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([cartId, productId])
 }
@@ -104,6 +105,7 @@ model Order {
   updatedAt             DateTime    @updatedAt
   stripeSessionId       String?     @unique
   stripePaymentIntentId String?
+  name                  String?
   items                 OrderItem[]
   user                  User?       @relation(fields: [userId], references: [id])
 

@@ -15,7 +15,7 @@ const {user,status} = useSelector((state: any) => state.userSlice);
     console.log("test user from home", user)
 
   return (
-    <div className="grid gap-10 h-full w-full">
+    <div className="grid gap-10 mb10 h-full w-full">
       <Hero/>
       <ProductGrid/>
     </div>

@@ -22,6 +22,9 @@ import { fetchUser, setLogout } from '@/redux/slices/userSlices'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/redux/store'
 import Search from './Search'
+import Link from 'next/link'
+import { GoTriangleDown, GoTriangleUp } from 'react-icons/go'
+import UserMenu from './UI/UserMenu'
 
 
 const Header = () => {
@@ -59,18 +62,18 @@ const Header = () => {
             }
     }, [accessToken, user.status, dispatch]);
     console.log(accessToken, "accessToken")
-    const handleSignout = async () => {
-        try {
-            const response = await Axios({
-                ...SummeryApi.signout,
-            });
-            dispatch(setLogout());
-            localStorage.clear();
-            toast.success(response?.data?.message);
-        } catch (error) {
-            AxiosToastError(error);
-        }
-    };
+    // const handleSignout = async () => {
+    //     try {
+    //         const response = await Axios({
+    //             ...SummeryApi.signout,
+    //         });
+    //         dispatch(setLogout());
+    //         localStorage.clear();
+    //         toast.success(response?.data?.message);
+    //     } catch (error) {
+    //         AxiosToastError(error);
+    //     }
+    // };
     return (
         <div className="">
             {/* top bar */}
@@ -90,9 +93,9 @@ const Header = () => {
             <div className="flex w-full bg-neutral-200 h-full items-center ">
                 {/* logo */}
                 <div className="container flex items-center justify-between gap-4 w-full">
-                    <div className="flex py-3 w-full">
+                    <Link href={"/"} className="flex py-3 w-full">
                         <Image src={logo} className='object-scale-down h-14 ' alt='Health U Shop' />
-                    </div>
+                    </Link>
                     {/* search bar */}
                     <div className=" hidden  lg:flex">
                         <Search />
@@ -102,12 +105,12 @@ const Header = () => {
                         {/* login */}
                         {user.status == "succeeded" && accessToken ? (
                             <div className="relative z-100">
-                                <button onClick={handleSignout}
+                                {/* <button onClick={handleSignout}
                                     className="text-md font-medium hover:bg-amber-100 cursor-pointer px-3 py-2 rounded hover:text-secondary bg-amber-50 flex items-center gap-2 t text-neutral-800">
                                     <VscSignOut size={24} /> <span className="text-xl font-bold  ">Signout</span>
-                                </button>
+                                </button> */}
 
-                                {/* <button onClick={() => setShowUserMenu(!showUserMenu)}
+                                <button onClick={() => setShowUserMenu(!showUserMenu)}
                                 className="text-md flex items-center font-medium cursor-pointer hover:bg-neutral-200 px-3 py-2 rounded  text-neutral-800">
                                 <p>Account</p>
                                 {showUserMenu ? (<GoTriangleUp size={20} />) : (<GoTriangleDown size={20} />)}
@@ -116,7 +119,7 @@ const Header = () => {
                                 <div className="absolute top-12 z-100 right-0 bg-white shadow-md w-40 rounded-sm transition-all duration-500">
                                     <UserMenu close={handleCloseUserMenu} />
                                 </div>
-                                } */}
+                                }
                             </div>
                         ) : (
                             <button onClick={() => router.push("/signin")}
@@ -128,13 +131,13 @@ const Header = () => {
                         )
                         }
                         {/* cart */}
-                        <div className=" flex gap-1.5 bg-primary items-center justify-between py-2.5 px-2 rounded-md text-white">
+                        <div onClick={() => setOpenCartMenu(true)} className=" flex gap-1.5 bg-primary items-center cursor-pointer justify-between py-2.5 px-2 rounded-md text-white">
                             <div className=" animate-bounce">
                                 <BsCart4 size={28} />
                             </div>
-                            <div className=" font-bold text-sm cursor-pointer">
+                            <div className=" font-bold text-sm ">
                                 {cart?.items[0] ? (
-                                    <div onClick={() => setOpenCartMenu(true)}>
+                                    <div >
                                         {/* <p>{totalQty} Items</p> */}
                                         <p>{DisplayPriceInAud(subtotal)}</p>
                                     </div>

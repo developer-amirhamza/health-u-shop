@@ -29,7 +29,7 @@ const AddToCartButton: React.FC<Type> = ({ data }) => {
 
     // Update local state when cart changes
     useEffect(() => {
-        if (cart?.items?.length) {
+        if (cart?.items?.[0]) {
             const found = cart.items.find((item) => item?.product?.id === data?.id);
             setIsAvailable(!!found);
             setQuantity(found?.quantity || 0);
@@ -88,6 +88,7 @@ const AddToCartButton: React.FC<Type> = ({ data }) => {
                 if (deleteCartItem.fulfilled.match(resultAction)) {
                     toast.success("Item removed");
                 }
+                dispatch(fetchCart());
             } catch (error) {
                 toast.error("Failed to remove");
             }
@@ -114,7 +115,7 @@ const AddToCartButton: React.FC<Type> = ({ data }) => {
                     >
                         <FaMinus />
                     </button>
-                    <p className="mx-1 font-semibold text-neutral-700 min-w-[24px] text-center">{quantity}</p>
+                    <p className="mx-1 font-semibold text-neutral-700 min-w-6 text-center">{quantity}</p>
                     <button
                         onClick={increaseQty}
                         className="text-white bg-green-600 hover:bg-green-700 cursor-pointer rounded-sm py-1 px-1"

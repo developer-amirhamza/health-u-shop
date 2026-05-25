@@ -10,6 +10,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.16.0",
+    "date-fns": "^4.3.0",
     "dotenv": "^17.4.2",
     "init": "^0.1.2",
     "next": "16.1.6",

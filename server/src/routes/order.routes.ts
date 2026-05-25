@@ -11,6 +11,7 @@ router.get("/my-orders", auth, getMyOrders);
 router.get("/lookup", getOrdersByOrderNumber);
 router.get("/admin/get-all-orders",auth, getAllOrdersByAdmin);
 router.put("/admin/update-order",auth,updateOrderByAdmin);
+// router.put("/admin/delete-order", auth,deleteO)
 
 
 

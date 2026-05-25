@@ -18,7 +18,7 @@ const Search = () => {
 
     const handleOnChange = (e:any)=>{
         const value = e.target.value;
-        const url = `/search?query=${value}`
+        const url = `/search?q=${value}`
         router.push(url)
     }
     useEffect(() => {

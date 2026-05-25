@@ -20,7 +20,7 @@ interface AuthRequest extends Request {
 
 export const createCheckoutSession = async (req: AuthRequest, res: Response) => {
     try {
-        const { successUrl, cancelUrl, email, phone, shippingAddress } = req.body;
+        const { name,successUrl, cancelUrl, email, phone, shippingAddress } = req.body;
         const token: any = getCartToken(req, res);
         const userId = req.userId;
 
@@ -60,6 +60,7 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response) => 
                 userId: userId || undefined,
                 email: email || 'pending@example.com',
                 phone: phone || '',
+                name: name ?? null,
                 shippingAddress: shippingAddress || '',
                 subtotal: subtotal,
                 total: subtotal,
@@ -97,7 +98,7 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response) => 
             where: { id: order.id },
             data: { stripeSessionId: session.id },
         });
-
+        await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
         console.log('Stripe session created:', session.url);
         res.json({ success: true, url: session.url });
     } catch (error: any) {
