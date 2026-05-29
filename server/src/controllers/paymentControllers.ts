@@ -7,7 +7,6 @@ import { errorHandler } from '../utils/errorHandler';
 
 dotenv.config();
 
-
 // Initialize Stripe with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2026-04-22.dahlia', // Use the latest stable API version
@@ -17,22 +16,33 @@ interface AuthRequest extends Request {
     userId?: string;
 }
 
+// Define the shape of a cart item as returned by getOrCreateCart
+// (adjust if your actual Prisma include differs)
+type CartItemWithProduct = {
+    product: {
+        id: string;
+        title: string;
+        price: number;
+        images: string[];
+    };
+    quantity: number;
+};
 
 export const createCheckoutSession = async (req: AuthRequest, res: Response) => {
     try {
-        const { name,successUrl, cancelUrl, email, phone, shippingAddress } = req.body;
+        const { name, successUrl, cancelUrl, email, phone, shippingAddress } = req.body;
         const token: any = getCartToken(req, res);
         const userId = req.userId;
 
         // Log cart retrieval
         const cart = await getOrCreateCart(token, userId);
 
-
         if (!cart || cart.items.length === 0) {
             return errorHandler(res, 400, 'Your cart is empty.');
         }
 
-        const lineItems = cart.items.map((item) => {
+        // Fix #1: Add type for 'item' in map
+        const lineItems = cart.items.map((item: CartItemWithProduct) => {
             // Get the first image and validate it's a proper URL
             const imageUrl = item.product.images?.[0];
             const isValidImageUrl = imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'));
@@ -49,9 +59,12 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response) => 
                 quantity: item.quantity,
             };
         });
-        // Calculate subtotal
-        const subtotal = cart.items.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
 
+        // Fix #2: Add types for 'acc' (number) and 'item' in reduce
+        const subtotal = cart.items.reduce(
+            (acc: number, item: CartItemWithProduct) => acc + item.product.price * item.quantity,
+            0
+        );
 
         // Create pending order
         const order = await prisma.order.create({
@@ -68,8 +81,9 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response) => 
                 paymentStatus: 'Pending',
                 orderStatus: 'Pending',
                 items: {
-                    create: cart.items.map(item => ({
-                        productId: item.product.id,
+                    // Fix #3: Add type for 'item' in this map as well
+                    create: cart.items.map((item: CartItemWithProduct) => ({
+                        productId: item.product.id,     // Note: 'id' must exist on product (add to type if missing)
                         productName: item.product.title,
                         productImage: item.product.images[0] || null,
                         price: item.product.price,
