@@ -1,8 +1,6 @@
 
 import { Response, Request } from "express";
-import { v4 as uuidv4 } from "uuid"
 import bcrypt from "bcrypt";
-
 import { errorHandler } from "../utils/errorHandler";
 import { sendEmail } from "../config/sendEmail";
 import { prisma } from "../lib/prisma";
@@ -10,6 +8,7 @@ import generateRefreshToken from "../utils/refreshToken";
 import generateAccessToken from "../utils/accessToken";
 import verifyEmailTemplate from "../utils/verifyEmailTemplate";
 import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from 'uuid';
 import { uploadImageCloudinary } from "../config/cloudinary";
 interface CreateUserInput {
     id?: string | number,
