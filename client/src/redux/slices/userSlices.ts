@@ -12,13 +12,13 @@ interface User {
 
 
 interface userState {
-    user: User[],
+    user: User | null,
     status: any,
     error: string | null,
 }
 
 const initialState: userState = {
-    user: [],
+    user: null,
     status: "idle",
     error: null,
 };
@@ -40,7 +40,7 @@ const userSlice = createSlice({
             state.user = action.payload
         },
         setLogout: (state) => {
-            state.user = [];
+            state.user = null;
         }
     },
     extraReducers: (builder) => {

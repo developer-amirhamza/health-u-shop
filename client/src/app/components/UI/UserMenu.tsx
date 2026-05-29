@@ -49,7 +49,7 @@ const UserMenu:React.FC<Type> = ({ close }) => {
                     href={"/my-profile/"}
                     className="text-neutral-700 flex gap-4 hover:text-primary cursor-pointer hover:bg-amber-100 items-center  font-medium px-2"
                 >
-                    <span className="">{user?.name || user?.mobile} <span>{user?.role === "admin" ? "(Admin)" : ""}</span> </span>
+                    {/* <span className="">{user?.name || user?.mobile} <span>{user?.role === "admin" ? "(Admin)" : ""}</span> </span> */}
                     <FaExternalLinkAlt size={16} />
                 </Link>
                 <Divider />

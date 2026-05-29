@@ -1,7 +1,8 @@
 
 
 
-export const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL
+export const baseUrl =process.env.NEXT_PUBLIC_BACKEND_API_URL
+console.log(baseUrl, "url working ")
 
 
 export const SummeryApi = {

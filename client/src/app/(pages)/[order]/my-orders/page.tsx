@@ -71,7 +71,8 @@ const MyOrdersPage = () => {
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-2xl font-bold text-neutral-800 mb-6">My Orders</h1>
             <div className="space-y-6">
-                {orders.map((order) => (
+                {orders.map((order:any) => {
+                    return(
                     <div key={order.id} className="border rounded-lg bg-white shadow-sm overflow-hidden">
                         {/* Order Header */}
                         <div
@@ -120,7 +121,7 @@ const MyOrdersPage = () => {
                                 <div>
                                     <h3 className="font-semibold text-neutral-700 mb-2">Items</h3>
                                     <div className="space-y-3">
-                                        {order.items.map((item) => (
+                                        {order.items.map((item:any) => (
                                             <div key={item.id} className="flex gap-3 border-b pb-2 last:border-0">
                                                 {item.productImage && (
                                                     <img
@@ -154,7 +155,7 @@ const MyOrdersPage = () => {
                             </div>
                         )}
                     </div>
-                ))}
+                )})}
             </div>
         </div>
     );

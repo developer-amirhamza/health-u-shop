@@ -24,6 +24,7 @@ const CheckoutPage = () => {
   const { stripeUrl, status: orderStatus, error } = useSelector((state: RootState) => state.orderSlice);
   const user = useSelector((state: RootState) => state.userSlice.user);
 
+  
   const [form, setForm] = useState<FormData>({
     name: "",
     email: "",
@@ -35,7 +36,6 @@ const CheckoutPage = () => {
     country: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-console.log(user,"user checout")
   // Auto-fill user data if logged in
   useEffect(() => {
     if (user) {

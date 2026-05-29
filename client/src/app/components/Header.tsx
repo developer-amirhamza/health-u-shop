@@ -32,8 +32,8 @@ const Header = () => {
     const { cart, status, error } = useSelector((state: RootState) => state.cartSlice);
     const user = useSelector((state: RootState) => state.userSlice);
     const router = useRouter()
-
-    const accessToken = localStorage.getItem("accessToken");
+    const [accessToken, setAccessToken] = useState(null)
+    // const accessToken = localStorage.getItem("accessToken");
     const [openCartMenu, setOpenCartMenu] = useState(false)
     const [showUserMenu, setShowUserMenu] = useState(false);
     //   const { totalQty, totalPrice } = useGlobalContext()
@@ -49,11 +49,11 @@ const Header = () => {
 
     const subtotal = cart?.items?.reduce((sum, item) => sum + (item.product.price * item.quantity), 0) ?? 0;
     // Get token from localStorage after mount (client-side only)
-    // useEffect(() => {
-    //     const token = localStorage.getItem("accessToken");
-    //     setAccessToken(token);
-    // }, [])
-    // // Fetch user if token exists and status is idle
+    useEffect(() => {
+        const token:any = localStorage.getItem("accessToken");
+        setAccessToken(token);
+    }, [])
+    // Fetch user if token exists and status is idle
 
     useEffect(() => {
         if (user.status)

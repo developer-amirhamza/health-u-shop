@@ -8,6 +8,7 @@ interface Product {
     title: string,
     description: string,
     price: number,
+    discount:number
 }
 
 interface productState {

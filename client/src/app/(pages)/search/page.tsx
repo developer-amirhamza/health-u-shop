@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Axios from '@/utils/Axios';
 import { SummeryApi } from '@/app/common/SummeryApi';
@@ -18,7 +18,7 @@ interface Product {
     // ... other product fields
 }
 
-const SearchPage = () => {
+const SearchContent = () => {
     const searchParams = useSearchParams();
     const textSearch = searchParams.get('q') || ''; // ?q=keyword
 
@@ -29,7 +29,7 @@ const SearchPage = () => {
     const [hasMore, setHasMore] = useState(true);
 
     const loadingArrayCard = new Array(10).fill(null);
-console.log(textSearch, "search products")
+
     const fetchSearchProduct = useCallback(async () => {
         if (!textSearch) return;
         try {
@@ -135,6 +135,14 @@ console.log(textSearch, "search products")
                 )}
             </div>
         </section>
+    );
+};
+
+const SearchPage = () => {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><p>Loading...</p></div>}>
+            <SearchContent />
+        </Suspense>
     );
 };
 

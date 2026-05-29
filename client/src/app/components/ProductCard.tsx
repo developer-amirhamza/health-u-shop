@@ -1,9 +1,12 @@
+"use client"
 import Link from 'next/link';
 import React from 'react';
 import AddToCartButton from './UI/AddToCartBtn';
 import { DisplayPriceInAud } from '@/utils/DisplayPriceInAud';
 import { PriceWithDiscount } from '@/utils/PriceWithDiscount';
 import { validURLConvert } from '@/utils/validURLConvart';
+import { useRouter } from 'next/navigation';
+
 
 // import { validURLConvert } from '../utils/validURLConvart';
 // import { Link } from 'react-router-dom';
@@ -15,10 +18,11 @@ interface Type {
 }
 
 const ProductCard:React.FC<Type> = ({data}) => {
-    const url = `/product/${validURLConvert(data.title)}-${(data.id)}`
+    const router = useRouter()
+    const url = `/product/${validURLConvert(data.title)}_${(data.id)}`
 
   return (
-    <Link href={url} className=' border border-blue-200 p-2 grid hover:shadow-lg gap-1 hover:scale-105 duration-300 max-w-56 min-w-42 max-h-88 min-h-80 rounded '>
+    <div onClick={()=>{router.push(url);data.id}} className=' border border-blue-200 p-2 grid hover:shadow-lg gap-1 hover:scale-105 duration-300 max-w-56 min-w-42 max-h-88 min-h-80 rounded '>
         <div className="min-h-20 rounded">
         <img src={data.images[0] } alt={data?.title} className='w-full h-full object-scale-down' />
         </div>
@@ -35,7 +39,7 @@ const ProductCard:React.FC<Type> = ({data}) => {
         </div>
         <AddToCartButton data={data}/>
         </div>
-    </Link>
+    </div>
   )
 }
 

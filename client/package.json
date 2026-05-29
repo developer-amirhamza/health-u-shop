@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@next/env": "^16.2.6",
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.16.0",
     "date-fns": "^4.3.0",

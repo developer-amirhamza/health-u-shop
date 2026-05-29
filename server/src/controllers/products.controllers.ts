@@ -8,7 +8,7 @@ export const createProduct = async (req: Request, res: Response) => {
     try {
         console.log("controllers works", req.body)
         const { title, price, description, colors, sized, discount, more_details, category, stock, images } = req.body;
-        if (!title || !price || !discount ) {
+        if (!title || !price || !discount) {
             return errorHandler(res, 400, "Please provide the required fields", true)
         }
 
@@ -50,30 +50,42 @@ export const deleteProduct = async (req: Request, res: Response) => {
         if (!existingProduct) return errorHandler(res, 404, "The product not found!",)
         await prisma.product.delete({ where: { id: id } });
         await prisma.product.update({
-        where: { id },
-        data: { deletedAt: new Date(), isActive: false },
+            where: { id },
+            data: { deletedAt: new Date(), isActive: false },
         });
         // Example: get all products
         const products = await prisma.product.findMany({
-        where: { deletedAt: null, isActive: true },
-        // ...
+            where: { deletedAt: null, isActive: true },
+            // ...
         });
         return errorHandler(res, 200, "The product has been deleted!", false);
     } catch (error: any) {
         errorHandler(res, 500, error.message || "Internal server error!", true);
     }
 };
-
-
 export const getProductDetails = async (req: Request, res: Response) => {
     try {
-        const id:any  = req.params;
-        if (!id) return errorHandler(res, 404, "Product id is required!");
-        const existingProduct = await prisma.product.findUnique({ where: { id: id } });
-        if (!existingProduct) return errorHandler(res, 404, "The product not found!",)
-        return errorHandler(res, 200, "the product has been gotten successfully!", false, existingProduct);
+        // ✅ Extract id from req.query (not req.params, not req.query alone)
+        const { id } = req.body;
+
+        console.log("Extracted id:", id, "type:", typeof id);
+
+        if (!id || typeof id !== 'string') {
+            return errorHandler(res, 400, "Valid product id is required");
+        }
+
+        const existingProduct = await prisma.product.findUnique({
+            where: { id: id }
+        });
+
+        if (!existingProduct) {
+            return errorHandler(res, 404, "Product not found");
+        }
+
+        return errorHandler(res, 200, "Product retrieved successfully", false, existingProduct);
     } catch (error: any) {
-        errorHandler(res, 500, error.message || "Internal server error!", true);
+        console.error("Product details error:", error);
+        return errorHandler(res, 500, error.message || "Internal server error", true);
     }
 };
 
@@ -113,33 +125,33 @@ export const searchProducts = async (req: Request, res: Response) => {
 
         if (minPrice !== undefined || maxPrice !== undefined) {
             where.price = {};
-            if(minPrice) where.price.gte = parseFloat(minPrice as string);
-            if(maxPrice) where.price.lte = parseFloat(maxPrice as string);
+            if (minPrice) where.price.gte = parseFloat(minPrice as string);
+            if (maxPrice) where.price.lte = parseFloat(maxPrice as string);
         };
 
-        if(inStock === "true"){
-            where.stock = {gt:0};
+        if (inStock === "true") {
+            where.stock = { gt: 0 };
         };
 
         // Sorting
-        let orderBy :any = {createdAt: "desc"}
-        if (sortBy === "price_acs") orderBy = {price: "asc"};
-        if(sortBy === "price_desc") orderBy = {price: "desc"}
-        if(sortBy === "oldest") orderBy = {createdAt: "asc"}
+        let orderBy: any = { createdAt: "desc" }
+        if (sortBy === "price_acs") orderBy = { price: "asc" };
+        if (sortBy === "price_desc") orderBy = { price: "desc" }
+        if (sortBy === "oldest") orderBy = { createdAt: "asc" }
 
 
         const [products, totalCount] = await Promise.all([
-            prisma.product.findMany({orderBy,where,skip,take}),
-            prisma.product.count({where}),
+            prisma.product.findMany({ orderBy, where, skip, take }),
+            prisma.product.count({ where }),
         ]);
 
         res.status(200).json({
-            success:true,
-            data:products,
-            pagination:{
+            success: true,
+            data: products,
+            pagination: {
                 totalPages: Math.ceil(totalCount / take),
                 page: parseInt(page as string),
-                limit:take,
+                limit: take,
                 totalCount,
             }
         })

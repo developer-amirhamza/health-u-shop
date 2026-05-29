@@ -20,7 +20,7 @@ import Divider from '@/app/components/UI/Divider';
 const ProductDetailsPage = () => {
     const params = useParams();
     const productSlug = params.product; // e.g., "organic-apple-123"
-    const productId = productSlug?.split("-")?.slice(-1)[0];
+    const productId = (Array.isArray(productSlug) ? productSlug[0] : productSlug)?.split("_")?.slice(-1)[0];
 
     const [data, setData] = useState<any>({
         name: "",
@@ -39,18 +39,18 @@ const ProductDetailsPage = () => {
     const user = useSelector((state: any) => state.userSlice?.user);
     const reviews = useSelector((state: any) => state.reviewSlice?.reviews);
 
-    const averageReview = reviews && reviews.length > 0
-        ? reviews.reduce((sum, item) => sum + item.reviewValue, 0) / reviews.length
-        : 0;
+    // const averageReview = reviews && reviews.length > 0
+    //     ? reviews.reduce((sum, item) => sum + item.reviewValue, 0) / reviews.length : 0;
 
-    const fetchProductDetails = async (id: string) => {
-        if (!id) return;
+    const fetchProductDetails = async (productId: string) => {
+
+        if (!productId) return;
         try {
             setLoading(true);
             // Assuming fetchProductDetails uses GET with query param
             const response = await Axios({
                 ...SummeryApi.fetchProductDetails,
-                params: { id },
+                data: { id: productId }   // ✅ sends ?id=xxx
             });
             if (response.data?.success) {
                 setData(response.data?.data);
@@ -61,6 +61,7 @@ const ProductDetailsPage = () => {
             setLoading(false);
         }
     };
+
 
     // const fetchProductReview = async (id: string) => {
     //     try {
@@ -130,13 +131,13 @@ const ProductDetailsPage = () => {
                     <img className="h-full object-contain" src={data.images?.[image]} alt={data.name} />
                 </div>
                 <div className="flex justify-center gap-2 my-2">
-                    {data.images?.map((_, idx) => (
+                    {data.images?.map((_: any, idx: number) => (
                         <div key={idx} className={`w-2 h-2 rounded-full ${idx === image ? "bg-slate-600" : "bg-slate-300"}`} />
                     ))}
                 </div>
                 <div className="relative flex items-center">
                     <div className="flex overflow-x-auto gap-2 no-scrollbar my-4">
-                        {data.images?.map((img, idx) => (
+                        {data.images?.map((img: string, idx: number) => (
                             <div key={idx} onClick={() => setImage(idx)} className={`w-20 h-20 rounded-lg cursor-pointer ${idx === image ? "border-2 border-blue-500" : ""}`}>
                                 <img src={img} className="w-full h-full object-cover rounded" alt={data.name} />
                             </div>
@@ -149,16 +150,16 @@ const ProductDetailsPage = () => {
             </div>
 
             {/* Right Column - Details */}
-            <div>
-                <h1 className="text-2xl font-bold">{data.name}</h1>
+            <div className=' pt-10 px-5'>
+                <h1 className="text-2xl font-bold">{data.title}</h1>
                 {/* <div className="flex gap-2 items-center mt-2">
                     <StarRating rating={averageReview} />
                     <span className="text-sm text-orange-500">{averageReview?.toFixed(1)}</span>
                 </div> */}
-                <div className="mt-4">
-                    <p className="text-xl font-semibold">{DisplayPriceInAud(PriceWithDiscount(data.price, data.discount))}</p>
+                <div className="mt-4 flex items-center justify-star w-full gap-x-12">
+                    <p className="text-2xl font-semibold">{DisplayPriceInAud(PriceWithDiscount(data.price, data.discount))}</p>
                     {data.discount > 0 && (
-                        <p className="line-through text-neutral-500">{DisplayPriceInAud(data.price)}</p>
+                        <p className="line-through text-neutral-500 text-2xl">{DisplayPriceInAud(data.price)}</p>
                     )}
                 </div>
                 <div className="mt-4">
