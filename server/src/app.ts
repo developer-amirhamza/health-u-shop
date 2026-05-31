@@ -9,6 +9,8 @@ import productRouter from "./routes/products.routes";
 import cartRouter from "./routes/cart.routes";
 import orderRouter from "./routes/order.routes";
 import paymentRouter from "./routes/payment.route";
+import categoryRouter from "./routes/category.route";
+import reviewRouter from "./routes/review.routes"
 
 config();
 const app = express();
@@ -29,6 +31,8 @@ app.use(helmet({
 
 app.use("/api/user", userRouter);
 app.use("/api/products", productRouter);
+app.use("/api/reviews", reviewRouter);
+app.use("/api/categories", categoryRouter);
 app.use("/api/cart",cartRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/payment",paymentRouter);

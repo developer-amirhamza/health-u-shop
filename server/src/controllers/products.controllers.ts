@@ -7,13 +7,13 @@ import { prisma } from "../lib/prisma";
 export const createProduct = async (req: Request, res: Response) => {
     try {
         console.log("controllers works", req.body)
-        const { title, price, description, colors, sized, discount, more_details, category, stock, images } = req.body;
+        const { title, price, description, colors, sizes, discount, more_details, category, stock, images } = req.body;
         if (!title || !price || !discount) {
             return errorHandler(res, 400, "Please provide the required fields", true)
         }
 
         const newProduct = await prisma.product.create({
-            data: { title, price, description, colors, sized, discount, more_details, category, stock, images }
+            data: { title, price, description, colors, sizes, discount, more_details, category, stock, images }
         });
         return errorHandler(res, 200, "Tha product has been created successfully!", false, newProduct)
     } catch (error: any) {

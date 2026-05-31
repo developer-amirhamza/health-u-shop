@@ -22,7 +22,9 @@ model User {
   forgot_password_expire DateTime? @db.Timestamp(6)
   createdAt              DateTime? @default(now()) @db.Timestamp(6)
   updatedAt              DateTime? @default(now()) @db.Timestamp(6)
+  role                   String?   @default("USER")
   cart                   Cart?
+  reviews                Reviews[]
   order                  Order[]
 }
 
@@ -35,7 +37,6 @@ model Product {
   discount     Float
   stock        Int         @default(0)
   colors       String[]
-  sized        String[]
   categoryId   String?
   more_details String[]
   isActive     Boolean     @default(true)
@@ -43,22 +44,33 @@ model Product {
   updatedAt    DateTime    @updatedAt
   isFeatured   Boolean     @default(false)
   deletedAt    DateTime?
+  sizes        String[]
   cartItems    CartItem[]
   category     Category?   @relation(fields: [categoryId], references: [id])
+  reviews      Reviews[]
   orderItems   OrderItem[]
-  reviews      Reviews[]   @relation("ProductToReviews")
 }
 
 model Reviews {
-  id      String    @id @default(dbgenerated("gen_random_uuid()"))
-  product Product[] @relation("ProductToReviews")
+  id        String   @id @default(uuid())
+  comment   String?
+  createdAt DateTime @default(now())
+  productId String
+  rating    Int
+  userId    String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
 }
 
 model Category {
-  id      String    @id @default(dbgenerated("gen_random_uuid()"))
-  title   String    @unique
-  slug    String    @unique
-  product Product[]
+  id        String    @id @default(dbgenerated("gen_random_uuid()"))
+  title     String    @unique
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
 }
 
 model Cart {

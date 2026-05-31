@@ -10,14 +10,7 @@ import verifyEmailTemplate from "../utils/verifyEmailTemplate";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from 'uuid';
 import { uploadImageCloudinary } from "../config/cloudinary";
-interface CreateUserInput {
-    id?: string | number,
-    fullName?: string,
-    email?: string,
-    phone?: number,
-    password?: string,
-    image?: string,
-}
+
 interface AuthRequest extends Request {
   userId?: string;
 }

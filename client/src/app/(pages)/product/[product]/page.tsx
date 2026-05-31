@@ -1,4 +1,4 @@
-"use client";   // ← CRITICAL
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
@@ -7,23 +7,25 @@ import toast from 'react-hot-toast';
 import Axios from '@/utils/Axios';
 import AxiosToastError from '@/utils/AxiosToastError';
 import { SummeryApi } from '@/app/common/SummeryApi';
-
 import { DisplayPriceInAud } from '@/utils/DisplayPriceInAud';
 import { PriceWithDiscount } from '@/utils/PriceWithDiscount';
 import image1 from "@/assets/minute_delivery-Bu9utzxK.png";
 import image2 from "@/assets/Best_Prices_Offers-CbMh73zQ.png";
 import image3 from "@/assets/Wide_Assortment-CbRiDBkF.png";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaTrash, FaEdit } from "react-icons/fa";
 import AddToCartButton from '@/app/components/UI/AddToCartBtn';
 import Divider from '@/app/components/UI/Divider';
+import StarRating from '@/utils/StartRating';
+import { fetchProductReviews, addReview, updateReview, deleteReview } from '@/redux/slices/reviewSlice';
+import { RootState, AppDispatch } from '@/redux/store';
 
 const ProductDetailsPage = () => {
     const params = useParams();
-    const productSlug = params.product; // e.g., "organic-apple-123"
+    const productSlug = params.product;
     const productId = (Array.isArray(productSlug) ? productSlug[0] : productSlug)?.split("_")?.slice(-1)[0];
 
     const [data, setData] = useState<any>({
-        name: "",
+        title: "",
         images: [],
         price: 0,
         discount: 0,
@@ -34,23 +36,23 @@ const ProductDetailsPage = () => {
     const [loading, setLoading] = useState(false);
     const [image, setImage] = useState(0);
     const [rating, setRating] = useState(0);
-    const [reviewMessage, setReviewMessage] = useState("");
-    const dispatch = useDispatch();
-    const user = useSelector((state: any) => state.userSlice?.user);
-    const reviews = useSelector((state: any) => state.reviewSlice?.reviews);
+    const [reviewComment, setReviewComment] = useState("");
+    const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+    const [editRating, setEditRating] = useState(0);
+    const [editComment, setEditComment] = useState("");
 
-    // const averageReview = reviews && reviews.length > 0
-    //     ? reviews.reduce((sum, item) => sum + item.reviewValue, 0) / reviews.length : 0;
-
-    const fetchProductDetails = async (productId: string) => {
-
-        if (!productId) return;
+    const dispatch = useDispatch<AppDispatch>();
+    const user = useSelector((state: RootState) => state.userSlice?.user);
+    const { reviews, averageRating, totalReviews, status: reviewStatus } = useSelector((state: RootState) => state.reviewSlice);
+    console.log(reviews,"reviews")
+    // Fetch product details
+    const fetchProductDetails = async (id: string) => {
+        if (!id) return;
         try {
             setLoading(true);
-            // Assuming fetchProductDetails uses GET with query param
             const response = await Axios({
                 ...SummeryApi.fetchProductDetails,
-                data: { id: productId }   // ✅ sends ?id=xxx
+                data: { id },
             });
             if (response.data?.success) {
                 setData(response.data?.data);
@@ -62,65 +64,79 @@ const ProductDetailsPage = () => {
         }
     };
 
-
-    // const fetchProductReview = async (id: string) => {
-    //     try {
-    //         const response = await Axios({
-    //             ...SummeryApi.getProductReview,
-    //             params: { productId: id },
-    //         });
-    //         if (response.data?.success) {
-    //             dispatch(setReviewSlice(response.data?.data));
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
-
-    // const handleAddReview = async () => {
-    //     if (!user) {
-    //         toast.error("Please login to write a review");
-    //         return;
-    //     }
-    //     try {
-    //         const response = await Axios({
-    //             ...SummeryApi.addProductReview,
-    //             data: {
-    //                 userId: user._id,
-    //                 userName: user.name,
-    //                 productId: productId,
-    //                 reviewMessage: reviewMessage,
-    //                 reviewValue: rating,
-    //             },
-    //         });
-    //         if (response.data.success) {
-    //             setRating(0);
-    //             setReviewMessage("");
-    //             dispatch(fetchProductReview(productId));
-    //             toast.success(response.data?.message);
-    //         }
-    //     } catch (error) {
-    //         AxiosToastError(error);
-    //     }
-    // };
-
+    // Fetch reviews when productId changes
     useEffect(() => {
-        console.log("it's product details page")
         if (productId) {
             fetchProductDetails(productId);
-            // fetchProductReview(productId);
+            dispatch(fetchProductReviews(productId));
         }
-    }, [productId]);
+    }, [productId, dispatch]);
 
+    // Scroll to top on mount
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "instant" });
     }, []);
 
-    const handleScrollLeft = () => setImage(prev => prev > 0 ? prev - 1 : data.images.length - 1);
-    const handleScrollRight = () => setImage(prev => prev < data.images.length - 1 ? prev + 1 : 0);
+    // Helper for image scroll
+    const handleScrollLeft = () => setImage(prev => prev > 0 ? prev - 1 : data.images?.length - 1);
+    const handleScrollRight = () => setImage(prev => prev < data.images?.length - 1 ? prev + 1 : 0);
+
+    // Submit new review
+    const handleAddReview = async () => {
+        if (!user) {
+            toast.error("Please login to write a review");
+            return;
+        }
+        if (rating === 0) {
+            toast.error("Please select a rating");
+            return;
+        }
+        if (!reviewComment.trim()) {
+            toast.error("Please write a comment");
+            return;
+        }
+        await dispatch(addReview({ productId: productId!, rating, comment: reviewComment }));
+        setRating(0);
+        setReviewComment("");
+    };
+
+    // Start editing a review
+    const startEdit = (review: any) => {
+        setEditingReviewId(review.id);
+        setEditRating(review.rating);
+        setEditComment(review.comment || "");
+    };
+
+    // Cancel editing
+    const cancelEdit = () => {
+        setEditingReviewId(null);
+        setEditRating(0);
+        setEditComment("");
+    };
+
+    // Submit edit
+    const handleUpdateReview = async (reviewId: string) => {
+        if (editRating === 0) {
+            toast.error("Please select a rating");
+            return;
+        }
+        if (!editComment.trim()) {
+            toast.error("Please write a comment");
+            return;
+        }
+        await dispatch(updateReview({ reviewId, rating: editRating, comment: editComment }));
+        cancelEdit();
+    };
+
+    // Delete review
+    const handleDeleteReview = async (reviewId: string) => {
+        if (window.confirm("Are you sure you want to delete this review?")) {
+            await dispatch(deleteReview(reviewId));
+        }
+    };
 
     if (loading) {
-        return <div className="container mx-auto p-4">Loading...</div>; // Add proper skeleton
+        return <div className="container mx-auto p-4">Loading...</div>;
     }
 
     return (
@@ -128,7 +144,7 @@ const ProductDetailsPage = () => {
             {/* Left Column - Images */}
             <div>
                 <div className="w-full h-56 lg:h-[65vh] bg-white rounded flex items-center justify-center">
-                    <img className="h-full object-contain" src={data.images?.[image]} alt={data.name} />
+                    <img className="h-full object-contain" src={data.images?.[image]} alt={data.title} />
                 </div>
                 <div className="flex justify-center gap-2 my-2">
                     {data.images?.map((_: any, idx: number) => (
@@ -139,23 +155,29 @@ const ProductDetailsPage = () => {
                     <div className="flex overflow-x-auto gap-2 no-scrollbar my-4">
                         {data.images?.map((img: string, idx: number) => (
                             <div key={idx} onClick={() => setImage(idx)} className={`w-20 h-20 rounded-lg cursor-pointer ${idx === image ? "border-2 border-blue-500" : ""}`}>
-                                <img src={img} className="w-full h-full object-cover rounded" alt={data.name} />
+                                <img src={img} className="w-full h-full object-cover rounded" alt={data.title} />
                             </div>
                         ))}
                     </div>
                     <button onClick={handleScrollLeft} className="absolute left-0 bg-white p-1 rounded-full shadow"><FaAngleLeft /></button>
                     <button onClick={handleScrollRight} className="absolute right-0 bg-white p-1 rounded-full shadow"><FaAngleRight /></button>
                 </div>
-                {/* Description & details (same as before) */}
+                {/* Description */}
+                {data.description && (
+                    <div className="mt-4 lg:block hidden">
+                        <h2 className="text-xl font-semibold">Description</h2>
+                        <p>{data.description}</p>
+                    </div>
+                )}
             </div>
 
             {/* Right Column - Details */}
-            <div className=' pt-10 px-5'>
+            <div className='pt-10 px-5'>
                 <h1 className="text-2xl font-bold">{data.title}</h1>
-                {/* <div className="flex gap-2 items-center mt-2">
-                    <StarRating rating={averageReview} />
-                    <span className="text-sm text-orange-500">{averageReview?.toFixed(1)}</span>
-                </div> */}
+                <div className="flex gap-2 items-center mt-2">
+                    <StarRating rating={averageRating} />
+                    <span className="text-sm text-orange-500">{averageRating} ({totalReviews} reviews)</span>
+                </div>
                 <div className="mt-4 flex items-center justify-star w-full gap-x-12">
                     <p className="text-2xl font-semibold">{DisplayPriceInAud(PriceWithDiscount(data.price, data.discount))}</p>
                     {data.discount > 0 && (
@@ -170,11 +192,78 @@ const ProductDetailsPage = () => {
                     )}
                 </div>
                 <Divider />
-                <div className="mt-4">
-                    <h2 className="text-xl font-semibold">Description</h2>
-                    <p>{data.description}</p>
+                {data.description && (
+                    <div className="mt-4 lg:hidden">
+                        <h2 className="text-xl font-semibold">Description</h2>
+                        <p>{data.description}</p>
+                    </div>
+                )}
+                <Divider />
+
+                {/* ========== REVIEWS SECTION ========== */}
+                <div className="mt-6">
+                    <h2 className="text-xl font-semibold mb-3">Customer Reviews</h2>
+
+                    {/* Add/Edit Review Form */}
+                    {user ? (
+                        <div className="bg-white p-4 rounded shadow mb-4">
+                            <h3 className="font-medium mb-2">{editingReviewId ? "Edit Your Review" : "Write a Review"}</h3>
+                            <div className="mb-2">
+                                <StarRating
+                                    rating={editingReviewId ? editRating : rating}
+                                    handleRatingChange={editingReviewId ? setEditRating : setRating}
+                                />
+                            </div>
+                            <textarea
+                                rows={3}
+                                className="w-full border rounded p-2 mb-2"
+                                placeholder="Share your experience with this product..."
+                                value={editingReviewId ? editComment : reviewComment}
+                                onChange={(e) => editingReviewId ? setEditComment(e.target.value) : setReviewComment(e.target.value)}
+                            />
+                            <div className="flex gap-2">
+                                {editingReviewId ? (
+                                    <>
+                                        <button onClick={() => handleUpdateReview(editingReviewId)} className="bg-blue-600 text-white px-3 py-1 rounded">Update</button>
+                                        <button onClick={cancelEdit} className="bg-gray-300 px-3 py-1 rounded">Cancel</button>
+                                    </>
+                                ) : (
+                                    <button onClick={handleAddReview} className="bg-green-600 text-white px-3 py-1 rounded">Submit Review</button>
+                                )}
+                            </div>
+                        </div>
+                    ) : (
+                        <p className="text-sm text-neutral-500 mb-3">Please <a href="/signin" className="text-blue-600">login</a> to write a review.</p>
+                    )}
+
+                    {/* Reviews List */}
+                    {reviewStatus === 'loading' && <p>Loading reviews...</p>}
+                    {reviews.length === 0 && reviewStatus !== 'loading' && (
+                        <p className="text-neutral-500">No reviews yet. Be the first to review!</p>
+                    )}
+                    <div className="space-y-4 mt-3">
+                        {reviews.map((review) => (
+                            <div key={review.id} className="border-b pb-3">
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <StarRating rating={review.rating} />
+                                            <span className="font-semibold">{review.user.name}</span>
+                                        </div>
+                                        <p className="text-sm text-neutral-500">{new Date(review.createdAt).toLocaleDateString()}</p>
+                                    </div>
+                                    {/* {user && (user?.id === review.userId || user?.role === 'ADMIN') && !editingReviewId && (
+                                        <div className="flex gap-2">
+                                            <button onClick={() => startEdit(review)} className="text-blue-600"><FaEdit /></button>
+                                            <button onClick={() => handleDeleteReview(review.id)} className="text-red-600"><FaTrash /></button>
+                                        </div>
+                                    )} */}
+                                </div>
+                                <p className="mt-1 text-neutral-700">{review.comment}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                {/* Reviews section, why shop, etc. */}
             </div>
         </section>
     );

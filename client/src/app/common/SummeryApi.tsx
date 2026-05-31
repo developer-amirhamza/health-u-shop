@@ -112,4 +112,46 @@ export const SummeryApi = {
         url: "/api/payment/create-checkout-session",
         method: "post",
     },
+
+    // review
+
+    addReview:{
+        url:"/api/reviews/add-review",
+        method:"post"
+    },
+    getProductReviews:{
+        url:"/api/reviews/get-reviews",
+        method:"post"
+    },
+    updateReview:{
+        url:"/api/review/update-review",
+        method:"put"
+    },
+    deleteReview:{
+        url:"/api/review/delete-review",
+        method:"delete"
+    },
+
+    // categories
+    getAllCategories:{
+        url:"/api/categories",
+        method:"get"
+    },
+    createCategory:{
+        url:"/api/categories/create",
+        method:"post"
+    },
+    updateCategories:{
+        url:"/api/categories/update",
+        method:"put"
+    },
+    getCategoryBySlug:{
+        url:"/api/categories/single-category",
+        method:"post"
+    },
+    deleteCategory:{
+        url:"/api/categories/delete",
+        method:"delete"
+    },
+
 };
