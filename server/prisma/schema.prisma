@@ -29,26 +29,28 @@ model User {
 }
 
 model Product {
-  id           String      @id @default(dbgenerated("gen_random_uuid()"))
-  title        String
-  images       String[]
-  description  String?
-  price        Float
-  discount     Float
-  stock        Int         @default(0)
-  colors       String[]
-  categoryId   String?
-  more_details String[]
-  isActive     Boolean     @default(true)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  isFeatured   Boolean     @default(false)
-  deletedAt    DateTime?
-  sizes        String[]
-  cartItems    CartItem[]
-  category     Category?   @relation(fields: [categoryId], references: [id])
-  reviews      Reviews[]
-  orderItems   OrderItem[]
+  id            String       @id @default(dbgenerated("gen_random_uuid()"))
+  title         String
+  images        String[]
+  description   String?
+  price         Float
+  discount      Float
+  stock         Int          @default(0)
+  colors        String[]
+  categoryId    String?
+  more_details  String[]
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  isFeatured    Boolean      @default(false)
+  deletedAt     DateTime?
+  sizes         String[]
+  subcategoryId String?
+  cartItems     CartItem[]
+  category      Category?    @relation(fields: [categoryId], references: [id])
+  subcategory   Subcategory? @relation(fields: [subcategoryId], references: [id])
+  reviews       Reviews[]
+  orderItems    OrderItem[]
 }
 
 model Reviews {
@@ -65,14 +67,28 @@ model Reviews {
 }
 
 model Category {
-  id        String    @id @default(dbgenerated("gen_random_uuid()"))
-  title     String    @unique
-  slug      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products  Product[]
+  id            String        @id @default(dbgenerated("gen_random_uuid()"))
+  title         String        @unique
+  slug          String        @unique
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  products      Product[]
+  subcategories Subcategory[]
 }
 
+model Subcategory {
+  id         String    @id @default(uuid())
+  title      String
+  slug       String
+  categoryId String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  products   Product[]
+  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, slug])
+  @@unique([categoryId, title])
+}
 model Cart {
   id        String     @id @default(dbgenerated("gen_random_uuid()"))
   token     String?    @unique

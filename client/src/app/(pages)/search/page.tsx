@@ -9,6 +9,7 @@ import nothingImage from "@/assets/empty-box.gif";
 import Image from 'next/image';
 import AxiosToastError from '@/utils/AxiosToastError';
 import ProductCard from '@/app/components/ProductCard';
+import ProductGrid from '@/app/components/ProductGrid';
 
 interface Product {
     id: string;
@@ -82,7 +83,7 @@ const SearchContent = () => {
     if (!textSearch) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh]">
-                <p className="text-neutral-500 text-lg">Please enter a search term.</p>
+                <ProductGrid/>
             </div>
         );
     }

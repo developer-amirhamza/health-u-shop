@@ -7,13 +7,13 @@ import { prisma } from "../lib/prisma";
 export const createProduct = async (req: Request, res: Response) => {
     try {
         console.log("controllers works", req.body)
-        const { title, price, description, colors, sizes, discount, more_details, category, stock, images } = req.body;
+        const { title, price, description, colors, sizes, discount, more_details, category, stock, images,categoryId, subcategoryId } = req.body;
         if (!title || !price || !discount) {
             return errorHandler(res, 400, "Please provide the required fields", true)
         }
 
         const newProduct = await prisma.product.create({
-            data: { title, price, description, colors, sizes, discount, more_details, category, stock, images }
+            data: { title, price, description, colors, sizes, discount, more_details, category, stock, images,categoryId, subcategoryId }
         });
         return errorHandler(res, 200, "Tha product has been created successfully!", false, newProduct)
     } catch (error: any) {
@@ -23,21 +23,34 @@ export const createProduct = async (req: Request, res: Response) => {
 
 
 export const updateProduct = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.body;
-        // const id:any = req.params;
-        // const {title, price, description,colors,sized,discount,more_details,category,stock,images} = req.body;
-        if (!id) return errorHandler(res, 404, "Product id is required!");
-        const existingProduct = await prisma.product.findUnique({ where: { id: id } });
-        if (!existingProduct) return errorHandler(res, 404, "The product not found!",)
-        const updatedProduct = await prisma.product.update({
-            where: { id: id },
-            data: { ...req.body }
-        })
-        return errorHandler(res, 200, "The product has been updated  successfully!", false, updatedProduct);
-    } catch (error: any) {
-        errorHandler(res, 500, error.message || "Internal server error!", true);
-    }
+  try {
+    const { id, title, price, description, colors, sizes, discount,
+            more_details, categoryId, subcategoryId, stock, images, isActive } = req.body;
+
+    const existing = await prisma.product.findUnique({ where: { id } });
+    if (!existing) return errorHandler(res, 404, "Product not found");
+
+    const updated = await prisma.product.update({
+      where: { id },
+      data: {
+        title,
+        price,
+        description,
+        colors,
+        sizes,
+        discount,
+        more_details,
+        categoryId,
+        subcategoryId,
+        stock,
+        images,
+        isActive,
+      },
+    });
+    return errorHandler(res, 200, "Product updated successfully", false, updated);
+  } catch (error: any) {
+    return errorHandler(res, 500, error.message);
+  }
 };
 
 
@@ -89,6 +102,22 @@ export const getProductDetails = async (req: Request, res: Response) => {
     }
 };
 
+
+export const getProductsBySubcategory = async (req: Request, res: Response) => {
+  try {
+    const { subcategoryId } = req.body;
+    if (!subcategoryId) return errorHandler(res, 400, "Subcategory ID required");
+
+    const products = await prisma.product.findMany({
+      where: { subcategoryId, isActive: true },
+      orderBy: { createdAt: "desc" },
+      include: { category: true, subcategory: true },
+    });
+    return errorHandler(res, 200, "Products fetched", false, products);
+  } catch (error: any) {
+    return errorHandler(res, 500, error.message || "internal server error");
+  }
+};
 
 
 export const getAllProductDetails = async (req: Request, res: Response) => {
@@ -157,5 +186,20 @@ export const searchProducts = async (req: Request, res: Response) => {
         })
     } catch (error: any) {
         errorHandler(res, 500, error.message || "Internal server error!");
+    }
+};
+
+export const getProductsByCategory = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.body;
+        if (!id) return errorHandler(res, 400, "Category ID required");
+
+        const products = await prisma.product.findMany({
+            where: { categoryId: id, isActive: true },
+            orderBy: { createdAt: "desc" },
+        });
+        return errorHandler(res, 200, "Products fetched", false, products);
+    } catch (error: any) {
+        return errorHandler(res, 500, error.message);
     }
 };

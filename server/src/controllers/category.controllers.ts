@@ -90,7 +90,7 @@ export const deleteCategory = async(req:Request, res:Response)=>{
 
 export const getCategoryBySlug = async(req:Request, res:Response)=>{
     try {
-        const slug = req.params;
+        const {slug} = req.body;
         const category = await prisma.category.findFirst({where:{slug}, include:{products:true}})
         if(!category) return errorHandler(res,404, "The category not found")
         return errorHandler(res,200, "The category gotten successfully!",false,category);
@@ -101,7 +101,7 @@ export const getCategoryBySlug = async(req:Request, res:Response)=>{
 
 export const getAllCategories = async(req:Request, res:Response)=>{
     try {
-        const categories = await prisma.category.findMany({ orderBy:{"title":"asc"}})
+        const categories = await prisma.category.findMany({ orderBy:{"title":"asc"},include:{products:true}})
         if(!categories) return errorHandler(res,404, "The category not found")
         return errorHandler(res,200, "The category gotten successfully!",false,categories);
     } catch (error:any) {

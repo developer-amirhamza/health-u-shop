@@ -1,7 +1,7 @@
 
 
 
-export const baseUrl =process.env.NEXT_PUBLIC_BACKEND_API_URL
+export const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL
 console.log(baseUrl, "url working ")
 
 
@@ -70,6 +70,10 @@ export const SummeryApi = {
         url: "/api/products/search",
         method: "get",  // GET request
     },
+    getProductByCategory: {
+        url: "/api/products/by-category",
+        method: "post",
+    },
 
     fetchCart: {
         url: "/api/cart/get-cart",
@@ -91,7 +95,6 @@ export const SummeryApi = {
         url: "/api/cart/merge",
         method: "post",
     },
-
 
     // Orders
     placeOrder: {
@@ -115,43 +118,80 @@ export const SummeryApi = {
 
     // review
 
-    addReview:{
-        url:"/api/reviews/add-review",
-        method:"post"
+    addReview: {
+        url: "/api/reviews/add-review",
+        method: "post"
     },
-    getProductReviews:{
-        url:"/api/reviews/get-reviews",
-        method:"post"
+    getProductReviews: {
+        url: "/api/reviews/get-reviews",
+        method: "post"
     },
-    updateReview:{
-        url:"/api/review/update-review",
-        method:"put"
+    updateReview: {
+        url: "/api/review/update-review",
+        method: "put"
     },
-    deleteReview:{
-        url:"/api/review/delete-review",
-        method:"delete"
+    deleteReview: {
+        url: "/api/review/delete-review",
+        method: "delete"
     },
 
     // categories
-    getAllCategories:{
-        url:"/api/categories",
-        method:"get"
+    getAllCategories: {
+        url: "/api/categories",
+        method: "get"
     },
-    createCategory:{
-        url:"/api/categories/create",
-        method:"post"
+    createCategory: {
+        url: "/api/categories/create",
+        method: "post"
     },
-    updateCategories:{
-        url:"/api/categories/update",
-        method:"put"
+    updateCategory: {
+        url: "/api/categories/update",
+        method: "put"
     },
-    getCategoryBySlug:{
-        url:"/api/categories/single-category",
-        method:"post"
+    getCategoryBySlug: {
+        url: "/api/categories/single-category",
+        method: "post"
     },
-    deleteCategory:{
-        url:"/api/categories/delete",
-        method:"delete"
+    deleteCategory: {
+        url: "/api/categories/delete",
+        method: "delete"
     },
+
+
+
+    // subcategory
+
+    fetchSubcategoriesByCategory: {
+        url: "/api/subcategories/category/subcategories-by-categories",
+        method: "post",
+    },
+    fetchSubcategoryBySlug: {
+        url: "/api/subcategories",
+        method: "get",
+    },
+    createSubcategory: {
+        url: "/api/subcategories",
+        method: "post",
+    },
+    updateSubcategory: {
+        url: "/api/subcategories",
+        method: "put",
+    },
+    deleteSubcategory: {
+        url: "/api/subcategories",
+        method: "delete",
+    },
+
+    // SummeryApi additions
+
+getProductBySubcategory: {
+  url: "/api/products/by-subcategory",
+  method: "post",
+},
+
+createProduct: {
+  url: "/api/products/create",
+  method: "post",
+},
 
 };

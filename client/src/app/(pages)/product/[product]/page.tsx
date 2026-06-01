@@ -140,7 +140,8 @@ const ProductDetailsPage = () => {
     }
 
     return (
-        <section className="container mx-auto p-4 grid lg:grid-cols-2 gap-6 bg-slate-100">
+        <main className='bg-amber-100 ' >
+        <section className="container mx-auto p-4 grid lg:grid-cols-2 gap-6     ">
             {/* Left Column - Images */}
             <div>
                 <div className="w-full h-56 lg:h-[65vh] bg-white rounded flex items-center justify-center">
@@ -266,6 +267,7 @@ const ProductDetailsPage = () => {
                 </div>
             </div>
         </section>
+        </main>
     );
 };
 
