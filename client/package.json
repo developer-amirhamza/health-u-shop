@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
+  "dev": "next dev",
+  "build": "next build && cp -r .next/static .next/standalone/.next/static",
+  "start": "node .next/standalone/server.js",
+  "lint": "next lint"
+},
   "dependencies": {
     "@next/env": "^16.2.6",
     "@reduxjs/toolkit": "^2.11.2",
