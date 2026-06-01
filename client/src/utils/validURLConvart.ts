@@ -1,4 +1,7 @@
-export const validURLConvert = (title:"title")=>{
-    const url = title?.toString().replaceAll(" ", "-").replaceAll(",", "-").replaceAll("&", "-")
-    return url
-}
+// utils/validURLConvart.ts
+export const validURLConvert = (str: string): string => {
+  return str
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+};
