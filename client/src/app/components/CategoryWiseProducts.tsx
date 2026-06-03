@@ -116,7 +116,7 @@ const CategoryWiseProductDisplay: React.FC<CategoryWiseProductProps> = ({ catego
             <div className="flex items-center justify-between gap-4 mb-2">
                 <h1 className="text-xl capitalize text-neutral-800 font-semibold">{title}</h1>
                 <Link
-                    href={viewAllUrl}
+                    href={"/search"}
                     className="text-green-700 hover:text-green-800 font-medium bg-neutral-100 px-4 py-2 rounded"
                 >
                     View All
@@ -156,7 +156,7 @@ const CategoryWiseProductDisplay: React.FC<CategoryWiseProductProps> = ({ catego
             {/* Products Carousel */}
             <div className="relative">
                 <div
-                    className="flex overflow-x-auto scroll-smooth no-scrollbar gap-4"
+                    className="flex overflow-x-auto overflow-y-hidden scroll-smooth no-scrollbar gap-4"
                     ref={containerRef}
                 >
                     {loading ? (

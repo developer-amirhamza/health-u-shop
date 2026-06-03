@@ -25,9 +25,9 @@ console.log(categories, "categories")
     console.log("test user from home", user)
 
   return (
-    <div className="grid gap-10 mb10 h-full w-full">
+    <div className="grid gap-10 mb-10 h-full w-full">
       <Hero/>
-      
+
       <div className="grid">
         {categories.map((category,index)=>(
           <CategoryWiseProducts categoryId={category.id} title={category.title} key={index} />

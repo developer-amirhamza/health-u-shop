@@ -11,7 +11,7 @@ router.get('/subcategory-by-slug', getSubcategoryBySlug);
 
 // Admin only
 router.post('/create',  createSubcategory);
-router.put('/update', auth, updateSubcategory);
-router.delete('/delete', auth, deleteSubcategory);
+router.put('/update',  updateSubcategory);
+router.delete('/delete', deleteSubcategory);
 
 export default router;

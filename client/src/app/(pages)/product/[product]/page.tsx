@@ -140,7 +140,7 @@ const ProductDetailsPage = () => {
     }
 
     return (
-        <main className='bg-amber-100 ' >
+        <main className='bg-[#fffbeb] py-12' >
         <section className="container mx-auto p-4 grid lg:grid-cols-2 gap-6     ">
             {/* Left Column - Images */}
             <div>
@@ -191,6 +191,15 @@ const ProductDetailsPage = () => {
                     ) : (
                         <AddToCartButton data={data} />
                     )}
+                </div>
+                <div className="my-4">
+                    {data.sizes &&
+                    <div className="flex gap-2 items-center flex-wrap">
+                        {data.sizes?.map((size:any,index:number)=>(
+                            <div key={index} className="flex  ">
+                                <div className="text-sm font-medium border cursor-pointer hover:bg-gray-100 text-neutral-500 p-1 rounded">{size}</div> </div>
+                        ))}
+                    </div> }
                 </div>
                 <Divider />
                 {data.description && (

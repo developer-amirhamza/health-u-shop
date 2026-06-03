@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { IoCall } from 'react-icons/io5'
-import logo from "@/assets/logo-img.png"
+import logo from "@/assets/header-logosr.png"
 import { IoMdCart } from 'react-icons/io'
 import { TiShoppingCart } from 'react-icons/ti'
 import { FaSearch } from 'react-icons/fa'
@@ -93,8 +93,8 @@ const Header = () => {
             <div className="flex w-full bg-neutral-200 h-full items-center ">
                 {/* logo */}
                 <div className="container flex items-center justify-between gap-4 w-full">
-                    <Link href={"/"} className="flex py-3 w-full">
-                        <Image src={logo} className='object-scale-down h-14 ' alt='Health U Shop' />
+                    <Link href={"/"} className="flex  w-full justify-start items-start">
+                        <Image src={logo} className='object-scale-down h-20 py-1 mr-32 ' alt='Health U Shop' />
                     </Link>
                     {/* search bar */}
                     <div className=" hidden  lg:flex">
