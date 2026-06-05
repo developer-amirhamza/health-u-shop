@@ -75,7 +75,7 @@ export const infographic_cards = {
 export const home_posts = [
     {
         title:"Explore TENA's Incontinence Range", subtitle:"",
-        buttons:[{label:"Shop Now", path:"/"}],
+        buttons:[{label:"Shop Now", path:"/products"}],
         image:home_post,
         paragraph:"TENA offers a range of incontinence pads and products that provide expert protection, ensuring you stay secure, dry, and odour-free day and night."
     },
@@ -87,7 +87,7 @@ export const home_posts = [
     },
     {
         title:"Use our Product Finder to choose what suits you best", subtitle:"",
-        buttons:[{label:"Shop now", path:"/"},{label:"Learn more", path:"/"}],
+        buttons:[{label:"Shop now", path:"/products"},{label:"Learn more", path:"/"}],
         image:home_post2,
         paragraph:" This Product Finder has been designed to identify the most suitable product based on the answers to the questions about your situation."
     }

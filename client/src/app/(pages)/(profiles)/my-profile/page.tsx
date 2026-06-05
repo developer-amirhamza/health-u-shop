@@ -218,8 +218,8 @@ const ProfilePage = () => {
                     <p>{order.items.length} item(s)</p>
                   </div>
                   <Link
-                    // href={`/order/${order.id}`}
-                    href={`/order/my-orders`}
+                    href={`/order/${order.id}`}
+                    // href={`/order/my-orders`}
                     className="text-blue-600 text-sm hover:underline mt-2 inline-block"
                   >
                     View Details →

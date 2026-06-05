@@ -1,11 +1,9 @@
 "use client"
 import { fetchUser } from "@/redux/slices/userSlices";
 import { AppDispatch, RootState } from "@/redux/store";
-import Image from "next/image";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Hero from "./components/Hero";
-import ProductGrid from "./components/ProductGrid";
 import CategoryWiseProducts from "./components/CategoryWiseProducts";
 import { fetchCategories } from "@/redux/slices/categorySlice";
 import InfoGraphicCard from "./components/InfoGraphicCard";
@@ -13,42 +11,39 @@ import { home_posts, infographic_cards } from "@/config/page";
 import PostCard from "./components/PostCard";
 
 export default function Home() {
-const dispatch = useDispatch<AppDispatch>()
-const {user} = useSelector((state: any) => state.userSlice);
-const {categories, status}= useSelector((state:RootState)=>state.categorySlice);
-console.log(categories, "categories")
-     useEffect(()=>{
-      if(status === "idle"){
-        dispatch(fetchCategories())
-      }
-     },[dispatch,status])
-    console.log("test user from home", user)
+  const dispatch = useDispatch<AppDispatch>()
+  const { user } = useSelector((state: any) => state.userSlice);
+  const { categories, status } = useSelector((state: RootState) => state.categorySlice);
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchCategories())
+    }
+  }, [dispatch, status])
 
   return (
     <div className="grid gap-10 mb-10 h-full bg-[#fffbeb] ">
-      <Hero/>
+      <Hero />
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1  container gap-10 w-4/6 ">
-        {infographic_cards.hero.map((item,index)=>(
-        <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />
-      ))}
+        {infographic_cards.hero.map((item, index) => (
+          <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />
+        ))}
       </div>
       <div className="grid">
-        {categories.map((category,index)=>(
+        {categories.map((category, index) => (
           <CategoryWiseProducts categoryId={category.id} title={category.title} key={index} />
         ))}
       </div>
       <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 sm:grid-cols-2  container gap-10 w-4/6 ">
-        {infographic_cards.policies.map((item,index)=>(
-        <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />
-      ))}
+        {infographic_cards.policies.map((item, index) => (
+          <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />
+        ))}
       </div>
       <div className="grid container">
-        {home_posts.map((post,index)=>(
+        {home_posts.map((post, index) => (
           <PostCard image={post.image} key={index} title={post.title} subtitle={post.subtitle} paragraph={post.paragraph} buttons={post.buttons} />
         ))}
       </div>
-
-
     </div>
   );
 }
