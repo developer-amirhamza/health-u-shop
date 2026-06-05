@@ -130,63 +130,107 @@ export const getAllProductDetails = async (req: Request, res: Response) => {
     }
 };
 
+export const getAllProducts = async (req: Request, res: Response) => {
+  const { category, search, minPrice, maxPrice, sort, page = 1, limit = 20 } = req.query;
+  const where: any = { isActive: true };
+  if (category) where.category = { slug: category };
+  if (search) {
+    where.OR = [
+      { title: { contains: search, mode: 'insensitive' } },
+      { description: { contains: search, mode: 'insensitive' } },
+    ];
+  }
+  if (minPrice || maxPrice) {
+    where.price = {};
+    if (minPrice) where.price.gte = parseFloat(minPrice as string);
+    if (maxPrice) where.price.lte = parseFloat(maxPrice as string);
+  }
+
+  let orderBy: any = { createdAt: 'desc' };
+  if (sort === 'price_asc') orderBy = { price: 'asc' };
+  if (sort === 'price_desc') orderBy = { price: 'desc' };
+  if (sort === 'popular') orderBy = { soldCount: 'desc' }; // if you have that field
+
+  const products = await prisma.product.findMany({
+    where,
+    orderBy,
+    skip: (Number(page) - 1) * Number(limit),
+    take: Number(limit),
+    include: { category: true },
+  });
+  const totalCount = await prisma.product.count({ where });
+  res.json({ success: true, data: products, totalCount });
+};
+
 
 export const searchProducts = async (req: Request, res: Response) => {
-    try {
-        const { q, category, minPrice, maxPrice, inStock, sortBy, page = "1", limit = "20" } = req.query;
-        const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
-        const take = parseInt(limit as string);
+  try {
+    const {
+      q, category, minPrice, maxPrice, inStock,
+      sort,
+      page = "1", limit = "20"
+    } = req.query;
 
+    const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
+    const take = parseInt(limit as string);
 
-        let where: any = { isActive: true };
+    let where: any = { isActive: true };
 
-        // Full-text search on name and description
-        if (q && typeof q === "string") {
-            where.OR = [
-                { title: { contains: q, mode: "insensitive" } },
-                { description: { contains: q, mode: "insensitive" } }
-            ]
-        };
-
-        if (category && typeof category === "string") {
-            where.category = category;
-        }
-
-        if (minPrice !== undefined || maxPrice !== undefined) {
-            where.price = {};
-            if (minPrice) where.price.gte = parseFloat(minPrice as string);
-            if (maxPrice) where.price.lte = parseFloat(maxPrice as string);
-        };
-
-        if (inStock === "true") {
-            where.stock = { gt: 0 };
-        };
-
-        // Sorting
-        let orderBy: any = { createdAt: "desc" }
-        if (sortBy === "price_acs") orderBy = { price: "asc" };
-        if (sortBy === "price_desc") orderBy = { price: "desc" }
-        if (sortBy === "oldest") orderBy = { createdAt: "asc" }
-
-
-        const [products, totalCount] = await Promise.all([
-            prisma.product.findMany({ orderBy, where, skip, take }),
-            prisma.product.count({ where }),
-        ]);
-
-        res.status(200).json({
-            success: true,
-            data: products,
-            pagination: {
-                totalPages: Math.ceil(totalCount / take),
-                page: parseInt(page as string),
-                limit: take,
-                totalCount,
-            }
-        })
-    } catch (error: any) {
-        errorHandler(res, 500, error.message || "Internal server error!");
+    // Search on title and description
+    if (q && typeof q === "string") {
+      where.OR = [
+        { title: { contains: q, mode: "insensitive" } },
+        { description: { contains: q, mode: "insensitive" } }
+      ];
     }
+
+    // ✅ FIX: category is a relation – use slug filter
+    if (category && typeof category === "string") {
+      where.category = { categoryId: category };   // not "category: category"
+    }
+
+    // Price range
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      where.price = {};
+      if (minPrice) where.price.gte = parseFloat(minPrice as string);
+      if (maxPrice) where.price.lte = parseFloat(maxPrice as string);
+    }
+
+    // In stock
+    if (inStock === "true") {
+      where.stock = { gt: 0 };
+    }
+
+    // Sorting
+    let orderBy: any = { createdAt: "desc" };
+    const sortValue = sort as string;
+    if (sortValue === "price_asc") orderBy = { price: "asc" };
+    if (sortValue === "price_desc") orderBy = { price: "desc" };
+    if (sortValue === "oldest") orderBy = { createdAt: "asc" };
+
+    const [products, totalCount] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        orderBy,
+        skip,
+        take,
+        include: { category: true, subcategory: true } // include for frontend
+      }),
+      prisma.product.count({ where })
+    ]);
+
+    const totalNoPage = Math.ceil(totalCount / take);
+
+    res.json({
+      success: true,
+      data: products,
+      totalNoPage,
+      totalCount
+    });
+  } catch (error: any) {
+    console.error("Search error:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
 };
 
 export const getProductsByCategory = async (req: Request, res: Response) => {
@@ -195,7 +239,7 @@ export const getProductsByCategory = async (req: Request, res: Response) => {
         if (!id) return errorHandler(res, 400, "Category ID required");
 
         const products = await prisma.product.findMany({
-            where: { categoryId: id, isActive: true },
+            where: { categoryId: id,  isActive: true },
             orderBy: { createdAt: "desc" },
         });
         return errorHandler(res, 200, "Products fetched", false, products);

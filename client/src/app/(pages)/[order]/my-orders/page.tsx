@@ -68,7 +68,7 @@ const MyOrdersPage = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 my-12">
             <h1 className="text-2xl font-bold text-neutral-800 mb-6">My Orders</h1>
             <div className="space-y-6">
                 {orders.map((order:any) => {

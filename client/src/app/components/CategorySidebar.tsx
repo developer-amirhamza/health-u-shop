@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AppDispatch, RootState } from '@/redux/store';
 import { fetchCategories } from '@/redux/slices/categorySlice';
+import Loader from './UI/Loader';
 
 const CategorySidebar = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -18,7 +19,7 @@ const CategorySidebar = () => {
     }, [status, dispatch]);
 
     if (status === 'loading') {
-        return <div className="p-4 text-sm text-neutral-500">Loading categories...</div>;
+        return <Loader/>
     }
 
     return (

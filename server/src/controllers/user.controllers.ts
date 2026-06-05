@@ -212,6 +212,7 @@ const GetUserDetails = async (req: AuthRequest, res: Response) => {
                 email:true,
                 mobile:true,
                 avatar:true,
+                role:true,
                 refresh_token:true,
             }
             });
@@ -242,6 +243,7 @@ const getAllUsers = async (req: Request, res: Response) => {
                 mobile:true,
                 avatar:true,
                 refresh_token:true,
+                role:true,
             }
         });
         res.status(200).json({
@@ -289,7 +291,7 @@ const updateUserDetails = async (req: AuthRequest, res: Response) => {
         if (!userId) {
             return errorHandler(res, 400, "User ID is required", true);
         };
-        const {name,email,password,mobile,avatar} = req.body;
+        const {name,email,password,mobile,avatar,role} = req.body;
         let hashPassword = "";
         if(password){
             const salt = await bcrypt.genSalt(10);
@@ -301,6 +303,7 @@ const updateUserDetails = async (req: AuthRequest, res: Response) => {
         if(mobile) updatedData.mobile = mobile;
         if(password) updatedData.password = hashPassword;
         if(avatar) updatedData.avatar = avatar;
+        if(role) updatedData.role = role;
 
         const updatedUser = await prisma.user.update({
             where : {id:userId},

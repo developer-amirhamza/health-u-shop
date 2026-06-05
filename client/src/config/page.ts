@@ -1,8 +1,12 @@
 
+import { basket, discreet, doctor, drop, home_post, home_post1, home_post2, repeat, return_box, speedy } from "@/assets"
 import banner1 from "@/assets/banners/banner1.webp"
 import banner2 from "@/assets/banners/banner2.webp"
 import banner3 from "@/assets/banners/banner3.webp"
 import banner4 from "@/assets/banners/banner4.webp"
+import { GiStethoscope } from "react-icons/gi"
+import { MdOutlineWaterDrop } from "react-icons/md"
+import { RiShoppingBasketLine } from 'react-icons/ri'
 
 
 
@@ -12,40 +16,82 @@ import banner4 from "@/assets/banners/banner4.webp"
 
 
 
-
-export const nav_items = [
-    {
-        label: "Home",
-        options: [{ label: "About Health U", path: "/about" }]
-    },
-    { label: "NDIS", path: "/ndis" },
-    {
-        label: "Services",
+export const footer_nav_items = [
+    {        label: "Shop Now",
         options: [
-            { label: "Community Participation", path: "/community-participation" },
-            { label: "Capacity Building", path: "/capacity-building" },
-            { label: "Support Coordination", path: "/support-coordination" },
-            { label: "Assist In Self-care", path: "/assist-in-self-care" },
-            { label: "Assist In Transport", path: "/assist-in-transport" },
-            { label: "Home Modification", path: "/home-modification" },
-            { label: "Non NDIS Service", path: "/compassion-in-action" },
-            { label: "Gardening/House And Yard", path: "/gardening-house-yard" },
+            { label: "Men", path: "/men" },
+            { label: "Women", path: "/women" },
+            { label: "Family Carers", path: "/family-carers" },
+            { label: "Product Finder", path: "/product-finder" },
         ]
     },
-    { label: "SIL House", path: "/sil-house" },
-    { label: "Compassion in Action", path: "/compassion-in-action" },
     {
-        label: "Events And News",
+        label: "Advice & Support",
         options: [
-            { label: "Current Events", path: "current-events" },
-            { label: "Past Events", path: "past-events" },
+            { label: "Understanding Incontinence", path: "/understanding-incontinence" },
+            { label: "Living with Incontinence", path: "/living-with-incontinence" },
+            { label: "Treatment & Management", path: "/treatment-management" },
+            { label: "Exercise Zone", path: "/exercise-zone" },
+            { label: "Carers & Specialists", path: "/carers-specialists" },
         ]
     },
-    { label: "Career", path: "/career" },
-    { label: "Contact Us", path: "/contact-us" },
-    { label: "Referral", path: "/referral" },
+    {
+        label: "Company",
+        options: [
+            { label: "About Aidble", path: "/about-aidble" },
+            { label: "Sustainability", path: "/sustainability" },
+            { label: "Professionals", path: "/professionals" },
+            { label: "Privacy Policy", path: "/privacy-policy" },
+            { label: "Delivery & Returns", path: "/delivery-returns" },
+        ]
+    },
+    {
+        label: "Get in touch",
+        options: [
+            { label: "Send us a message", path: "/contact-us" },
+            { label: "Facebook", path: "/facebook" },
+            { label: "Instagram", path: "/support-coordination" },
+            { label: "Facebook", path: "/assist-in-self-care" },
+            { label: "Whatsapp", path: "/assist-in-transport" },
+        ]
+    },
+
 ]
 
+export const infographic_cards = {
+    hero:[
+        {label:"Product finder", icon:drop , path:"/products"},
+        {label:"Get Advice", icon:doctor , path:"/"},
+        {label:"Shop now", icon:basket, path:"/products"},
+    ],
+    policies:[
+        {label:"Easy ordering", icon:repeat , path:"/"},
+        {label:"Direct Delivery", icon:speedy , path:"/"},
+        {label:"Discreet Packaging", icon:discreet, path:"/"},
+        {label:"Easy Returns", icon:return_box, path:"/"},
+    ]
+}
 
+export const home_posts = [
+    {
+        title:"Explore TENA's Incontinence Range", subtitle:"",
+        buttons:[{label:"Shop Now", path:"/"}],
+        image:home_post,
+        paragraph:"TENA offers a range of incontinence pads and products that provide expert protection, ensuring you stay secure, dry, and odour-free day and night."
+    },
+    {
+        title:"Advice & Support", subtitle:"Our Community",
+        buttons:[{label:"Learn more", path:"/"}],
+        image:home_post1,
+        paragraph:"Understand more about incontinence, including its causes and treatment options, will enable you to make an informed decision about your choices"
+    },
+    {
+        title:"Use our Product Finder to choose what suits you best", subtitle:"",
+        buttons:[{label:"Shop now", path:"/"},{label:"Learn more", path:"/"}],
+        image:home_post2,
+        paragraph:" This Product Finder has been designed to identify the most suitable product based on the answers to the questions about your situation."
+    }
+
+]
 
 export const banner_slides = [banner1,banner2,banner3,banner4]

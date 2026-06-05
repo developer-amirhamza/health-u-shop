@@ -33,10 +33,8 @@ const Header = () => {
     const user = useSelector((state: RootState) => state.userSlice);
     const router = useRouter()
     const [accessToken, setAccessToken] = useState(null)
-    // const accessToken = localStorage.getItem("accessToken");
     const [openCartMenu, setOpenCartMenu] = useState(false)
     const [showUserMenu, setShowUserMenu] = useState(false);
-    //   const { totalQty, totalPrice } = useGlobalContext()
     const handleCloseUserMenu = () => {
         setShowUserMenu(false)
     }
@@ -61,7 +59,6 @@ const Header = () => {
                 dispatch(fetchUser())
             }
     }, [accessToken, user.status, dispatch]);
-    console.log(accessToken, "accessToken")
     // const handleSignout = async () => {
     //     try {
     //         const response = await Axios({
