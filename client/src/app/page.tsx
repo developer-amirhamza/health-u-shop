@@ -37,16 +37,17 @@ console.log(categories, "categories")
           <CategoryWiseProducts categoryId={category.id} title={category.title} key={index} />
         ))}
       </div>
-      <div className="grid container">
-        {home_posts.map((post,index)=>(
-          <PostCard image={post.image} key={index} title={post.title} subtitle={post.subtitle} paragraph={post.paragraph} buttons={post.buttons} />
-        ))}
-      </div>
       <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 sm:grid-cols-2  container gap-10 w-4/6 ">
         {infographic_cards.policies.map((item,index)=>(
         <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />
       ))}
       </div>
+      <div className="grid container">
+        {home_posts.map((post,index)=>(
+          <PostCard image={post.image} key={index} title={post.title} subtitle={post.subtitle} paragraph={post.paragraph} buttons={post.buttons} />
+        ))}
+      </div>
+
 
     </div>
   );
