@@ -34,7 +34,7 @@ const ProductsContent = () => {
     const categoryId = searchParams.get('category') || '';
     const minPrice = searchParams.get('minPrice') || '';
     const maxPrice = searchParams.get('maxPrice') || '';
-    const sortBy = searchParams.get('sort') || 'newest';
+    const sort = searchParams.get('sort') || 'newest';
     const [selectedCategoryId,setSelectedCategoryId] = useState("")
 
     // State
@@ -57,7 +57,7 @@ const ProductsContent = () => {
 
     // Fetch products with all filters
     const fetchProducts = useCallback(async () => {
-        if (!textSearch && !categoryId && !minPrice && !maxPrice && page === 1 && products.length === 0) {
+        if (!textSearch  && !minPrice && !maxPrice && page === 1 && products.length === 0) {
             setLoading(true);
         } else if (page !== 1) {
             setLoading(true);
@@ -66,10 +66,9 @@ const ProductsContent = () => {
         try {
             const params: any = { page, limit: 20 };
             if (textSearch) params.q = textSearch;
-            if (categoryId) params.category = categoryId;
             if (minPrice) params.minPrice = minPrice;
             if (maxPrice) params.maxPrice = maxPrice;
-            if (sortBy) params.sort = sortBy;
+            if (sort) params.sort = sort;
 
             const response = await Axios({
                 ...SummeryApi.searchProduct,
@@ -91,14 +90,14 @@ const ProductsContent = () => {
         } finally {
             setLoading(false);
         }
-    }, [textSearch, categoryId, minPrice, maxPrice, sortBy, page]);
+    }, [textSearch, categoryId, minPrice, maxPrice, sort, page]);
 
     // Reset page when filters change
     useEffect(() => {
         setPage(1);
         setProducts([]);
         setHasMore(true);
-    }, [textSearch, categoryId, minPrice, maxPrice, sortBy]);
+    }, [textSearch, categoryId, minPrice, maxPrice, sort]);
 
     // Fetch when page changes or filters change
     useEffect(() => {
@@ -223,14 +222,15 @@ const ProductsContent = () => {
                     <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-lg mb-3">Sort By</h3>
                         <select
-                            value={sortBy}
+                            value={sort}
                             onChange={handleSortChange}
                             className="w-full border rounded px-2 py-1 text-sm"
                         >
                             <option value="newest">Newest</option>
                             <option value="price_asc">Price: Low to High</option>
                             <option value="price_desc">Price: High to Low</option>
-                            <option value="popular">Popularity</option>
+                            <option value="oldest">Oldest</option>
+                           //// <option value="popular">Popularity</option>
                         </select>
                     </div>
 

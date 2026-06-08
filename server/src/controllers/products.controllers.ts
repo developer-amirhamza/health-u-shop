@@ -184,10 +184,10 @@ export const searchProducts = async (req: Request, res: Response) => {
       ];
     }
 
-    // ✅ FIX: category is a relation – use slug filter
-    if (category && typeof category === "string") {
-      where.category = { categoryId: category };   // not "category: category"
-    }
+    // // ✅ FIX: category is a relation – use slug filter
+    // if (category && typeof category === "string") {
+    //   where.category = { categoryId: category };   // not "category: category"
+    // }
 
     // Price range
     if (minPrice !== undefined || maxPrice !== undefined) {
@@ -207,6 +207,7 @@ export const searchProducts = async (req: Request, res: Response) => {
     if (sortValue === "price_asc") orderBy = { price: "asc" };
     if (sortValue === "price_desc") orderBy = { price: "desc" };
     if (sortValue === "oldest") orderBy = { createdAt: "asc" };
+    if (sortValue === "newest") orderBy = { createdAt: "desc" };
 
     const [products, totalCount] = await Promise.all([
       prisma.product.findMany({
