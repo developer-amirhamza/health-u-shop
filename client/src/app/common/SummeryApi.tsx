@@ -7,10 +7,10 @@ console.log(baseUrl, "url working ")
 
 export const SummeryApi = {
 
-resetPassword: {
-  url: "/api/user/reset-password",
-  method: "post",
-},
+    resetPassword: {
+        url: "/api/user/reset-password",
+        method: "post",
+    },
     signup: {
         url: "/api/user/signup",
         method: "post",
@@ -189,14 +189,35 @@ resetPassword: {
 
     // SummeryApi additions
 
-getProductBySubcategory: {
-  url: "/api/products/by-subcategory",
-  method: "post",
-},
+    getProductBySubcategory: {
+        url: "/api/products/by-subcategory",
+        method: "post",
+    },
 
-createProduct: {
-  url: "/api/products/create",
-  method: "post",
-},
+    createProduct: {
+        url: "/api/products/create",
+        method: "post",
+    },
+
+    getAllBlogs: {
+        url: "/api/blogs",
+        method: "get",
+    },
+    getBlogBySlug: {
+        url: "/api/blogs",
+        method: "get",
+    },
+    createBlog: {
+        url: "/api/blogs",
+        method: "post",
+    },
+    updateBlog: {
+        url: "/api/blogs",
+        method: "put",
+    },
+    deleteBlog: {
+        url: "/api/blogs",
+        method: "delete",
+    },
 
 };

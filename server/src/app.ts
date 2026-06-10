@@ -12,6 +12,7 @@ import paymentRouter from "./routes/payment.route";
 import categoryRouter from "./routes/category.route";
 import reviewRouter from "./routes/review.routes";
 import subcategoryRouter from "./routes/subcategory.routes";
+import blogRouter from "./routes/blog.routes"
 
 config();
 const app = express();
@@ -38,6 +39,7 @@ app.use("/api/cart",cartRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/payment",paymentRouter);
 app.use("/api/subcategories", subcategoryRouter);
+app.use("/api/blogs", blogRouter);
 
 
 

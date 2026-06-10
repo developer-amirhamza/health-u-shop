@@ -2,13 +2,13 @@
 import { fetchUser } from "@/redux/slices/userSlices";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import Hero from "./components/Hero";
 import CategoryWiseProducts from "./components/CategoryWiseProducts";
 import { fetchCategories } from "@/redux/slices/categorySlice";
 import InfoGraphicCard from "./components/InfoGraphicCard";
 import { home_posts, infographic_cards } from "@/config/page";
 import PostCard from "./components/PostCard";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>()

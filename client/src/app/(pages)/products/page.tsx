@@ -169,7 +169,9 @@ const ProductsContent = () => {
                         <div className="space-y-2">
                             <button
                                 onClick={() => handleCategoryChange('')}
-                                className={`block w-full text-left px-2 py-1 rounded ${!categoryId ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'}`}
+                                className={`block w-full text-left px-2 py-1 rounded
+                                    ////${!categoryId ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'}
+                                    `}
                             >
                                 All Categories
                             </button>
@@ -177,7 +179,9 @@ const ProductsContent = () => {
                                 <button
                                     key={cat.id}
                                     onClick={() => handleCategoryChange(cat.id)}
-                                    className={`block w-full text-left px-2 py-1 rounded ${selectedCategoryId === cat.id ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'}`}
+                                    className={`block w-full text-left px-2 py-1 rounded
+                                        ////${selectedCategoryId === cat.id ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'}
+                                        `}
                                 >
                                     {cat.title}
                                 </button>
