@@ -4,9 +4,6 @@ import banner1 from "@/assets/banners/banner1.webp"
 import banner2 from "@/assets/banners/banner2.webp"
 import banner3 from "@/assets/banners/banner3.webp"
 import banner4 from "@/assets/banners/banner4.webp"
-import { GiStethoscope } from "react-icons/gi"
-import { MdOutlineWaterDrop } from "react-icons/md"
-import { RiShoppingBasketLine } from 'react-icons/ri'
 
 
 
@@ -61,7 +58,7 @@ export const footer_nav_items = [
 export const infographic_cards = {
     hero:[
         {label:"Product finder", icon:drop , path:"/products"},
-        {label:"Get Advice", icon:doctor , path:"/"},
+        {label:"Get Advice", icon:doctor , path:"/blog"},
         {label:"Shop now", icon:basket, path:"/products"},
     ],
     policies:[
@@ -81,13 +78,13 @@ export const home_posts = [
     },
     {
         title:"Advice & Support", subtitle:"Our Community",
-        buttons:[{label:"Learn more", path:"/"}],
+        buttons:[{label:"Learn more", path:"/blog"}],
         image:home_post1,
         paragraph:"Understand more about incontinence, including its causes and treatment options, will enable you to make an informed decision about your choices"
     },
     {
         title:"Use our Product Finder to choose what suits you best", subtitle:"",
-        buttons:[{label:"Shop now", path:"/products"},{label:"Learn more", path:"/"}],
+        buttons:[{label:"Shop now", path:"/products"},{label:"Learn more", path:"/products"}],
         image:home_post2,
         paragraph:" This Product Finder has been designed to identify the most suitable product based on the answers to the questions about your situation."
     }

@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { uploadImageCloudinary } from "../config/cloudinary";
 
 interface AuthRequest extends Request {
-  userId?: string;
+    userId?: string;
 }
 
 const SignUp = async (req: Request, res: Response) => {

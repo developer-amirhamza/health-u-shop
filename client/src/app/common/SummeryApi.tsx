@@ -200,23 +200,27 @@ export const SummeryApi = {
     },
 
     getAllBlogs: {
-        url: "/api/blogs",
+        url: "/api/blogs/all",
         method: "get",
+    },
+    getBlogById: {
+        url: "/api/blogs/by-id",
+        method: "post",
     },
     getBlogBySlug: {
-        url: "/api/blogs",
-        method: "get",
+        url: "/api/blogs/by-slug",
+        method: "post",
     },
     createBlog: {
-        url: "/api/blogs",
+        url: "/api/blogs/create",
         method: "post",
     },
     updateBlog: {
-        url: "/api/blogs",
+        url: "/api/blogs/update",
         method: "put",
     },
     deleteBlog: {
-        url: "/api/blogs",
+        url: "/api/blogs/delete",
         method: "delete",
     },
 

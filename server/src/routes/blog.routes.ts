@@ -1,16 +1,17 @@
 import { Router } from 'express';
-import { createBlog, deleteBlog, getAllBlogs, getBlogBySlug, updateBlog } from '../controllers/blog.controllers';
+import { createBlog, deleteBlog, getAllBlogs, getBlogById, getBlogBySlug, updateBlog } from '../controllers/blog.controllers';
 
 
 const router = Router();
 
 // Public
-router.get('/', getAllBlogs);
-router.get('/:slug', getBlogBySlug);
+router.get('/all', getAllBlogs);
+router.post('/by-slug', getBlogBySlug);
+router.post('/by-id', getBlogById);
 
 // Admin only
-router.post('/',  createBlog);
-router.put('/:id',  updateBlog);
-router.delete('/:id',  deleteBlog);
+router.post('/create',  createBlog);
+router.put('/update',  updateBlog);
+router.delete('/delete',  deleteBlog);
 
 export default router;

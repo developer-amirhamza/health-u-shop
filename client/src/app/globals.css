@@ -66,3 +66,88 @@ body {
     margin: 0 auto;
   }
 }
+
+
+
+
+
+
+/* TipTap editor basic styles */
+.ProseMirror {
+  outline: none;
+  min-height: 300px;
+}
+.ProseMirror p {
+  margin-bottom: 1rem;
+}
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+.ProseMirror blockquote {
+  border-left: 3px solid rgb(37, 42, 49);
+  padding-left: 1rem;
+  font-style: italic;
+  margin: 1rem 0;
+}
+.ProseMirror pre {
+  background: #f1f5f9;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+.ProseMirror code {
+  background: #f1f5f9;
+  padding: 0.2rem 0.3rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+}
+.ProseMirror li{
+  list-style: disc;
+}
+
+
+.ProseMirror .text-left { text-align: left; }
+.ProseMirror .text-center { text-align: center; }
+.ProseMirror .text-right { text-align: right; }
+.ProseMirror .text-justify { text-align: justify; }
+
+
+/* TipTap editor heading styles */
+.ProseMirror h1 {
+  font-size: 2rem !important;
+  font-weight: bold !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 1rem !important;
+}
+.ProseMirror h2 {
+  font-size: 1.5rem !important;
+  font-weight: bold !important;
+  margin-top: 1.25rem !important;
+  margin-bottom: 0.75rem !important;
+}
+.ProseMirror h3 {
+  font-size: 1.25rem !important;
+  font-weight: bold !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0.5rem !important;
+}
+.ProseMirror h4 {
+  font-size: 1.125rem !important;
+  font-weight: bold !important;
+}
+.ProseMirror h5 {
+  font-size: 1rem !important;
+  font-weight: bold !important;
+}
+.ProseMirror h6 {
+  font-size: 0.875rem !important;
+  font-weight: bold !important;
+}

@@ -48,8 +48,7 @@ export const createBlog = async (req: Request, res: Response) => {
 
 export const updateBlog = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-        const { title, content, excerpt, featuredImage, category, tags, isPublished } = req.body;
+        const { id,title, content, excerpt, featuredImage, category, tags, isPublished } = req.body;
         const existing = await prisma.blog.findUnique({ where: { id: id as string } })
         if (!existing) return errorHandler(res, 400, 'The blog is not found');
 
@@ -84,7 +83,7 @@ export const updateBlog = async (req: Request, res: Response) => {
 // DELETE blog (admin only)
 export const deleteBlog = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const { id } = req.body;
         await prisma.blog.delete({ where: { id: id as string } });
         res.json({ success: true, message: 'Blog deleted' });
     } catch (error: any) {
@@ -131,8 +130,25 @@ export const getAllBlogs = async (req: Request, res: Response) => {
 
 export const getBlogBySlug = async (req:Request,res:Response)=>{
     try {
-        const {slug} = req.params;
+        const {slug} = req.body;
+        console.log(req.params,"params")
         const blog = await prisma.blog.findUnique({where:{slug:slug as string}});
+
+        if (!blog) return errorHandler(res, 404, 'Blog not found');
+
+    // Increment views
+    await prisma.blog.update({ where: { id: blog.id }, data: { views: blog.views + 1 } });
+
+    return errorHandler(res,200,"The blog found", false, blog);
+    } catch (error:any) {
+        errorHandler(res,500,error.message || "Internal server error!")
+    }
+};
+
+export const getBlogById = async (req:Request,res:Response)=>{
+    try {
+        const {id} = req.body;
+        const blog = await prisma.blog.findUnique({where:{id:id as string}});
 
         if (!blog) return errorHandler(res, 404, 'Blog not found');
 

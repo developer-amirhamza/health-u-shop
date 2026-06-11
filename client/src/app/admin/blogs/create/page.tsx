@@ -63,8 +63,8 @@ const CreateBlogPage = () => {
     };
 
     return (
-        <div className="container mx-auto p-4 max-w-4xl">
-            <h1 className="text-2xl font-bold mb-6">Create New Blog</h1>
+        <div className="container mx-auto  p-4 max-w-4xl">
+            <h1 className="text-2xl font-bold my-6">Create New Blog</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block font-medium mb-1">Title *</label>
@@ -136,7 +136,7 @@ const CreateBlogPage = () => {
                     />
                     <label htmlFor="isPublished">Publish immediately</label>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex mb-12 gap-3">
                     <button
                         type="submit"
                         disabled={loading}
