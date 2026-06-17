@@ -174,26 +174,46 @@ export const SummeryApi = {
 
     // subcategory
 
-    fetchSubcategoriesByCategory: {
-        url: "/api/subcategories/category/subcategories-by-categories",
-        method: "post",
-    },
-    fetchSubcategoryBySlug: {
-        url: "/api/subcategories",
-        method: "get",
-    },
-    createSubcategory: {
-        url: "/api/subcategories",
-        method: "post",
-    },
-    updateSubcategory: {
-        url: "/api/subcategories",
-        method: "put",
-    },
-    deleteSubcategory: {
-        url: "/api/subcategories",
-        method: "delete",
-    },
+    // fetchSubcategoriesByCategory: {
+    //     url: "/api/subcategories/category/subcategories-by-categories",
+    //     method: "post",
+    // },
+    // fetchSubcategoryBySlug: {
+    //     url: "/api/subcategories",
+    //     method: "get",
+    // },
+    // createSubcategory: {
+    //     url: "/api/subcategories",
+    //     method: "post",
+    // },
+    // updateSubcategory: {
+    //     url: "/api/subcategories",
+    //     method: "put",
+    // },
+    // deleteSubcategory: {
+    //     url: "/api/subcategories",
+    //     method: "delete",
+    // },
+fetchSubcategoriesByCategory: {
+    url: "/api/subcategories/category/subcategories-by-categories",
+    method: "post",
+},
+fetchSubcategoryBySlug: {
+    url: "/api/subcategories/subcategory-by-slug",
+    method: "get",
+},
+createSubcategory: {
+    url: "/api/subcategories/create",
+    method: "post",
+},
+updateSubcategory: {
+    url: "/api/subcategories/update",
+    method: "put",
+},
+deleteSubcategory: {
+    url: "/api/subcategories/delete",
+    method: "delete",
+},
 
     // SummeryApi additions
 

@@ -44,6 +44,11 @@ export const adminNavItems = [
         icon: MdCategory,
         path: "/admin/categories",
     },
+        {
+        label: "Subcategories",
+        icon: MdCategory,
+        path: "/admin/subcategories",
+    },
     {
         label: "Articles",
         icon: RiArticleFill,
