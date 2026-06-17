@@ -114,6 +114,14 @@ export const SummeryApi = {
         url: "/api/orders/lookup",
         method: "get",
     },
+    fetchAllOrdersByAdmin: {
+        url: "/api/orders/admin/get-all-orders",
+        method: "get",
+    },
+    updateOrderByAdmin: {
+        url: "/api/orders/admin/update-order",
+        method: "put",
+    },
 
     // Payment (Stripe)
     createCheckoutSession: {
