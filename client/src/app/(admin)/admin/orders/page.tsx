@@ -159,7 +159,7 @@ const AdminOrdersPage = () => {
         return (
             <div className="container mx-auto p-4">
                 <div className="flex justify-center items-center h-96">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ff8800]"></div>
                 </div>
             </div>
         );
