@@ -111,7 +111,7 @@ const CategoryWiseProductDisplay: React.FC<CategoryWiseProductProps> = ({ catego
     const loadingCardNumber = new Array(6).fill(null);
 
     return (
-        <div className="container mx-auto p-4 relative">
+        <div className="container mx-auto p-4  relative">
             {/* Category Header */}
             <div className="flex items-center justify-between gap-4 mb-2">
                 <h1 className="text-xl capitalize text-neutral-800 font-semibold">{title}</h1>
@@ -164,8 +164,10 @@ const CategoryWiseProductDisplay: React.FC<CategoryWiseProductProps> = ({ catego
                     ) : products.length === 0 ? (
                         <p className="text-neutral-500 py-8">No products in this {activeSubcategoryId ? 'subcategory' : 'category'}</p>
                     ) : (
-                        products.map((product) => (
-                            <ProductCard key={product.id} data={product} />
+                            products.map((product) => (
+                            <div key={product.id} className="max-w-68 shrink-0">
+                                <ProductCard data={product} />
+                            </div>
                         ))
                     )}
                 </div>

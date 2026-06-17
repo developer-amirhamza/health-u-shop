@@ -18,7 +18,7 @@ interface Type {
 
 const UserMenu:React.FC<Type> = ({ close }) => {
     const dispatch = useDispatch();
-    const user = useSelector((state:RootState) => state.userSlice?.user);
+    const {user }= useSelector((state:RootState) => state.userSlice);
     const router = useRouter();
      const handleSignout = async () => {
         try {
@@ -50,7 +50,7 @@ const UserMenu:React.FC<Type> = ({ close }) => {
                 >
                     <span className="">
                         {user?.name || user?.mobile}
-                        {/* <span>{user?.role === "admin" ? "(Admin)" : ""}</span> */}
+                        <span>{user?.role === "ADMIN" ? "(Admin)" : ""}</span>
                          </span>
                     <FaExternalLinkAlt size={16} />
                 </Link>

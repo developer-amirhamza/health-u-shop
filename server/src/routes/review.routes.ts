@@ -4,12 +4,9 @@ import { auth } from "../middlewares/auth";
 
 const router = Router();
 
-
-router.post("/add-review",auth, addReview);
+router.post("/add-review", auth, addReview);
 router.post("/get-reviews", getProductReviews);
-router.put("/update-review", updateReview);
-router.delete("/delete-review", deleteReview);
-
-
+router.put("/update-review", auth, updateReview);
+router.delete("/delete-review", auth, deleteReview);
 
 export default router

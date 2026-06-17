@@ -20,6 +20,7 @@ export default function Home() {
       dispatch(fetchCategories())
     }
   }, [dispatch, status])
+  console.log(user?.role, "role user")
 
   return (
     <div className="grid gap-10 mb-10 h-full bg-[#fffbeb] ">
@@ -29,7 +30,7 @@ export default function Home() {
           <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />
         ))}
       </div>
-      <div className="grid">
+      <div className="grid gap-10">
         {categories.map((category, index) => (
           <CategoryWiseProducts categoryId={category.id} title={category.title} key={index} />
         ))}

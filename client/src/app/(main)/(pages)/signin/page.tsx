@@ -5,6 +5,7 @@ import { fetchUser } from '@/redux/slices/userSlices';
 import { AppDispatch } from '@/redux/store';
 import Axios from '@/utils/Axios';
 import AxiosToastError from '@/utils/AxiosToastError';
+import IsAdmin from '@/utils/IsAdmin';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -52,7 +53,8 @@ const SignIn = () => {
                 dispatch(fetchUser())
                 dispatch(fetchCart())
                 setFormData(initialFormData);
-                router.push("/")
+                const role = response?.data?.data?.user?.role;
+                router.push(IsAdmin(role) ? "/admin" : "/")
             }
         } catch (error) {
             AxiosToastError(error);

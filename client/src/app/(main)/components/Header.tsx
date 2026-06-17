@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { VscSignIn, VscSignOut } from 'react-icons/vsc'
 import AxiosToastError from '@/utils/AxiosToastError'
 import Axios from '@/utils/Axios'
-import { SummeryApi } from '../common/SummeryApi'
+
 import toast from 'react-hot-toast'
 import { fetchCart } from '@/redux/slices/cartSlice'
 import CartMenu from './CartMenu'
@@ -100,7 +100,7 @@ const Header = () => {
                     {/* left side */}
                     <div className="w-full flex gap-3 items-center justify-end  ">
                         {/* login */}
-                        {user.status == "succeeded" && accessToken ? (
+                        {user.status === "succeeded" && accessToken ? (
                             <div className="relative z-100">
                                 {/* <button onClick={handleSignout}
                                     className="text-md font-medium hover:bg-amber-100 cursor-pointer px-3 py-2 rounded hover:text-secondary bg-amber-50 flex items-center gap-2 t text-neutral-800">

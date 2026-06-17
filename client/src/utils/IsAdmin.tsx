@@ -1,7 +1,7 @@
 
 
 const IsAdmin = (user:any)=>{
-    if(user === "admin"){
+    if(user === "ADMIN"){
         return true
     }
     return false
