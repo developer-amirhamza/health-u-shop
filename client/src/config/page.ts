@@ -61,6 +61,11 @@ export const adminNavItems = [
         icon: MdReviews,
         path: "/admin/reviews",
     },
+    {
+    label: "Testimonials",
+    icon: MdReviews,
+    path: "/admin/testimonials",
+},
      {
         label: "Articles",
         icon: RiArticleFill,

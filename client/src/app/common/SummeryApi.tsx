@@ -151,6 +151,28 @@ export const SummeryApi = {
         method: "delete"
     },
 
+        // testimonials
+    getTestimonials: {
+        url: "/api/testimonials",
+        method: "get",
+    },
+    getAllTestimonials: {
+        url: "/api/testimonials/all",
+        method: "get",
+    },
+    createTestimonial: {
+        url: "/api/testimonials/create",
+        method: "post",
+    },
+    updateTestimonial: {
+        url: "/api/testimonials/update",
+        method: "put",
+    },
+    deleteTestimonial: {
+        url: "/api/testimonials/delete",
+        method: "delete",
+    },
+
     // categories
     getAllCategories: {
         url: "/api/categories",
