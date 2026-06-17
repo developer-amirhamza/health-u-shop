@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { VscSignIn, VscSignOut } from 'react-icons/vsc'
 import AxiosToastError from '@/utils/AxiosToastError'
 import Axios from '@/utils/Axios'
-import { SummeryApi } from '../common/SummeryApi'
+
 import toast from 'react-hot-toast'
 import { fetchCart } from '@/redux/slices/cartSlice'
 import CartMenu from './CartMenu'

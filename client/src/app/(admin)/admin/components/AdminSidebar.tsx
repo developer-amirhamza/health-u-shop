@@ -50,7 +50,7 @@ const AdminSidebar: React.FC<Props> = ({ activeSidebar }) => {
                     {adminNavItems.map((item, index) => {
                         const Icon = item?.icon;
                         return (
-                            <li key={index} className="grid w-full hover:bg-blue-900 transition-colors rounded duration-200 px-2 py-3 z-10">
+                            <li key={index} className="grid w-full hover:bg-[#362917] transition-colors rounded duration-200 px-2 py-3 z-10">
                                 {item?.path ? <Link href={`${item?.path}`} onClick={() => handleToggle(index)}
                                     className={`flex items-center gap-3 ${activeSidebar ? "flex-row" : "flex-col"} z-10 w-full cursor-pointer`}
                                 >
