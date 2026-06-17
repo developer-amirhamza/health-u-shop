@@ -1,10 +1,8 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 import { ReduxProvider } from "@/redux/provider";
 import { Toaster } from "react-hot-toast";
-
 
 export const metadata: Metadata = {
   title: "Aidble",
@@ -13,22 +11,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <head>
         <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
       </head>
-      <body   suppressHydrationWarning
-        className={` antialiased`}
-      >
+      <body suppressHydrationWarning className="antialiased">
         <ReduxProvider>
-        <Header/>
-        {children}
-        <Footer/>
-        <Toaster/>
+          {children}
+          <Toaster />
         </ReduxProvider>
       </body>
     </html>
