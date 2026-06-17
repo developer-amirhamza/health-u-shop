@@ -130,7 +130,10 @@ export const SummeryApi = {
     },
 
     // review
-
+        getAllReviews: {
+        url: "/api/reviews/all-reviews",
+        method: "get"
+    },
     addReview: {
         url: "/api/reviews/add-review",
         method: "post"
@@ -174,26 +177,6 @@ export const SummeryApi = {
 
     // subcategory
 
-    // fetchSubcategoriesByCategory: {
-    //     url: "/api/subcategories/category/subcategories-by-categories",
-    //     method: "post",
-    // },
-    // fetchSubcategoryBySlug: {
-    //     url: "/api/subcategories",
-    //     method: "get",
-    // },
-    // createSubcategory: {
-    //     url: "/api/subcategories",
-    //     method: "post",
-    // },
-    // updateSubcategory: {
-    //     url: "/api/subcategories",
-    //     method: "put",
-    // },
-    // deleteSubcategory: {
-    //     url: "/api/subcategories",
-    //     method: "delete",
-    // },
 fetchSubcategoriesByCategory: {
     url: "/api/subcategories/category/subcategories-by-categories",
     method: "post",

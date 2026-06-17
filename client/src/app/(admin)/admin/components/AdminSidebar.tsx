@@ -19,10 +19,10 @@ const AdminSidebar: React.FC<Props> = ({ activeSidebar }) => {
     const handleToggle = (index: number) => {
         setActiveIndex(activeIndex === index ? null : index)
     }
-    console.log(user, "user")
+
     return (
         <div className={` flex flex-col w-full h-full ${!activeSidebar ? "flex" : "max-sm:hidden"} `}>
-            <div className="flex  w-full bg-[#214162] py-3 justify-center px-6 gap-x-5">
+            <div className="flex  w-full bg-[#362917] py-3 justify-center px-6 gap-x-5">
                 <img
                     className="w-20 rounded-full object-cover"
                     src={

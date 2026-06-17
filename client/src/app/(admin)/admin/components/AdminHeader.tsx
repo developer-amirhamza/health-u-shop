@@ -47,10 +47,10 @@ const AdminHeader: React.FC<Props> = ({ sidebar }) => {
         }
     };
     return (
-        <div className="flex w-full h-full max-h-16 bg-blue-950 items-center z-100  ">
+        <div className="flex w-full h-full max-h-16 bg-[#000000] items-center z-100  ">
             <button
                 onClick={sidebar}
-                className="bg-sky-900 cursor-pointer  min-h-full p-4 flex "
+                className="bg-[#fc0404]  cursor-pointer  min-h-full p-4 flex "
             >
                 <IoMenuSharp className="text-white text-3xl " />
             </button>
@@ -59,7 +59,7 @@ const AdminHeader: React.FC<Props> = ({ sidebar }) => {
                 <ul className="flex items-center gap-4 px-2 ">
                     <li className="relative cursor-pointer  h-full text-white">
                         <FaRegBell size={20} />
-                        <span className="absolute bg-emerald-600 text-xs  h-5 w-5 items-center justify-center flex -right-2.5 -top-4 rounded-full p-1">
+                        <span className="absolute bg-[#fc0404] text-xs  h-5 w-5 items-center justify-center flex -right-2.5 -top-4 rounded-full p-1">
                             4
                         </span>
                     </li>
@@ -68,13 +68,13 @@ const AdminHeader: React.FC<Props> = ({ sidebar }) => {
                     </li>
                     <li className="relative cursor-pointer  h-full text-white">
                         <FaRegEnvelope size={20} />
-                        <span className="absolute bg-emerald-600 text-xs  h-5 w-5 items-center justify-center flex -right-2.5 -top-4 rounded-full p-1">
+                        <span className="absolute bg-[#fc0404] text-xs  h-5 w-5 items-center justify-center flex -right-2.5 -top-4 rounded-full p-1">
                             4
                         </span>
                     </li>
                 </ul>
             </div>
-            <div className="bg-sky-900  relative z-100  min-w-fit px-4 py-2 items-center flex ">
+            <div className="bg-[#fc0404] relative z-100  min-w-fit px-4 py-2 items-center flex ">
                 <div className="flex w-full  gap-3 items-center z-100  ">
                     <img
                         className=" w-12  object-cover rounded-full"

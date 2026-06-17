@@ -7,6 +7,31 @@ interface AuthRequest extends Request {
   userId?: string;
 }
 
+// ---------- GET all reviews (admin) ----------
+export const getAllReviews = async (req: Request, res: Response) => {
+  try {
+    const reviews = await prisma.reviews.findMany({
+      include: {
+        user: { select: { id: true, name: true, avatar: true, email: true } },
+        product: { select: { id: true, title: true, images: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const averageRating = reviews.length > 0
+      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      : 0;
+
+    return errorHandler(res, 200, "All reviews retrieved", false, {
+      reviews,
+      totalReviews: reviews.length,
+      averageRating: Math.round(averageRating * 10) / 10,
+    });
+  } catch (error: any) {
+    return errorHandler(res, 500, error.message || "Internal server error");
+  }
+};
+
 // ---------- GET reviews for a product (public) ----------
 export const getProductReviews = async (req: Request, res: Response) => {
   try {

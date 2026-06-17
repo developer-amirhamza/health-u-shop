@@ -10,6 +10,7 @@ import { RiArticleFill, RiPriceTag2Fill } from "react-icons/ri"
 import { AiFillDashboard, AiFillProduct } from "react-icons/ai";
 import { GrArticle } from "react-icons/gr";
 import { MdCategory, MdReviews } from "react-icons/md"
+import { BiSolidCategory } from "react-icons/bi";
 
 
 
@@ -20,7 +21,7 @@ import { MdCategory, MdReviews } from "react-icons/md"
 export const adminNavItems = [
     {
         label: "Dashboard",
-        path: "/admin/admin-profile",
+        path: "/admin",
         icon: AiFillDashboard,
     },
     {
@@ -41,7 +42,7 @@ export const adminNavItems = [
     },
     {
         label: "Categories",
-        icon: MdCategory,
+        icon: BiSolidCategory,
         path: "/admin/categories",
     },
         {
@@ -50,25 +51,22 @@ export const adminNavItems = [
         path: "/admin/subcategories",
     },
     {
-        label: "Articles",
-        icon: RiArticleFill,
-        path: "/admin/articles",
-    },
-    {
         label: "All Users",
         icon: FaUsersGear,
         path: "/admin/users"
     },
+
     {
         label: "Reviews",
         icon: MdReviews,
         path: "/admin/reviews",
     },
-    {
-        label: "Contact",
-        icon: FaNewspaper,
-        path: "/admin/admin-contact",
+     {
+        label: "Articles",
+        icon: RiArticleFill,
+        path: "/admin/articles",
     },
+
 ]
 
 export const footer_nav_items = [

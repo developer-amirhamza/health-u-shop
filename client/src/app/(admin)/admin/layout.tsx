@@ -54,12 +54,12 @@ const AdminLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     return (
         <>
             <div className="flex w-full h-screen items-start bg-slate-100 overflow-x-hidden transition-all duration-700">
-                <div className={`w-full max-w-fit sticky h-screen overflow-y-auto no-scrollbar bg-blue-950 z-50 flex`}>
+                <div className={`w-full max-w-fit sticky h-screen overflow-y-auto no-scrollbar bg-[#000000] z-50 flex`}>
                     <AdminSidebar activeSidebar={showSidebar} />
                 </div>
                 <div className="w-full h-screen flex  flex-col">
                     <AdminHeader sidebar={() => setShowSidebar(!showSidebar)} />
-                    <div className=" no-scrollbar overflow-y-auto">
+                    <div className=" no-scrollbar py-5 overflow-y-auto">
                         {children}
                     </div>
                 </div>

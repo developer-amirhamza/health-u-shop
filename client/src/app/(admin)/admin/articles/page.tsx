@@ -114,7 +114,7 @@ const AdminBlogsPage = () => {
     return (
         <div className="container mx-auto  p-4  ">
       <div className="flex justify-between  items-center my-5 mb-6">
-        <h1 className="text-2xl font-bold">Blogs</h1>
+        <h1 className="text-2xl font-bold">Articles</h1>
                 <Link
                     href="/admin/blogs/create"
                     className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
