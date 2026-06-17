@@ -3,14 +3,15 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/navigation'
+import IsAdmin from '@/utils/IsAdmin'
 
 const AdminDashboard = () => {
     const { user } = useSelector((state: RootState) => state.userSlice)
     const router = useRouter()
 
-    useEffect(() => {
-        // Check if user is admin
-        if (user && user.role !== "USER") {
+  useEffect(() => {
+        // Redirect non-admins away from the dashboard.
+        if (user && !IsAdmin(user.role)) {
             router.push("/")
         }
     }, [user, router])

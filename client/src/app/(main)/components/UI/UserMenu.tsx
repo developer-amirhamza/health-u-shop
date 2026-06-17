@@ -5,7 +5,7 @@ import Axios from "@/utils/Axios";
 import AxiosToastError from "@/utils/AxiosToastError";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,19 +19,40 @@ interface Type {
 const UserMenu:React.FC<Type> = ({ close }) => {
     const dispatch = useDispatch();
     const {user }= useSelector((state:RootState) => state.userSlice);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
-     const handleSignout = async () => {
+    //  const handleSignout = async () => {
+    //     try {
+    //         const response = await Axios({
+    //             ...SummeryApi.signout,
+    //         });
+    //         dispatch(setLogout());
+    //         localStorage.clear();
+    //         toast.success(response?.data?.message);
+    //     } catch (error) {
+    //         AxiosToastError(error);
+    //     }
+    // };
+
+    const handleSignout = async () => {
         try {
+            setLoading(true);
             const response = await Axios({
                 ...SummeryApi.signout,
             });
-            dispatch(setLogout());
-            localStorage.clear();
-            toast.success(response?.data?.message);
+            if (response.data?.success) {
+                toast.success(response.data?.message);
+                dispatch(setLogout());
+                localStorage.clear();
+                router.push("/");
+            }
         } catch (error) {
             AxiosToastError(error);
+        } finally {
+            setLoading(false);
         }
     };
+
 
     const handleCloseMenu = () => {
         if (close) {
