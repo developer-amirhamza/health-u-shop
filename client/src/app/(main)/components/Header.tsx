@@ -1,158 +1,200 @@
 "use client"
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { IoCall } from 'react-icons/io5'
+import { MdVerified } from 'react-icons/md'
+import { FaTruck } from 'react-icons/fa'
 import logo from "@/assets/header-logosr.png"
-import { IoMdCart } from 'react-icons/io'
-import { TiShoppingCart } from 'react-icons/ti'
-import { FaSearch } from 'react-icons/fa'
-
-
-import { useRouter } from 'next/navigation'
-import { VscSignIn, VscSignOut } from 'react-icons/vsc'
-import AxiosToastError from '@/utils/AxiosToastError'
-import Axios from '@/utils/Axios'
-
-import toast from 'react-hot-toast'
-import { fetchCart } from '@/redux/slices/cartSlice'
-import CartMenu from './CartMenu'
-import { DisplayPriceInAud } from '@/utils/DisplayPriceInAud'
 import { BsCart4 } from 'react-icons/bs'
-import { fetchUser, setLogout } from '@/redux/slices/userSlices'
+import { GoTriangleDown, GoTriangleUp } from 'react-icons/go'
+import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/redux/store'
+import { fetchCart } from '@/redux/slices/cartSlice'
+import { fetchUser } from '@/redux/slices/userSlices'
+import { DisplayPriceInAud } from '@/utils/DisplayPriceInAud'
+import CartMenu from './CartMenu'
 import Search from './Search'
 import Link from 'next/link'
-import { GoTriangleDown, GoTriangleUp } from 'react-icons/go'
 import UserMenu from './UI/UserMenu'
 
+const NAV_LINKS = [
+    { label: 'Shop', href: '/products' },
+    { label: 'NDIS Support', href: '/ndis-support' },
+    { label: 'Brands', href: '/brands' },
+    { label: 'Care Guides', href: '/blog' },
+    { label: 'Contact', href: '/contact-us' },
+]
 
 const Header = () => {
-    const dispatch = useDispatch<AppDispatch>();
-    const { cart, status, error } = useSelector((state: RootState) => state.cartSlice);
-    const user = useSelector((state: RootState) => state.userSlice);
+    const dispatch = useDispatch<AppDispatch>()
+    const { cart, status } = useSelector((state: RootState) => state.cartSlice)
+    const user = useSelector((state: RootState) => state.userSlice)
     const router = useRouter()
-    const [accessToken, setAccessToken] = useState(null)
+
+    const [accessToken, setAccessToken] = useState<string | null>(null)
     const [openCartMenu, setOpenCartMenu] = useState(false)
-    const [showUserMenu, setShowUserMenu] = useState(false);
-    const handleCloseUserMenu = () => {
-        setShowUserMenu(false)
-    }
+    const [showUserMenu, setShowUserMenu] = useState(false)
+    const [topbarVisible, setTopbarVisible] = useState(true)
+    const lastScrollY = useRef(0)
 
     useEffect(() => {
-        if (status === "idle") {
-            dispatch(fetchCart())
+        const handleScroll = () => {
+            const currentY = window.scrollY
+            setTopbarVisible(currentY <= 10 || currentY < lastScrollY.current)
+            lastScrollY.current = currentY
         }
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
+    useEffect(() => {
+        if (status === 'idle') dispatch(fetchCart())
     }, [status, dispatch])
 
-    const subtotal = cart?.items?.reduce((sum, item) => sum + (item.product.price * item.quantity), 0) ?? 0;
-    // Get token from localStorage after mount (client-side only)
     useEffect(() => {
-        const token:any = localStorage.getItem("accessToken");
-        setAccessToken(token);
+        const token = localStorage.getItem('accessToken')
+        setAccessToken(token)
     }, [])
-    // Fetch user if token exists and status is idle
 
     useEffect(() => {
-        if (user.status)
-            if (accessToken && user.status === "idle") {
-                dispatch(fetchUser())
-            }
-    }, [accessToken, user.status, dispatch]);
-    // const handleSignout = async () => {
-    //     try {
-    //         const response = await Axios({
-    //             ...SummeryApi.signout,
-    //         });
-    //         dispatch(setLogout());
-    //         localStorage.clear();
-    //         toast.success(response?.data?.message);
-    //     } catch (error) {
-    //         AxiosToastError(error);
-    //     }
-    // };
+        if (accessToken && user.status === 'idle') {
+            dispatch(fetchUser())
+        }
+    }, [accessToken, user.status, dispatch])
+
+    const subtotal = cart?.items?.reduce(
+        (sum, item) => sum + item.product.price * item.quantity, 0
+    ) ?? 0
+
+    const cartCount = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0
+
     return (
-        <div className="">
-            {/* top bar */}
-            <div className=" w-full max-h-10 bg-primary text-foreground flex py-1 justify-center items-center ">
-                <div className="container flex items-center justify-end w-full">
-                    <div className="flex w-2/6"></div>
-                    <div className="flex justify-between w-full text-white font-medium items-center">
-                        <p className="text-lg  text-end"> Looking for something specific? Click here! </p>
-                        <div className="flex items-center gap-3 font-medium ">
+        <div className="sticky top-0 z-50 shadow-sm">
+            {/* Top bar */}
+            <div
+                className={`bg-[#1a56db] text-white transition-all duration-300 overflow-hidden ${
+                    topbarVisible ? 'max-h-10 opacity-100' : 'max-h-0 opacity-0'
+                }`}
+            >
+                <div className="container mx-auto flex items-center justify-between px-4 h-9 text-sm">
+                    <div className="flex items-center gap-2">
+                        <FaTruck className="text-blue-200 shrink-0" />
+                        <span className="font-medium">Free, discreet shipping Australia-wide on orders over $99</span>
+                    </div>
+                    <div className="hidden md:flex items-center gap-6">
+                        <a href="tel:1300243253" className="flex items-center gap-1.5 hover:text-blue-200 transition-colors">
                             <IoCall />
-                            <a className='font-medium text-lg ' href="tel:+0481707758">0481 707 758</a>
+                            <span className="font-semibold">1300 243 253</span>
+                        </a>
+                        <div className="flex items-center gap-1.5">
+                            <MdVerified className="text-blue-200" />
+                            <span>Registered NDIS provider</span>
                         </div>
                     </div>
                 </div>
             </div>
-            {/* nav bar */}
-            <div className="flex w-full bg-neutral-200 h-full items-center ">
-                {/* logo */}
-                <div className="container flex items-center justify-between gap-4 w-full">
-                    <Link href={"/"} className="flex  w-full justify-start items-start">
-                        <Image src={logo} className='object-scale-down h-20 py-1 mr-32 ' alt='Health U Shop' />
+
+            {/* Main navbar */}
+            <div className="bg-white border-b border-gray-100">
+                <div className=" mx-auto flex items-center gap-4 px-4 h-16">
+
+                    {/* Logo */}
+                    <Link href="/" className="shrink-0 -ml-5 flex items-center">
+                        <Image
+                            src={logo}
+                            alt="Health U Shop"
+                            className="h-13 w-auto object-contain"
+                            priority
+                        />
                     </Link>
-                    {/* search bar */}
-                    <div className=" hidden  lg:flex">
+
+                    {/* Nav links */}
+                    <nav className="hidden lg:flex items-center -ml-5 gap-1 ">
+                        {NAV_LINKS.map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-[#1a56db] hover:bg-blue-50 rounded-md transition-colors whitespace-nowrap"
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
+                    </nav>
+
+                    {/* Search */}
+                    <div className="hidden lg:flex flex-1 max-w-md mx-1">
                         <Search />
                     </div>
-                    {/* left side */}
-                    <div className="w-full flex gap-3 items-center justify-end  ">
-                        {/* login */}
-                        {user.status === "succeeded" && accessToken ? (
-                            <div className="relative z-100">
-                                {/* <button onClick={handleSignout}
-                                    className="text-md font-medium hover:bg-amber-100 cursor-pointer px-3 py-2 rounded hover:text-secondary bg-amber-50 flex items-center gap-2 t text-neutral-800">
-                                    <VscSignOut size={24} /> <span className="text-xl font-bold  ">Signout</span>
-                                </button> */}
 
-                                <button onClick={() => setShowUserMenu(!showUserMenu)}
-                                className="text-md flex items-center font-medium cursor-pointer hover:bg-neutral-200 px-3 py-2 rounded  text-neutral-800">
-                                <p>Account</p>
-                                {showUserMenu ? (<GoTriangleUp size={20} />) : (<GoTriangleDown size={20} />)}
+                    {/* Right actions */}
+                    <div className="flex items-center gap-2 ml-auto shrink-0">
+
+                        {/* Free Samples */}
+                        <Link
+                            href="/free-samples"
+                            className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-[#1a56db] hover:bg-blue-700 text-white text-sm font-medium rounded-full transition-colors whitespace-nowrap"
+                        >
+                            Free Samples
+                        </Link>
+
+                        {/* Account */}
+                        {user.status === 'succeeded' && accessToken ? (
+                            <div className="relative">
+                                <button
+                                    onClick={() => setShowUserMenu(!showUserMenu)}
+                                    className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                                >
+                                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    {/* <span className="hidden sm:inline">Account</span> */}
+                                    {showUserMenu ? <GoTriangleUp size={14} /> : <GoTriangleDown size={14} />}
                                 </button>
-                                {showUserMenu &&
-                                <div className="absolute top-12 z-100 right-0 bg-white shadow-md w-40 rounded-sm transition-all duration-500">
-                                    <UserMenu close={handleCloseUserMenu} />
-                                </div>
-                                }
+                                {showUserMenu && (
+                                    <div className="absolute top-11 right-0 bg-white shadow-lg w-44 rounded-lg border border-gray-100 z-50">
+                                        <UserMenu close={() => setShowUserMenu(false)} />
+                                    </div>
+                                )}
                             </div>
                         ) : (
-                            <button onClick={() => router.push("/signin")}
-                                className="text-md font-medium hover:bg-amber-100 cursor-pointer px-3 py-2 rounded hover:text-secondary bg-amber-50 flex items-center gap-2 t text-neutral-800">
-                                <VscSignIn size={24} /> <span className="text-xl font-bold ">Signin</span>
+                            <button
+                                onClick={() => router.push('/signin')}
+                                className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                            >
+                                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                {/* <span className="hidden sm:inline">Sign in</span> */}
                             </button>
+                        )}
 
-
-                        )
-                        }
-                        {/* cart */}
-                        <div onClick={() => setOpenCartMenu(true)} className=" flex gap-1.5 bg-primary items-center cursor-pointer justify-between py-2.5 px-2 rounded-md text-white">
-                            <div className=" animate-bounce">
-                                <BsCart4 size={28} />
-                            </div>
-                            <div className=" font-bold text-sm ">
-                                {cart?.items[0] ? (
-                                    <div >
-                                        {/* <p>{totalQty} Items</p> */}
-                                        <p>{DisplayPriceInAud(subtotal)}</p>
-                                    </div>
-                                ) : (<p>My Cart</p>)}
-                            </div>
-                        </div>
-                        {openCartMenu && <CartMenu close={() => setOpenCartMenu(false)} />}
-
-                        {/* <Link href={"/signin"} className="text-xl font-medium text-neutral-800 z-50 cursor-pointer hover:text-secondary transition-colors duration-300 ">Login</Link>
-                        <div className="flex gap-1.5 bg-primary items-center justify-between py-2.5 px-2 rounded-md text-white ">
-                            <TiShoppingCart size={25} className=' animate-bounce ' />
-                            <p className="font-medium  ">My Cart</p>
-                        </div> */}
+                        {/* Cart */}
+                        <button
+                            onClick={() => setOpenCartMenu(true)}
+                            className="relative flex items-center gap-2 bg-[#1a56db] hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors"
+                        >
+                            <BsCart4 size={20} />
+                            {cartCount > 0 && (
+                                <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+                                    {cartCount}
+                                </span>
+                            )}
+                            <span className="hidden sm:inline text-sm font-medium">
+                                {cart?.items?.[0] ? DisplayPriceInAud(subtotal) : 'My Cart'}
+                            </span>
+                        </button>
                     </div>
                 </div>
-            </div >
 
-        </div >
+                {/* Mobile search */}
+                <div className="lg:hidden px-4 pb-3">
+                    <Search />
+                </div>
+            </div>
+
+            {openCartMenu && <CartMenu close={() => setOpenCartMenu(false)} />}
+        </div>
     )
 }
 

@@ -24,7 +24,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const sendEmail = async ({ sendTo, subject, html, attachments }: Type) => {
     try {
         const { data, error } = await resend.emails.send({
-            from: 'Health U Shop <onboarding@resend.dev>',
+            from: 'Aidble Care Pty Ltd <onboarding@resend.dev>',
             to: sendTo,
             subject: subject,
             html: html,
@@ -37,4 +37,5 @@ export const sendEmail = async ({ sendTo, subject, html, attachments }: Type) =>
     } catch (error: any) {
         console.log(error.message);
     }
+
 };

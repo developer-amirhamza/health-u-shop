@@ -112,7 +112,7 @@ export const placeOrder = async (req: AuthRequest, res: Response) => {
             generateInvoicePdf(invoiceData)
                 .then((pdfBuffer) =>
                     sendEmail({
-                        sendTo: email,
+                        sendTo:'amirhamza27940@gmail.com', // your Resend account email
                         subject: `Order Confirmed – ${order.orderNumber}`,
                         html: orderConfirmationTemplate(invoiceData),
                         attachments: [{ filename: `invoice-${order.orderNumber}.pdf`, content: pdfBuffer }],
