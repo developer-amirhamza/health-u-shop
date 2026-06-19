@@ -10,6 +10,8 @@ import { home_posts, infographic_cards } from "@/config/page";
 import PostCard from "./components/PostCard";
 import { useDispatch, useSelector } from "react-redux";
 import TestimonialsSection from "./components/TestimonialsSection";
+import CareGuidesSection from "./components/CareGuidesSection";
+import ProductFinderWizard from "./components/ProductFinderWizard";
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>()
@@ -26,6 +28,7 @@ export default function Home() {
   return (
     <div className="grid gap-10 mb-10 h-full bg-[#fffbeb] ">
       <Hero />
+      <ProductFinderWizard />
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1  container gap-10 w-4/6 ">
         {infographic_cards.hero.map((item, index) => (
           <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />
@@ -41,9 +44,8 @@ export default function Home() {
           <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />
         ))}
       </div>
-
+      <CareGuidesSection/>
       <TestimonialsSection />
-
       <div className="grid container">
         {home_posts.map((post, index) => (
           <PostCard image={post.image} key={index} title={post.title} subtitle={post.subtitle} paragraph={post.paragraph} buttons={post.buttons} />

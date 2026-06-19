@@ -73,7 +73,7 @@ const Header = () => {
         <div className="sticky top-0 z-50 shadow-sm">
             {/* Top bar */}
             <div
-                className={`bg-[#1a56db] text-white transition-all duration-300 overflow-hidden ${
+                className={`bg-[#0d1b2e] text-white transition-all duration-300 overflow-hidden ${
                     topbarVisible ? 'max-h-10 opacity-100' : 'max-h-0 opacity-0'
                 }`}
             >
@@ -133,7 +133,7 @@ const Header = () => {
                         {/* Free Samples */}
                         <Link
                             href="/free-samples"
-                            className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-[#1a56db] hover:bg-blue-700 text-white text-sm font-medium rounded-full transition-colors whitespace-nowrap"
+                            className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-red-600 hover:bg-red-700  text-white text-sm font-medium rounded-full transition-colors whitespace-nowrap"
                         >
                             Free Samples
                         </Link>
@@ -172,11 +172,11 @@ const Header = () => {
                         {/* Cart */}
                         <button
                             onClick={() => setOpenCartMenu(true)}
-                            className="relative flex items-center gap-2 bg-[#1a56db] hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors"
+                            className="relative flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg transition-colors"
                         >
                             <BsCart4 size={20} />
                             {cartCount > 0 && (
-                                <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+                                <span className="absolute -top-1.5 -right-1.5 bg-amber-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
                                     {cartCount}
                                 </span>
                             )}
