@@ -2,10 +2,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fffbeb;
+  --background: #F7F4EF;
   --foreground: #171717;
-  --primary:#fe0000;
-  --secondary:#ffa500;
+  --primary:#EDE6DC;
+  --primary-hover:#ccc4b8;
+  --secondary:#4F5B3A;
+  --text:#3D3C3B;
 }
 
 @theme inline {
@@ -14,7 +16,9 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-primary:var(--primary);
+  --color-primary-hover:var(--primary-hover);
   --color-secondary:var(--secondary);
+  --color-text:var(--text)
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -25,7 +29,7 @@
 } */
 
 body {
-  background: #fffbeb;
+  background: #F7F4EF;
   color: var(--foreground);
   font-family: "Poppins", sans-serif;
   overflow-x: hidden;

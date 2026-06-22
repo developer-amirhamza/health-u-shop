@@ -74,7 +74,7 @@ const Header = () => {
     return (
         <div className="">
             {/* top bar */}
-            <div className=" w-full max-h-10 bg-primary text-foreground flex py-1 justify-center items-center ">
+            <div className=" w-full max-h-10 bg-secondary text-foreground flex py-1 justify-center items-center ">
                 <div className="container flex items-center justify-end w-full">
                     <div className="flex w-2/6"></div>
                     <div className="flex justify-between w-full text-white font-medium items-center">
@@ -128,7 +128,7 @@ const Header = () => {
                         )
                         }
                         {/* cart */}
-                        <div onClick={() => setOpenCartMenu(true)} className=" flex gap-1.5 bg-primary items-center cursor-pointer justify-between py-2.5 px-2 rounded-md text-white">
+                        <div onClick={() => setOpenCartMenu(true)} className=" flex gap-1.5 bg-secondary items-center cursor-pointer justify-between py-2.5 px-2 rounded-md text-white">
                             <div className=" animate-bounce">
                                 <BsCart4 size={28} />
                             </div>

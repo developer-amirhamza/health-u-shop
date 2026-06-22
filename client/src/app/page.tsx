@@ -22,7 +22,7 @@ export default function Home() {
   }, [dispatch, status])
 
   return (
-    <div className="grid gap-10 mb-10 h-full bg-[#fffbeb] ">
+    <div className="grid gap-10 mb-10 h-full bg-background">
       <Hero />
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1  container gap-10 w-4/6 ">
         {infographic_cards.hero.map((item, index) => (

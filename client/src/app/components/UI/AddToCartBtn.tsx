@@ -111,14 +111,14 @@ const AddToCartButton: React.FC<Type> = ({ data }) => {
                 <div className="flex items-center gap-0.5">
                     <button
                         onClick={decreaseQty}
-                        className="text-white bg-green-600 hover:bg-green-700 cursor-pointer rounded-sm py-1 px-1"
+                        className="text-white bg-secondary  cursor-pointer rounded-sm py-1 px-1"
                     >
                         <FaMinus />
                     </button>
                     <p className="mx-1 font-semibold text-neutral-700 min-w-6 text-center">{quantity}</p>
                     <button
                         onClick={increaseQty}
-                        className="text-white bg-green-600 hover:bg-green-700 cursor-pointer rounded-sm py-1 px-1"
+                        className="text-white bg-secondary  cursor-pointer rounded-sm py-1 px-1"
                     >
                         <FaPlus />
                     </button>
@@ -126,7 +126,7 @@ const AddToCartButton: React.FC<Type> = ({ data }) => {
             ) : (
                 <button
                     onClick={handleAddToCart}
-                    className="px-2 py-1 rounded text-white font-medium hover:bg-green-700 bg-green-600"
+                    className="px-2 py-1 rounded text-white font-medium bg-secondary "
                     disabled={loading}
                 >
                     {loading ? <Loader className="max-h-5 max-w-5" /> : "Add"}

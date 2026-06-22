@@ -122,7 +122,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
       <div className="w-px h-6 bg-gray-300 mx-1" />
 
       {/* Code block & Horizontal rule */}
-      <button type="button" onClick={() => editor.chain().focus().toggleCodeBlock().run()} className={buttonClass(editor.isActive('codeBlock'))}>
+      <button type="button" onClick={() => editor.chain().focus().toggleLi().run()} className={buttonClass(editor.isActive('codeBlock'))}>
         <FaCode />
       </button>
       <button type="button" onClick={() => editor.chain().focus().setHorizontalRule().run()} className={buttonClass(false)}>

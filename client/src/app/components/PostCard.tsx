@@ -16,14 +16,14 @@ const PostCard: React.FC<Type> = ({ title, subtitle, buttons, paragraph, image }
                 <Image src={image} alt={title} />
             </div>
             <div className="grid place-content-start place-items-center gap-5 ">
-                <span className="text-base text-center uppercase tracking-widest">{subtitle}</span>
-                <h1 className="text-4xl text-center font-semibold">{title} </h1>
-                <p className="text-base text-center font-medium">{paragraph} </p>
+                <span className="text-base text-center text-text uppercase tracking-widest">{subtitle}</span>
+                <h1 className="text-4xl text-center text-text font-semibold">{title} </h1>
+                <p className="text-base text-center text-text font-medium">{paragraph} </p>
                 <div className="flex gap-5 items-center justify-center ">
                     {buttons.map((item: any, index: any) => {
                         return (
                             <Link key={index} href={item.path}
-                                className='first:bg-primary first:text-white px-3.5 py-1.5 rounded-full  '
+                                className='first:bg-secondary first:text-white px-3.5 py-1.5 rounded-full  '
                             >{item.label}</Link>
                         )
                     })}

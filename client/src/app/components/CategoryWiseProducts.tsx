@@ -125,14 +125,14 @@ const CategoryWiseProductDisplay: React.FC<CategoryWiseProductProps> = ({ catego
 
             {/* Subcategories Tabs (horizontal scroll) */}
             {subcategories.length > 0 && (
-                <div className="relative mb-4">
+                <div className="relative mb-4 ">
                     <div className="flex overflow-x-auto scroll-smooth no-scrollbar gap-2 pb-2">
                         {/* "All" button to show all products in category */}
                         <button
                             onClick={() => handleSubcategoryClick(null)}
                             className={`px-3 py-1 rounded-full text-sm whitespace-nowrap transition ${activeSubcategoryId === null
-                                    ? 'bg-green-600 text-white'
-                                    : 'bg-gray-100 text-neutral-700 hover:bg-gray-200'
+                                    ? 'bg-secondary text-background'
+                                    : 'bg-primary text-neutral-700 hover:bg-primary-hover'
                                 }`}
                         >
                             All
@@ -142,8 +142,8 @@ const CategoryWiseProductDisplay: React.FC<CategoryWiseProductProps> = ({ catego
                                 key={sub.id}
                                 onClick={() => handleSubcategoryClick(sub.id)}
                                 className={`px-3 py-1 rounded-full text-sm whitespace-nowrap transition ${activeSubcategoryId === sub.id
-                                        ? 'bg-green-600 text-white'
-                                        : 'bg-gray-100 text-neutral-700 hover:bg-gray-200'
+                                        ? 'bg-secondary text-background'
+                                        : 'bg-primary text-neutral-700 hover:bg-primary-hover'
                                     }`}
                             >
                                 {sub.title}
@@ -156,15 +156,14 @@ const CategoryWiseProductDisplay: React.FC<CategoryWiseProductProps> = ({ catego
             {/* Products Carousel */}
             <div className="relative">
                 <div
-                    className="flex overflow-x-auto overflow-y-hidden scroll-smooth no-scrollbar gap-4"
+                    className="flex overflow-x-auto overflow-y-hidden pb-10 scroll-smooth no-scrollbar gap-4"
                     ref={containerRef}
                 >
                     {loading ? (
                         loadingCardNumber.map((_, idx) => <CardLoader key={idx} />)
                     ) : products.length === 0 ? (
                         <p className="text-neutral-500 py-8">No products in this {activeSubcategoryId ? 'subcategory' : 'category'}</p>
-                    ) : (
-                        products.map((product) => (
+                    ) : (products.map((product,index) => (
                             <ProductCard key={product.id} data={product} />
                         ))
                     )}
