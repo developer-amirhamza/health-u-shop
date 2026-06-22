@@ -50,10 +50,10 @@ const ProductCard: React.FC<Type> = ({ data }) => {
     return (
         <div
             onClick={() => router.push(url)}
-            className="group flex flex-col bg-white border border-gray-200 rounded-2xl overflow-hidden cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full"
+            className="group flex flex-col bg-background border border-primary rounded-2xl overflow-hidden cursor-pointer shadow-xl hover:-translate-y-1 transition-all duration-300 w-full"
         >
             {/* Image + badges */}
-            <div className="relative bg-gray-100 aspect-square overflow-hidden">
+            <div className="relative bg-primary aspect-square overflow-hidden">
                 <img
                     src={data?.images?.[0]}
                     alt={data?.title}
@@ -62,12 +62,12 @@ const ProductCard: React.FC<Type> = ({ data }) => {
 
                 <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5">
                     {highlight && (
-                        <span className="px-3 py-1 rounded-full bg-blue-600 text-white text-xs font-semibold shadow">
+                        <span className="px-3 py-1 rounded-full bg-green-600 text-white text-xs font-semibold shadow">
                             {highlight}
                         </span>
                     )}
                     {hasDiscount && (
-                        <span className="px-3 py-1 rounded-full bg-red-500 text-white text-xs font-bold shadow">
+                        <span className="px-3 py-1 rounded-full bg-secondary text-white text-xs font-bold shadow">
                             {discount}% OFF
                         </span>
                     )}
@@ -75,7 +75,7 @@ const ProductCard: React.FC<Type> = ({ data }) => {
 
                 <div className="absolute top-3 right-3">
                     <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-white text-gray-700 text-xs font-semibold shadow">
-                        NDIS <span className="text-blue-600">✓</span>
+                        NDIS <span className="text-green-600">✓</span>
                     </span>
                 </div>
             </div>

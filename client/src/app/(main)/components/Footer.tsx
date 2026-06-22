@@ -33,7 +33,7 @@ const COMPANY_LINKS = [
 
 const Footer = () => {
     return (
-        <footer className="w-full bg-[#0d1b2e] py-12 text-white">
+        <footer className="w-full bg-primary py-12 text-text">
 
             {/* Main footer content */}
             <div className="container mx-auto px-6 py-14  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
@@ -42,19 +42,19 @@ const Footer = () => {
                 <div className="flex flex-col gap-5">
                      <Image src={logo} alt='Health U Australia' className='  max-w-56 max-h-40 h-full  w-full justify-self-start items-center-safe   ' />
 
-                    <p className="text-[#94a3b8] text-sm leading-relaxed">
+                    <p className="text-text text-sm leading-relaxed">
                         Aidble Care Pty Ltd is a registered NDIS provider supplying continence and personal care products to Australian families, carers and aged-care facilities.
                     </p>
                 </div>
 
                 {/* Shop column */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-white mb-1">Shop</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-text mb-1">Shop</h3>
                     {SHOP_LINKS.map((link) => (
                         <Link
                             key={link.label}
                             href={link.href}
-                            className="text-[#94a3b8] hover:text-white text-sm transition-colors"
+                            className="text-text text-sm transition-colors"
                         >
                             {link.label}
                         </Link>
@@ -63,12 +63,12 @@ const Footer = () => {
 
                 {/* Support column */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-white mb-1">Support</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-text mb-1">Support</h3>
                     {SUPPORT_LINKS.map((link) => (
                         <Link
                             key={link.label}
                             href={link.href}
-                            className="text-[#94a3b8] hover:text-white text-sm transition-colors"
+                            className="text-text text-sm transition-colors"
                         >
                             {link.label}
                         </Link>
@@ -77,12 +77,12 @@ const Footer = () => {
 
                 {/* Company column */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-white mb-1">Company</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-text mb-1">Company</h3>
                     {COMPANY_LINKS.map((link) => (
                         <Link
                             key={link.label}
                             href={link.href}
-                            className="text-[#94a3b8] hover:text-white text-sm transition-colors"
+                            className="text-text text-sm transition-colors"
                         >
                             {link.label}
                         </Link>
@@ -90,49 +90,48 @@ const Footer = () => {
                 </div>
                 {/* Contact info */}
                 <div className="flex flex-col gap-4">
-                  <h3 className="text-xs font-bold uppercase tracking-widest text-white mb-1">Company</h3>
-                  <div className="flex flex-col gap-3 text-sm text-[#94a3b8]">
-                        <a href="tel:1300243253" className="flex items-center gap-2 hover:text-white transition-colors">
-                            <IoCall className="text-white shrink-0" size={16} />
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-text mb-1">Company</h3>
+                  <div className="flex flex-col gap-3 text-sm text-text">
+                        <a href="tel:1300243253" className="flex items-center gap-2 hover:text-text-hover transition-colors">
+                            <IoCall className="text-text shrink-0" size={16} />
                             1300 243 253
                         </a>
-                        <a href="mailto:care@aidble.com.au" className="flex items-center gap-2 hover:text-white transition-colors">
-                            <IoMail className="text-white shrink-0" size={16} />
+                        <a href="mailto:care@aidble.com.au" className="flex items-center gap-2 hover:text-text-hover transition-colors">
+                            <IoMail className="text-text shrink-0" size={16} />
                             care@aidble.com.au
                         </a>
                         <div className="flex items-center gap-2">
-                            <IoLocationSharp className="text-white shrink-0" size={16} />
+                            <IoLocationSharp className="text-text shrink-0" size={16} />
                             Sydney · Melbourne · Brisbane
                         </div>
                     </div>
                     {/* Social icons */}
-                    <div className="flex items-center gap-3 mt-1">
+                    <div className="flex items-center text-background gap-3 mt-1">
                         <Link
                             href="https://www.facebook.com/healthuau/"
-                            className="w-9 h-9 rounded-full bg-[#1e2d40] hover:bg-[#1a56db] flex items-center justify-center transition-colors"
+                            className="w-9 h-9 rounded-full bg-secondary hover:bg-secondary-hover flex items-center justify-center transition-colors"
                         >
                             <FaFacebookF size={14} />
                         </Link>
                         <Link
                             href="https://www.instagram.com/healthu_au/"
-                            className="w-9 h-9 rounded-full bg-[#1e2d40] hover:bg-[#1a56db] flex items-center justify-center transition-colors"
+                            className="w-9 h-9 rounded-full bg-secondary hover:bg-secondary-hover flex items-center justify-center transition-colors"
                         >
                             <FaInstagram size={14} />
                         </Link>
                         <Link
                             href="https://www.linkedin.com/company/health-u-australia/"
-                            className="w-9 h-9 rounded-full bg-[#1e2d40] hover:bg-[#1a56db] flex items-center justify-center transition-colors"
+                            className="w-9 h-9 rounded-full bg-secondary hover:bg-secondary-hover flex items-center justify-center transition-colors"
                         >
                             <FaLinkedinIn size={14} />
                         </Link>
                     </div>
                 </div>
-
             </div>
 
             {/* Bottom bar */}
             <div className="border-t border-[#1e2d40] mt-5">
-                <div className="container mx-auto px-6 py-4 flex flex-col  sm:flex-row items-center justify-between gap-2 text-xs text-[#64748b]">
+                <div className="container mx-auto px-6 py-4 flex flex-col  sm:flex-row items-center justify-between gap-2 text-xs text-text-hover">
                     <p>© {new Date().getFullYear()} Aidble Care Pty Ltd · ABN 00 000 000 000</p>
                     <div className="flex items-center gap-4">
                         <span className="flex items-center gap-1">

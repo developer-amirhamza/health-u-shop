@@ -67,12 +67,12 @@ const ProductFinderWizard = () => {
     const reset = () => { setStep(0); setAnswers({}); setResults([]); setDone(false); setLoading(false) }
 
     if (step === 0) return (
-        <section className="bg-[#f0f7ff] py-6">
+        <section className="bg-background py-6">
             <div className="container mx-auto px-6 flex flex-col items-center text-center gap-4">
                 {/* <div className="w-12 h-12 bg-[#1a56db] rounded-xl flex items-center justify-center text-white font-extrabold text-lg">PF</div> */}
                 <h2 className="text-3xl font-extrabold text-gray-900">Find Your Perfect Product</h2>
                 <p className="text-gray-500 text-base max-w-md">Answer 4 quick questions and we'll match you with the right continence products.</p>
-                <button onClick={() => setStep(1)} className="bg-[#1a56db] hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-full transition-colors text-sm">Start the quiz →</button>
+                <button onClick={() => setStep(1)} className="bg-secondary hover:bg-secondary-hover text-white font-semibold px-8 py-3 rounded-full transition-colors text-sm">Start the quiz →</button>
             </div>
         </section>
     )

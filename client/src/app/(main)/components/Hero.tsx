@@ -9,22 +9,22 @@ import banner from '@/assets/banners/image.png'
 
 const Hero = () => {
     return (
-        <section className="bg-[#f0f7ff] w-full overflow-hidden">
+        <section className="bg-background w-full overflow-hidden">
             <div className="container mx-auto px-6 py-14 flex flex-col lg:flex-row items-center gap-10">
 
                 {/* ── Left: Text content ── */}
                 <div className="flex-1 flex flex-col gap-6 max-w-xl">
 
                     {/* NDIS badge */}
-                    <div className="inline-flex items-center gap-2 bg-white border border-blue-100 rounded-full px-4 py-1.5 w-fit shadow-sm">
+                    <div className="inline-flex items-center gap-2 bg-primary border border-blue-100 rounded-full px-4 py-1.5 w-fit shadow-sm">
                         <MdVerified className="text-green-500" size={16} />
-                        <span className="text-xs font-semibold text-amber-600">Australian NDIS Registered Provider</span>
+                        <span className="text-xs font-semibold text-text">Australian NDIS Registered Provider</span>
                     </div>
 
                     {/* Headline */}
-                    <h1 className="text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight">
+                    <h1 className="text-4xl lg:text-5xl font-extrabold text-text leading-tight">
                         Dignified continence care,{' '}
-                        <span className="text-[#db1a1a]">delivered with compassion.</span>
+                        <span className="text-secondary">delivered with compassion.</span>
                     </h1>
 
                     {/* Subtext */}
@@ -38,13 +38,13 @@ const Hero = () => {
                     <div className="flex flex-wrap gap-3">
                         <Link
                             href="/products"
-                            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-full transition-colors text-sm"
+                            className="flex items-center gap-2 bg-secondary hover:bg-secondary-hover text-background font-semibold px-6 py-3 rounded-full transition-colors text-sm"
                         >
                             Shop products →
                         </Link>
                         <Link
                             href="/contact-us"
-                            className="flex items-center gap-2 border border-gray-300 hover:border-red-600 hover:text-red-600 text-gray-700 font-semibold px-6 py-3 rounded-full transition-colors text-sm bg-white"
+                            className="flex items-center gap-2 border border-primary-hover hover:border-secondary hover:text-secondary-hover text-text font-semibold px-6 py-3 rounded-full transition-colors text-sm bg-primary"
                         >
                             <FaPhoneAlt size={13} />
                             Talk to NDIS Support

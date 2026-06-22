@@ -26,7 +26,7 @@ const Search = () => {
         setIsSearchPage(isSearch)
     }, [pathname])
     return (
-        <div onClick={() => router.push("/products")} className='flex w-full border gap-2 group lg:min-w-96 bg-slate-100 focus-within:bg-amber-50 h-11 items-center
+        <div onClick={() => router.push("/products")} className='flex w-full border gap-2 group lg:min-w-96 bg-background focus-within:bg-primary h-11 items-center
          min-w-70 rounded-md border-neutral-300  focus-within:border-primary'>
 
             {/* {isSearchPage && isMobile ?

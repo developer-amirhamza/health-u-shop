@@ -15,16 +15,19 @@ import Axios from '@/utils/Axios'
 import { SummeryApi } from '../common/SummeryApi'
 import toast from 'react-hot-toast'
 import { fetchCart } from '@/redux/slices/cartSlice'
-import CartMenu from './CartMenu'
+
 import { DisplayPriceInAud } from '@/utils/DisplayPriceInAud'
 import { BsCart4 } from 'react-icons/bs'
 import { fetchUser, setLogout } from '@/redux/slices/userSlices'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/redux/store'
-import Search from './Search'
+
 import Link from 'next/link'
 import { GoTriangleDown, GoTriangleUp } from 'react-icons/go'
-import UserMenu from './UI/UserMenu'
+import Search from '../(main)/components/Search'
+import UserMenu from '../(main)/components/UI/UserMenu'
+import CartMenu from '../(main)/components/CartMenu'
+
 
 
 const Header = () => {
@@ -102,10 +105,7 @@ const Header = () => {
                         {/* login */}
                         {user.status == "succeeded" && accessToken ? (
                             <div className="relative z-100">
-                                {/* <button onClick={handleSignout}
-                                    className="text-md font-medium hover:bg-amber-100 cursor-pointer px-3 py-2 rounded hover:text-secondary bg-amber-50 flex items-center gap-2 t text-neutral-800">
-                                    <VscSignOut size={24} /> <span className="text-xl font-bold  ">Signout</span>
-                                </button> */}
+                               
 
                                 <button onClick={() => setShowUserMenu(!showUserMenu)}
                                 className="text-md flex items-center font-medium cursor-pointer hover:bg-neutral-200 px-3 py-2 rounded  text-neutral-800">

@@ -34,7 +34,7 @@ export default function Home() {
           <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />
         ))}
       </div>
-      <div className="grid gap-10">
+      <div className="grid gap-10 bg-primary">
         {categories.map((category, index) => (
           <CategoryWiseProducts categoryId={category.id} title={category.title} key={index} />
         ))}

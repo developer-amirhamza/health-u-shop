@@ -73,22 +73,22 @@ const Header = () => {
         <div className="sticky top-0 z-50 shadow-sm">
             {/* Top bar */}
             <div
-                className={`bg-[#0d1b2e] text-white transition-all duration-300 overflow-hidden ${
+                className={`bg-secondary text-background transition-all duration-300 overflow-hidden ${
                     topbarVisible ? 'max-h-10 opacity-100' : 'max-h-0 opacity-0'
                 }`}
             >
                 <div className="container mx-auto flex items-center justify-between px-4 h-9 text-sm">
                     <div className="flex items-center gap-2">
-                        <FaTruck className="text-blue-200 shrink-0" />
+                        <FaTruck className="text-primary shrink-0" />
                         <span className="font-medium">Free, discreet shipping Australia-wide on orders over $99</span>
                     </div>
                     <div className="hidden md:flex items-center gap-6">
-                        <a href="tel:1300243253" className="flex items-center gap-1.5 hover:text-blue-200 transition-colors">
+                        <a href="tel:1300243253" className="flex items-center gap-1.5 hover:text-primary transition-colors">
                             <IoCall />
                             <span className="font-semibold">1300 243 253</span>
                         </a>
                         <div className="flex items-center gap-1.5">
-                            <MdVerified className="text-blue-200" />
+                            <MdVerified className="text-primary" />
                             <span>Registered NDIS provider</span>
                         </div>
                     </div>
@@ -96,7 +96,7 @@ const Header = () => {
             </div>
 
             {/* Main navbar */}
-            <div className="bg-white border-b border-gray-100">
+            <div className="bg-primary border-b border-primary-hover">
                 <div className=" mx-auto flex items-center gap-4 px-4 h-16">
 
                     {/* Logo */}
@@ -115,7 +115,7 @@ const Header = () => {
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-[#1a56db] hover:bg-blue-50 rounded-md transition-colors whitespace-nowrap"
+                                className="px-3 py-2 text-sm font-medium text-text hover:text-text-hover hover:bg-blue-50 rounded-md transition-colors whitespace-nowrap"
                             >
                                 {link.label}
                             </Link>
@@ -133,7 +133,7 @@ const Header = () => {
                         {/* Free Samples */}
                         <Link
                             href="/free-samples"
-                            className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-red-600 hover:bg-red-700  text-white text-sm font-medium rounded-full transition-colors whitespace-nowrap"
+                            className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-secondary hover:bg-secondary-hover  text-background text-sm font-medium rounded-full transition-colors whitespace-nowrap"
                         >
                             Free Samples
                         </Link>
@@ -143,7 +143,7 @@ const Header = () => {
                             <div className="relative">
                                 <button
                                     onClick={() => setShowUserMenu(!showUserMenu)}
-                                    className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                                    className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-text hover:bg-primary rounded-md transition-colors"
                                 >
                                     <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -152,7 +152,7 @@ const Header = () => {
                                     {showUserMenu ? <GoTriangleUp size={14} /> : <GoTriangleDown size={14} />}
                                 </button>
                                 {showUserMenu && (
-                                    <div className="absolute top-11 right-0 bg-white shadow-lg w-44 rounded-lg border border-gray-100 z-50">
+                                    <div className="absolute top-11 right-0 bg-white shadow-lg w-44 rounded-lg border border-primary z-50">
                                         <UserMenu close={() => setShowUserMenu(false)} />
                                     </div>
                                 )}
@@ -172,9 +172,9 @@ const Header = () => {
                         {/* Cart */}
                         <button
                             onClick={() => setOpenCartMenu(true)}
-                            className="relative flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg transition-colors"
+                            className="relative flex items-center gap-2 bg-secondary cursor-pointer hover:bg-secondary-hover  text-background px-3 py-2 rounded-lg transition-colors"
                         >
-                            <BsCart4 size={20} />
+                            <BsCart4 size={20} className='animate-bounce ' />
                             {cartCount > 0 && (
                                 <span className="absolute -top-1.5 -right-1.5 bg-amber-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
                                     {cartCount}

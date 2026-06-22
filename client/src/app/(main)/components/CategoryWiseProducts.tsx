@@ -163,16 +163,8 @@ const CategoryWiseProductDisplay: React.FC<CategoryWiseProductProps> = ({ catego
                         loadingCardNumber.map((_, idx) => <CardLoader key={idx} />)
                     ) : products.length === 0 ? (
                         <p className="text-neutral-500 py-8">No products in this {activeSubcategoryId ? 'subcategory' : 'category'}</p>
-<<<<<<< HEAD:client/src/app/components/CategoryWiseProducts.tsx
                     ) : (products.map((product,index) => (
                             <ProductCard key={product.id} data={product} />
-=======
-                    ) : (
-                            products.map((product) => (
-                            <div key={product.id} className="max-w-68 shrink-0">
-                                <ProductCard data={product} />
-                            </div>
->>>>>>> 98739ab22a9403c38c380b0e99f194d2b91d93ea:client/src/app/(main)/components/CategoryWiseProducts.tsx
                         ))
                     )}
                 </div>
