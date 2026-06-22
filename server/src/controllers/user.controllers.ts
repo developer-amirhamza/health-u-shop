@@ -236,15 +236,11 @@ const GetUserDetails = async (req: AuthRequest, res: Response) => {
 const getAllUsers = async (req: Request, res: Response) => {
     try {
         const users = await prisma.user.findMany({
-            select:{
-                id:true,
-                name:true,
-                email:true,
-                mobile:true,
-                avatar:true,
-                refresh_token:true,
-                role:true,
-            }
+           select:{
+    id:true, name:true, email:true, mobile:true, avatar:true,
+    role:true, status:true, verify_email:true, last_login_date:true, createdAt:true,
+},
+orderBy: { createdAt: 'desc' }
         });
         res.status(200).json({
             success: true,
@@ -257,6 +253,23 @@ const getAllUsers = async (req: Request, res: Response) => {
             error: true,
             message: error.message || "Internal server error!"
         });
+    }
+};
+
+export const updateUserByAdmin = async (req: Request, res: Response) => {
+    try {
+        const { id, status, role } = req.body;
+        if (!id) return errorHandler(res, 400, "User ID is required", true);
+        const updatedData: any = {};
+        if (status) updatedData.status = status;
+        if (role) updatedData.role = role;
+        const updatedUser = await prisma.user.update({
+            where: { id }, data: updatedData,
+            select: { id: true, name: true, email: true, role: true, status: true }
+        });
+        res.status(200).json({ success: true, error: false, message: "User updated successfully", data: updatedUser });
+    } catch (error: any) {
+        res.status(500).json({ success: false, error: true, message: error.message || "Internal server error!" });
     }
 };
 

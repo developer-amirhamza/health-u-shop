@@ -13,6 +13,7 @@ import categoryRouter from "./routes/category.route";
 import reviewRouter from "./routes/review.routes";
 import subcategoryRouter from "./routes/subcategory.routes";
 import blogRouter from "./routes/blog.routes"
+import testimonialRouter from "./routes/testimonial.routes"
 
 config();
 const app = express();
@@ -40,7 +41,7 @@ app.use("/api/orders", orderRouter);
 app.use("/api/payment",paymentRouter);
 app.use("/api/subcategories", subcategoryRouter);
 app.use("/api/blogs", blogRouter);
-
+app.use("/api/testimonials", testimonialRouter);
 
 
 
