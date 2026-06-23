@@ -34,11 +34,16 @@ export default function Home() {
           <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />
         ))}
       </div>
-      <div className="grid gap-10 bg-primary">
+      <div className="grid">
+          <CategoryWiseProducts   />
+
+      </div>
+
+       {/* <div className="grid">
         {categories.map((category, index) => (
           <CategoryWiseProducts categoryId={category.id} title={category.title} key={index} />
         ))}
-      </div>
+      </div> */}
       <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 sm:grid-cols-2  container gap-5 w-4/6 ">
         {infographic_cards.policies.map((item, index) => (
           <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />

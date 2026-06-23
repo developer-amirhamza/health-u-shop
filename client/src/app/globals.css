@@ -1,10 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Oriya:wght@400..700&family=Playfair+Display+SC:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import "tailwindcss";
 
 :root {
   --background: #F7F4EF;
-  --foreground: #171717;
+  --foreground: #3D3C3B;
   --primary:#EDE6DC;
+  --primary:#EDE6DC;
+
   --primary-hover:#e9dcc8;
   --secondary:#4F5B3A;
   --secondary-hover:#394624;
@@ -15,9 +18,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-pri: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-primary:var(--primary);
+  --font-display: "Playfair Display", serif;
+  --font-sens: "DM Sans", "DM Sans Fallback", sans-serif;
   --color-primary-hover:var(--primary-hover);
   --color-secondary:var(--secondary);
   --color-secondary-hover:var(--secondary-hover);
@@ -35,7 +40,7 @@
 body {
   background: #F7F4EF;
   color: var(--foreground);
-  font-family: "Poppins", sans-serif;
+  font-family: "DM Sans", "DM Sans Fallback", sans-serif;
   overflow-x: hidden;
 }
 
@@ -159,3 +164,10 @@ body {
   font-size: 0.875rem !important;
   font-weight: bold !important;
 }
+
+
+
+.playfair-display {
+  font-family: "Playfair Display", serif;
+}
+
