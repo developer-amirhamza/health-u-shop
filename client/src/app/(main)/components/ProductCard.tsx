@@ -21,14 +21,14 @@ const ProductCard: React.FC<Type> = ({ data }) => {
     return (
         <div
             onClick={() => router.push(url)}
-            className="group flex flex-col bg-white rounded-[18px] overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-300"
+            className="group flex flex-col bg-white rounded-[18px] hover:scale-[1.02] transition-all shadow-lg hover:shadow-2xl overflow-hidden cursor-pointer   duration-300"
         >
             {/* Image */}
             <div className="relative bg-[#d6cdc4] overflow-hidden" style={{ aspectRatio: '3/3.5' }}>
                 <img
                     src={data?.images?.[0]}
                     alt={data?.title}
-                    className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-500"
                 />
 
                 {/* Badge pills — top left */}

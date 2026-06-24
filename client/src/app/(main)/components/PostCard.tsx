@@ -11,9 +11,9 @@ interface Type {
 }
 const PostCard: React.FC<Type> = ({ title, subtitle, buttons, paragraph, image }) => {
     return (
-        <div className="flex w-full h-full items-center justify-start gap-10  not-even:flex-col-reverse sm:flex-row sm:not-even:flex-row-reverse py-12">
+        <div className="flex w-full h-full items-center justify-start gap-10 bg-background rounded-xl  not-even:flex-col-reverse sm:flex-row sm:not-even:flex-row-reverse">
             <div className="flex w-full ">
-                <Image src={image} alt={title} />
+                <Image src={image} alt={title} className='object-cover rounded-xl' />
             </div>
             <div className="grid place-content-start place-items-center gap-5 ">
                 <span className="text-base text-center text-text uppercase tracking-widest">{subtitle}</span>

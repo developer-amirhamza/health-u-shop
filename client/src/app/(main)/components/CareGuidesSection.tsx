@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Axios from '@/utils/Axios'
 import { SummeryApi } from '@/app/common/SummeryApi'
+import { motion } from 'framer-motion'
 
 interface Blog {
     id: string
@@ -29,32 +30,50 @@ const CareGuidesSection = () => {
     if (blogs.length === 0) return null
 
     return (
-        <section className="bg-white py-14">
+        <section className="bg-primary py-14">
             <div className="container mx-auto px-6">
                 <div className="flex items-end justify-between mb-8">
                     <div>
-                        <p className="text-xs font-bold uppercase tracking-widest text-red-600 mb-2">Care Guides</p>
-                        <h2 className="text-3xl font-extrabold text-gray-900 leading-tight max-w-sm">
+                        <p className="text-xs font-bold uppercase tracking-widest text-secondary mb-2">Care Guides</p>
+                        <h2 className="text-3xl font-extrabold text-secondary font-secondary leading-tight max-w-sm">
                             Practical advice from Australian clinicians
                         </h2>
                         <p className="text-gray-500 text-sm mt-2">
                             Honest, evidence-based articles to support you and your loved ones.
                         </p>
                     </div>
-                    <Link href="/blog" className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-red-600 hover:underline whitespace-nowrap">
+                    <Link href="/blog" className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline whitespace-nowrap">
                         All articles →
                     </Link>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {blogs.map((blog) => (
-                        <Link key={blog.id} href={`/blog/${blog.slug}`}
-                            className="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    {blogs.map((blog, index) => (
+                        <motion.div   key={index}
+                                initial={{
+                            opacity:0,
+                            x:0,
+                            y:20,
+                        }}
+                        whileInView={{
+                            opacity:1,
+                            x:0,
+                            y:0,
+                            transition:{
+                                type:"tween",
+                                delay:index * 0.2,
+                                duration:0.3,
+                                ease:[0.25,0.25,0.25,0.75]
+                            }
+                        }}
+                        viewport={{once:false,amount:0.2}} custom={index} className="bg-background rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 ">
+                        <Link href={`/blog/${blog.slug}`}
+                            className="group bg-background  rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                             <div className="h-52 overflow-hidden">
                                 {blog.featuredImage ? (
                                     <img src={blog.featuredImage} alt={blog.title}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform rounded-t-xl duration-300" />
                                 ) : (
-                                    <div className="w-full h-full bg-blue-50 flex items-center justify-center text-red-600 text-4xl font-bold">
+                                    <div className="w-full h-full bg-blue-50 flex items-center justify-center text-secondary text-4xl font-bold">
                                         {blog.title[0]}
                                     </div>
                                 )}
@@ -62,27 +81,28 @@ const CareGuidesSection = () => {
                             <div className="p-5 flex flex-col gap-3">
                                 <div className="flex items-center gap-2">
                                     {blog.category && (
-                                        <span className="text-xs font-semibold bg-blue-50 text-red-600 px-2.5 py-1 rounded-full">
+                                        <span className="text-xs font-semibold bg-blue-50 text-secondary px-2.5 py-1 rounded-full">
                                             {blog.category}
                                         </span>
                                     )}
                                     <span className="text-xs text-gray-400">· {blog.readTime ?? 5} min read</span>
                                 </div>
-                                <h3 className="text-base font-bold text-gray-900 leading-snug group-hover:text-red-600 transition-colors line-clamp-2">
+                                <h3 className="text-base font-bold text-text font-secondary leading-snug group-hover:text-secondary transition-colors line-clamp-2">
                                     {blog.title}
                                 </h3>
                                 {blog.excerpt && (
-                                    <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">{blog.excerpt}</p>
+                                    <p className="text-sm text-text line-clamp-2 leading-relaxed">{blog.excerpt}</p>
                                 )}
-                                <span className="text-sm font-semibold text-red-600 mt-1 inline-flex items-center gap-1">
+                                <span className="text-sm font-semibold text-secondary mt-1 inline-flex items-center gap-1">
                                     Read article →
                                 </span>
                             </div>
                         </Link>
+                        </motion.div>
                     ))}
                 </div>
                 <div className="sm:hidden mt-6 text-center">
-                    <Link href="/blog" className="text-sm font-semibold text-red-600 hover:underline">All articles →</Link>
+                    <Link href="/blog" className="text-sm font-semibold text-secondary hover:underline">All articles →</Link>
                 </div>
             </div>
         </section>

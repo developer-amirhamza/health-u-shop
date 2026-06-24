@@ -2,8 +2,8 @@ import React from 'react'
 
 const CardLoader = () => {
   return (
-    <div className=' border border-blue-200 p-2 grid gap-3 max-w-52 rounded animate-pulse'>
-        <div className="min-h-20 bg-blue-100/80 rounded"/>
+    <div className=' border border-blue-200 p-2 grid gap-3 max-w-58 rounded animate-pulse'>
+        <div className="min-h-30 bg-blue-100/80 rounded"/>
         <div className="p-3 bg-blue-100/80 rounded w-20"/>
         <div className="p-3 bg-blue-100/80 rounded"/>
         <div className="p-3 bg-blue-100/80 rounded w-14 "/>

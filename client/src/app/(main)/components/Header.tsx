@@ -20,8 +20,8 @@ import UserMenu from './UI/UserMenu'
 
 const NAV_LINKS = [
     { label: 'Shop', href: '/products' },
-    { label: 'NDIS Support', href: '/ndis-support' },
-    { label: 'Brands', href: '/brands' },
+    // { label: 'NDIS Support', href: '/ndis-support' },
+    // { label: 'Brands', href: '/brands' },
     { label: 'Care Guides', href: '/blog' },
     { label: 'Contact', href: '/contact-us' },
 ]
@@ -41,7 +41,7 @@ const Header = () => {
     useEffect(() => {
         const handleScroll = () => {
             const currentY = window.scrollY
-            setTopbarVisible(currentY <= 10 || currentY < lastScrollY.current)
+            setTopbarVisible(currentY <= 20 || currentY < lastScrollY.current)
             lastScrollY.current = currentY
         }
         window.addEventListener('scroll', handleScroll, { passive: true })
@@ -70,7 +70,7 @@ const Header = () => {
     const cartCount = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0
 
     return (
-        <div className="sticky top-0 z-50 shadow-sm">
+        <div className="sticky top-0 backdrop-blur-sm z-50 shadow-xl">
             {/* Top bar */}
             <div
                 className={`bg-secondary text-background transition-all duration-300 overflow-hidden ${
@@ -96,7 +96,7 @@ const Header = () => {
             </div>
 
             {/* Main navbar */}
-            <div className="bg-primary border-b border-primary-hover">
+            <div className="bg-background/60 backdrop-blur   border-b border-primary-hover">
                 <div className=" mx-auto flex items-center gap-4 px-4 h-16">
 
                     {/* Logo */}
@@ -115,7 +115,7 @@ const Header = () => {
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className="px-3 py-2 text-sm font-medium text-text hover:text-text-hover hover:bg-blue-50 rounded-md transition-colors whitespace-nowrap"
+                                className="px-3 py-2 text-sm font-medium text-text hover:text-text-hover hover:bg-background rounded-md transition-colors whitespace-nowrap"
                             >
                                 {link.label}
                             </Link>
@@ -123,7 +123,7 @@ const Header = () => {
                     </nav>
 
                     {/* Search */}
-                    <div className="hidden lg:flex flex-1 max-w-md mx-1">
+                    <div className="hidden lg:flex flex-1 justify-self-center max-w-md mx-1">
                         <Search />
                     </div>
 

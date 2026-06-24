@@ -8,14 +8,14 @@ import { fetchCategories } from "@/redux/slices/categorySlice";
 import InfoGraphicCard from "./components/InfoGraphicCard";
 import { home_posts, infographic_cards } from "@/config/page";
 import PostCard from "./components/PostCard";
-import { useDispatch, useSelector } from "react-redux";
 import TestimonialsSection from "./components/TestimonialsSection";
 import CareGuidesSection from "./components/CareGuidesSection";
 import ProductFinderWizard from "./components/ProductFinderWizard";
+import { useDispatch, useSelector } from "react-redux";
+import FeatureSection from "./components/FeatureSection";
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>()
-  const { user } = useSelector((state: any) => state.userSlice);
   const { categories, status } = useSelector((state: RootState) => state.categorySlice);
 
   useEffect(() => {
@@ -23,35 +23,41 @@ export default function Home() {
       dispatch(fetchCategories())
     }
   }, [dispatch, status])
-  console.log(user?.role, "role user")
 
   return (
-    <div className="grid gap-10 mb-10 h-full bg-background">
+    <div className="grid gap-0 mb-10 h-full bg-white">
       <Hero />
       <ProductFinderWizard />
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1  container gap-10 w-4/6 ">
-        {infographic_cards.hero.map((item, index) => (
-          <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />
-        ))}
+
+      {/* Hero infographic strip */}
+      <div className="bg-[#f5f0eb] border-y border-[#e5ddd5]">
+        <div className="container mx-auto flex divide-x divide-[#e5ddd5]">
+          {infographic_cards.hero.map((item, index) => (
+            <div key={index} className="flex-1">
+              <InfoGraphicCard label={item.label} subtitle={(item as any).subtitle} icon={item.icon} path={item.path} />
+            </div>
+          ))}
+        </div>
       </div>
+
       <div className="grid">
-          <CategoryWiseProducts   />
-
+        <CategoryWiseProducts />
       </div>
 
-       {/* <div className="grid">
-        {categories.map((category, index) => (
-          <CategoryWiseProducts categoryId={category.id} title={category.title} key={index} />
-        ))}
-      </div> */}
-      <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 sm:grid-cols-2  container gap-5 w-4/6 ">
-        {infographic_cards.policies.map((item, index) => (
-          <InfoGraphicCard key={index} label={item.label} icon={item.icon} path={item.path} />
-        ))}
+      {/* Policies infographic strip */}
+      <div className="bg-[#f5f0eb] border-y border-[#e5ddd5]">
+        <div className="container mx-auto flex flex-wrap divide-x divide-[#e5ddd5]">
+          {infographic_cards.policies.map((item, index) => (
+            <div key={index} className="flex-1 min-w-37.5">
+              <InfoGraphicCard label={item.label} subtitle={(item as any).subtitle} icon={item.icon} path={item.path} />
+            </div>
+          ))}
+        </div>
       </div>
-      <CareGuidesSection/>
+      <FeatureSection />
+      <CareGuidesSection />
       <TestimonialsSection />
-      <div className="grid container">
+      <div className="grid container bg-primary  gap-10">
         {home_posts.map((post, index) => (
           <PostCard image={post.image} key={index} title={post.title} subtitle={post.subtitle} paragraph={post.paragraph} buttons={post.buttons} />
         ))}

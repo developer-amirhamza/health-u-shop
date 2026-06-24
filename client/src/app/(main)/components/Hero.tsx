@@ -7,51 +7,63 @@ import { MdVerified } from 'react-icons/md'
 import { BsCheckCircleFill } from 'react-icons/bs'
 import banner from '@/assets/banners/image.png'
 
+
 const Hero = () => {
     return (
-        <section className="bg-background w-full overflow-hidden">
-            <div className="container mx-auto px-6 py-14 flex flex-col lg:flex-row items-center gap-10">
+        <section className="relative h-[84vh] min-h-[600px] w-full overflow-hidden">
 
-                {/* ── Left: Text content ── */}
-                <div className="flex-1 flex flex-col gap-6 max-w-xl">
+            {/* Background video */}
+            <video
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/hero-bg.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+            />
 
-                    {/* NDIS badge */}
-                    <div className="inline-flex items-center gap-2 bg-primary border border-blue-100 rounded-full px-4 py-1.5 w-fit shadow-sm">
-                        <MdVerified className="text-green-500" size={16} />
-                        <span className="text-xs font-semibold text-text">Australian NDIS Registered Provider</span>
-                    </div>
+            {/* Soft light overlay for text legibility (matches reference's airy look) */}
+            <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/40 to-transparent" />
 
-                    {/* Headline */}
-                    <h1 className="text-4xl lg:text-5xl font-extrabold text-text leading-tight">
-                        Dignified continence care,{' '}
-                        <span className="text-secondary">delivered with compassion.</span>
-                    </h1>
+            {/* Content */}
+            <div className="relative z-10 container mx-auto px-6 h-full flex flex-col justify-center">
+                <div className="max-w-2xl flex flex-col gap-6">
 
-                    {/* Subtext */}
-                    <p className="text-gray-500 text-base leading-relaxed">
-                        Premium incontinence products and home care essentials, sourced for
-                        Australian families and NDIS participants. Discreet shipping, clinical-grade
-                        quality and human support — every step of the way.
+                    {/* Eyebrow */}
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-gray-700">
+                        Dignified Continence Care
                     </p>
 
+                    {/* Headline — large editorial serif */}
+                    <h1 className="font-serif text-gray-900 leading-[0.95] tracking-tight text-6xl sm:text-7xl lg:text-8xl">
+                        Care gently.<br />
+                        Live freely.
+                    </h1>
+
+                    {/* Paragraph */}
+                    <p className="text-gray-700 text-base sm:text-lg leading-relaxed max-w-md">
+                        Premium continence products, delivered discreetly to your door. Pure comfort, gentle dignity, confident days — fully NDIS claimable.
+                    </p>
+
+
                     {/* CTA buttons */}
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-5">
                         <Link
                             href="/products"
-                            className="flex items-center gap-2 bg-secondary hover:bg-secondary-hover text-background font-semibold px-6 py-3 rounded-full transition-colors text-sm"
+                            className="flex items-center font-primary uppercase shadow-xl hover:shadow-2xl  gap-2 bg-secondary hover:bg-secondary-hover text-background font-semibold px-6 py-3 rounded-full hover:scale-105 transition-all duration-300  text-sm"
                         >
                             Shop products →
                         </Link>
                         <Link
                             href="/contact-us"
-                            className="flex items-center gap-2 border border-primary-hover hover:border-secondary hover:text-secondary-hover text-text font-semibold px-6 py-3 rounded-full transition-colors text-sm bg-primary"
+                            className="flex items-center shadow-xl hover:shadow-2xl gap-2 uppercase hover:scale-105 transition-all duration-300 border border-primary-hover hover:border-secondary hover:text-secondary-hover text-text font-semibold px-6 py-3 rounded-full  text-sm bg-primary"
                         >
                             <FaPhoneAlt size={13} />
                             Talk to NDIS Support
                         </Link>
                     </div>
 
-                    {/* Stats */}
+                    {/* Stats
                     <div className="flex flex-wrap gap-8 pt-2">
                         <div>
                             <p className="text-2xl font-extrabold text-gray-900">12k+</p>
@@ -67,24 +79,10 @@ const Hero = () => {
                             <p className="text-2xl font-extrabold text-gray-900">100%</p>
                             <p className="text-xs text-gray-500 mt-0.5">Discreet packaging</p>
                         </div>
-                    </div>
+                    </div> */}
+
                 </div>
-
-                {/* ── Right: Image + floating cards ── */}
-                <div className="flex-1 relative flex items-center justify-center min-h-95 w-full max-w-lg">
-
-                    {/* Hero image */}
-                    <div className="relative w-full h-100 rounded-3xl overflow-hidden shadow-xl">
-                        <Image
-                            src={banner}
-                            alt="Carer with patient"
-                            fill
-                            className="object-cover"
-                            priority
-                        />
-                    </div>
-
-                    {/* Floating review card — top right */}
+                {/* Floating review card — top right */}
                     <div className="absolute top-4 right-0 bg-white rounded-2xl shadow-lg px-4 py-3 flex flex-col gap-1 min-w-45 border border-gray-100">
                         <div className="flex gap-0.5">
                             {[1,2,3,4,5].map(i => <FaStar key={i} className="text-amber-400 text-xs" />)}
@@ -94,21 +92,29 @@ const Hero = () => {
                     </div>
 
                     {/* Floating NDIS card — bottom left */}
-                    <div className="absolute bottom-6 -left-4 bg-white rounded-2xl shadow-lg px-4 py-3 flex items-center gap-3 border border-gray-100 min-w-52.5">
+                    <div className="absolute bottom-14 right-4 bg-white rounded-2xl shadow-lg px-4 py-3 flex items-center gap-3 border border-gray-100 min-w-52.5">
                         <BsCheckCircleFill className="text-green-500 shrink-0" size={22} />
                         <div>
                             <p className="text-xs font-bold text-gray-800">NDIS plan approved</p>
                             <p className="text-[10px] text-gray-400">Invoiced directly to your plan</p>
                         </div>
                     </div>
-                </div>
+            </div>
 
+            {/* Scroll indicator */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-gray-600">
+                    Scroll
+                </span>
+                <span className="w-px h-10 bg-gray-500/50" />
             </div>
         </section>
     )
 }
 
 export default Hero
+
+
 
 
 

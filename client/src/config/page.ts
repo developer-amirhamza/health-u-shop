@@ -119,18 +119,17 @@ export const footer_nav_items = [
 
 export const infographic_cards = {
     hero: [
-        { label: "Product finder", icon: drop, path: "/products" },
-        { label: "Get Advice", icon: doctor, path: "/blog" },
-        { label: "Shop now", icon: basket, path: "/products" },
+        { label: "Product Finder", subtitle: "Find what suits you best", icon: drop, path: "/products" },
+        { label: "Get Advice", subtitle: "Evidence-based care guides", icon: doctor, path: "/blog" },
+        { label: "Shop Now", subtitle: "Browse our full range", icon: basket, path: "/products" },
     ],
     policies: [
-        { label: "Easy ordering", icon: repeat, path: "/" },
-        { label: "Direct Delivery", icon: speedy, path: "/" },
-        { label: "Discreet Packaging", icon: discreet, path: "/" },
-        { label: "Easy Returns", icon: return_box, path: "/" },
+        { label: "Easy Ordering", subtitle: "Simple checkout process", icon: repeat, path: "/" },
+        { label: "Direct Delivery", subtitle: "Fast Australia-wide shipping", icon: speedy, path: "/" },
+        { label: "Discreet Packaging", subtitle: "Private & confidential", icon: discreet, path: "/" },
+        { label: "Easy Returns", subtitle: "Hassle-free returns", icon: return_box, path: "/" },
     ]
 }
-
 export const home_posts = [
     {
         title: "Explore TENA's Incontinence Range", subtitle: "",
