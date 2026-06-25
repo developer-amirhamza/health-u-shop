@@ -57,11 +57,11 @@ export default function Home() {
       <FeatureSection />
       <CareGuidesSection />
       <TestimonialsSection />
-      <div className="grid container bg-primary  gap-10">
+      {/* <div className="grid container bg-primary  gap-10">
         {home_posts.map((post, index) => (
           <PostCard image={post.image} key={index} title={post.title} subtitle={post.subtitle} paragraph={post.paragraph} buttons={post.buttons} />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

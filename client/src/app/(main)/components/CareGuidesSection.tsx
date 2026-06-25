@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Axios from '@/utils/Axios'
 import { SummeryApi } from '@/app/common/SummeryApi'
 import { motion } from 'framer-motion'
+import Button from './UI/Button'
 
 interface Blog {
     id: string
@@ -33,7 +34,7 @@ const CareGuidesSection = () => {
         <section className="bg-primary py-14">
             <div className="container mx-auto px-6">
                 <div className="flex items-end justify-between mb-8">
-                    <div>
+                    <div className='mx-auto text-center'>
                         <p className="text-xs font-bold uppercase tracking-widest text-secondary mb-2">Care Guides</p>
                         <h2 className="text-3xl font-extrabold text-secondary font-secondary leading-tight max-w-sm">
                             Practical advice from Australian clinicians
@@ -42,9 +43,7 @@ const CareGuidesSection = () => {
                             Honest, evidence-based articles to support you and your loved ones.
                         </p>
                     </div>
-                    <Link href="/blog" className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline whitespace-nowrap">
-                        All articles →
-                    </Link>
+
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {blogs.map((blog, index) => (
@@ -101,8 +100,8 @@ const CareGuidesSection = () => {
                         </motion.div>
                     ))}
                 </div>
-                <div className="sm:hidden mt-6 text-center">
-                    <Link href="/blog" className="text-sm font-semibold text-secondary hover:underline">All articles →</Link>
+                <div className="mt-6 text-center max-w-fit mx-auto px-4">
+                    <Button path="/blog" label='All Articles'   />
                 </div>
             </div>
         </section>

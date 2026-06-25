@@ -41,8 +41,11 @@ const Header = () => {
     useEffect(() => {
         const handleScroll = () => {
             const currentY = window.scrollY
-            setTopbarVisible(currentY <= 20 || currentY < lastScrollY.current)
-            lastScrollY.current = currentY
+            if(currentY === 50){
+                setTopbarVisible(true)
+            }else{setTopbarVisible(false)}
+            // setTopbarVisible(currentY <= 20 || currentY < lastScrollY.current)
+            // lastScrollY.current = currentY
         }
         window.addEventListener('scroll', handleScroll, { passive: true })
         return () => window.removeEventListener('scroll', handleScroll)
@@ -123,7 +126,7 @@ const Header = () => {
                     </nav>
 
                     {/* Search */}
-                    <div className="hidden lg:flex flex-1 justify-self-center max-w-md mx-1">
+                    <div className="hidden lg:flex flex-1 items-self-center max-w-full mx-1">
                         <Search />
                     </div>
 
@@ -186,13 +189,11 @@ const Header = () => {
                         </button>
                     </div>
                 </div>
-
                 {/* Mobile search */}
                 <div className="lg:hidden px-4 pb-3">
                     <Search />
                 </div>
             </div>
-
             {openCartMenu && <CartMenu close={() => setOpenCartMenu(false)} />}
         </div>
     )

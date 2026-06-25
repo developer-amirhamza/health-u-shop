@@ -10,7 +10,7 @@ dotenv.config();
 const PORT = Number(process.env.PORT) || 5000;  // ✅ fixed: now always a number
 
 app.get("/", (req, res) => {
-    res.send("<center><h1> Welcome to Health server site </h1></center>");
+    res.send("<center><h1> Welcome to  Testing </h1></center>");
 });
 
 // Webhook route (raw body)
