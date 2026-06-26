@@ -59,18 +59,18 @@ const ProductCard: React.FC<Type> = ({ data }) => {
                     </p>
                 )}
                 <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2 mt-2">
-                    <span className="text-[14px] font-bold text-gray-900">
-                        {DisplayPriceInAud(finalPrice)}
-                    </span>
-                    {hasDiscount && (
-                        <span className="text-[13px] text-gray-400 line-through">
-                            {DisplayPriceInAud(Number(data?.price ?? 0))}
+                    <div className="flex items-center gap-2 mt-2">
+                        <span className="text-[14px] font-bold text-gray-900">
+                            {DisplayPriceInAud(finalPrice)}
                         </span>
-                    )}
+                        {hasDiscount && (
+                            <span className="text-[13px] text-gray-400 line-through">
+                                {DisplayPriceInAud(Number(data?.price ?? 0))}
+                            </span>
+                        )}
 
-                </div>
-                <AddToCartButton data={data}/>
+                    </div>
+                    <AddToCartButton data={data} />
                 </div>
             </div>
         </div>
