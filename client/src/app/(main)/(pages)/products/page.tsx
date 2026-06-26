@@ -276,8 +276,8 @@ const ProductsContent = () => {
                                         </div>
                                     </div>
                                 ))
-                                : products.map((product) => (
-                                    <ProductCard key={product.id} data={product} />
+                                : products.map((product,idx) => (
+                                    <ProductCard key={idx} data={product} />
                                 ))}
                         </div>
                     </InfiniteScroll>

@@ -44,6 +44,8 @@ body {
   color: var(--foreground);
   font-family: "DM Sans", "DM Sans Fallback", sans-serif;
   overflow-x: hidden;
+  scroll-behavior: smooth;
+
 }
 
 .btn {

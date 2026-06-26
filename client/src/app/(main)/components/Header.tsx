@@ -3,7 +3,8 @@ import Image from 'next/image'
 import React, { useEffect, useState, useRef } from 'react'
 import { IoCall } from 'react-icons/io5'
 import { MdVerified } from 'react-icons/md'
-import { FaTruck } from 'react-icons/fa'
+import { FaArrowRight, FaTruck } from 'react-icons/fa'
+import { FaSearch, FaArrowLeft } from 'react-icons/fa'
 import logo from "@/assets/header-logosr.png"
 import { BsCart4 } from 'react-icons/bs'
 import { GoTriangleDown, GoTriangleUp } from 'react-icons/go'
@@ -16,7 +17,8 @@ import { DisplayPriceInAud } from '@/utils/DisplayPriceInAud'
 import CartMenu from './CartMenu'
 import Search from './Search'
 import Link from 'next/link'
-import UserMenu from './UI/UserMenu'
+import UserMenu from './UI/UserMenu';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const NAV_LINKS = [
     { label: 'Shop', href: '/products' },
@@ -36,12 +38,14 @@ const Header = () => {
     const [openCartMenu, setOpenCartMenu] = useState(false)
     const [showUserMenu, setShowUserMenu] = useState(false)
     const [topbarVisible, setTopbarVisible] = useState(true)
-    const lastScrollY = useRef(0)
+    const [searchOpen, setSearchOpen] = useState(false)
+    const searchRef = useRef<HTMLDivElement>(null)
+
 
     useEffect(() => {
         const handleScroll = () => {
             const currentY = window.scrollY
-            if(currentY === 50){
+            if(currentY === 10){
                 setTopbarVisible(true)
             }else{setTopbarVisible(false)}
             // setTopbarVisible(currentY <= 20 || currentY < lastScrollY.current)
@@ -73,9 +77,9 @@ const Header = () => {
     const cartCount = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0
 
     return (
-        <div className="sticky top-0 backdrop-blur-sm z-50 shadow-xl">
+        <div className="sticky top-5  z-50 ">
             {/* Top bar */}
-            <div
+            {/* <div
                 className={`bg-secondary text-background transition-all duration-300 overflow-hidden ${
                     topbarVisible ? 'max-h-10 opacity-100' : 'max-h-0 opacity-0'
                 }`}
@@ -96,24 +100,16 @@ const Header = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             {/* Main navbar */}
-            <div className="bg-background/60 backdrop-blur   border-b border-primary-hover">
-                <div className=" mx-auto flex items-center gap-4 px-4 h-16">
+            <div className="bg-background/40 w-full rounded-2xl backdrop-blur-2xl shadow-xl container border-b border-primary-hover">
+                <div className=" mx-auto w-full flex items-center justify-center gap-4 px-4 h-16">
 
-                    {/* Logo */}
-                    <Link href="/" className="shrink-0 -ml-5 flex items-center">
-                        <Image
-                            src={logo}
-                            alt="Health U Shop"
-                            className="h-13 w-auto object-contain"
-                            priority
-                        />
-                    </Link>
+
 
                     {/* Nav links */}
-                    <nav className="hidden lg:flex items-center -ml-5 gap-1 ">
+                    <nav className="hidden lg:flex items-center justify-start  gap-1 ">
                         {NAV_LINKS.map((link) => (
                             <Link
                                 key={link.href}
@@ -125,21 +121,66 @@ const Header = () => {
                         ))}
                     </nav>
 
-                    {/* Search */}
+                    {/* Logo */}
+                    <Link href="/" className="shrink-0 flex-1 justify-end flex items-center">
+                        <Image
+                            src={logo}
+                            alt="Health U Shop"
+                            className="h-13 w-auto object-contain"
+                            priority
+                        />
+                    </Link>
+
+                    {/* Search area */}
+                    <div className="hidden lg:flex flex-1 justify-end" ref={searchRef}>
+                        <AnimatePresence mode="wait">
+                            {searchOpen ? (
+                                <motion.div
+                                    key="search-box"
+                                    initial={{ opacity: 0, width: 120 }}
+                                    animate={{ opacity: 1, width: '100%' }}
+                                    exit={{ opacity: 0, width: 120 }}
+                                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                                    className="flex items-center gap-2 w-full"
+                                >
+                                    <button onClick={() => setSearchOpen(false)}
+                                        className="p-2 rounded-full hover:bg-gray-100 text-gray-500 shrink-0 transition-colors"
+                                        aria-label="Close search">
+                                        {!searchOpen ? <FaArrowLeft size={16} /> : <FaArrowRight size={16} /> }
+                                    </button>
+                                    <div className="flex-1"><Search /></div>
+                                </motion.div>
+                            ) : (
+                                <motion.button
+                                    key="search-icon"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.15 }}
+                                    onClick={() => setSearchOpen(true)}
+                                    className="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
+                                    aria-label="Open search">
+                                    <FaSearch size={18} />
+                                </motion.button>
+                            )}
+                        </AnimatePresence>
+                    </div>
+
+                    {/* Search
                     <div className="hidden lg:flex flex-1 items-self-center max-w-full mx-1">
                         <Search />
-                    </div>
+                    </div> */}
 
                     {/* Right actions */}
                     <div className="flex items-center gap-2 ml-auto shrink-0">
 
                         {/* Free Samples */}
-                        <Link
+                        {/* <Link
                             href="/free-samples"
                             className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-secondary hover:bg-secondary-hover  text-background text-sm font-medium rounded-full transition-colors whitespace-nowrap"
                         >
                             Free Samples
-                        </Link>
+                        </Link> */}
 
                         {/* Account */}
                         {user.status === 'succeeded' && accessToken ? (
