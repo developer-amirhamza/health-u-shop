@@ -1,10 +1,11 @@
 "use client"
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import AddToCartButton from './UI/AddToCartBtn';
 import { DisplayPriceInAud } from '@/utils/DisplayPriceInAud';
 import { PriceWithDiscount } from '@/utils/PriceWithDiscount';
 import { validURLConvert } from '@/utils/validURLConvart';
-import AddToCartButton from './UI/AddToCartBtn';
+
 
 interface Type { data: any }
 
@@ -34,12 +35,12 @@ const ProductCard: React.FC<Type> = ({ data }) => {
                 {/* Badge pills — top left */}
                 <div className="absolute top-3 left-3 flex flex-col gap-1.5">
                     {isSale && (
-                        <span className="px-2.5 py-[3px] rounded-full bg-white/90 text-gray-800 text-[11px] font-semibold leading-none shadow-sm">
+                        <span className="px-2.5 py-0.75 rounded-full bg-white/90 text-gray-800 text-[11px] font-semibold leading-none shadow-sm">
                             Sale
                         </span>
                     )}
                     {isBestseller && (
-                        <span className="px-2.5 py-[3px] rounded-full bg-white/90 text-gray-800 text-[11px] font-semibold leading-none shadow-sm">
+                        <span className="px-2.5 py-0.75 rounded-full bg-white/90 text-gray-800 text-[11px] font-semibold leading-none shadow-sm">
                             Bestseller
                         </span>
                     )}
