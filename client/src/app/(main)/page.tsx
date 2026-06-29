@@ -25,7 +25,7 @@ export default function Home() {
   }, [dispatch, status])
 
   return (
-    <div className="grid gap-0 mb-10 h-full bg-white">
+    <div className="grid gap-0 mb-10 h-full bg-pr">
       <Hero />
       <ProductFinderWizard />
 

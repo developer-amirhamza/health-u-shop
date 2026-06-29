@@ -77,7 +77,7 @@ const Header = () => {
     const cartCount = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0
 
     return (
-        <div className="sticky top-5  z-50 ">
+        <div className="sticky top-3 -mt-16 z-50 ">
             {/* Top bar */}
             {/* <div
                 className={`bg-secondary text-background transition-all duration-300 overflow-hidden ${
@@ -103,7 +103,7 @@ const Header = () => {
             </div> */}
 
             {/* Main navbar */}
-            <div className="bg-background/40 w-full rounded-2xl backdrop-blur-2xl shadow-xl container border-b border-primary-hover">
+            <div className="bg-background/20 w-full rounded-2xl backdrop-blur-xl shadow-xl container border-b border-primary-hover">
                 <div className=" mx-auto w-full flex items-center justify-center gap-4 px-4 h-16">
 
 
@@ -196,7 +196,7 @@ const Header = () => {
                                     {showUserMenu ? <GoTriangleUp size={14} /> : <GoTriangleDown size={14} />}
                                 </button>
                                 {showUserMenu && (
-                                    <div className="absolute top-11 right-0 bg-white shadow-lg w-44 rounded-lg border border-primary z-50">
+                                    <div className="absolute top-11 right-0  shadow-lg w-44 rounded-lg border border-primary z-50">
                                         <UserMenu close={() => setShowUserMenu(false)} />
                                     </div>
                                 )}

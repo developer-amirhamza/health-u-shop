@@ -10,11 +10,11 @@ import banner from '@/assets/banners/image.png'
 
 const Hero = () => {
     return (
-        <section className="relative h-[84vh] min-h-[600px] w-full overflow-hidden">
+        <section className="relative h-[90vh] pt-20 min-h-150 w-full overflow-hidden">
 
             {/* Background video */}
             <video
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover  "
                 src="/hero-bg.mp4"
                 autoPlay
                 loop

@@ -22,11 +22,52 @@ model User {
   forgot_password_expire DateTime? @db.Timestamp(6)
   createdAt              DateTime? @default(now()) @db.Timestamp(6)
   updatedAt              DateTime? @default(now()) @db.Timestamp(6)
-  role                   String?   @default("USER")
+  // Role values: CONSUMER | TRADE | NDIS_COORDINATOR | ADMIN
+  // (legacy "USER" is treated as CONSUMER by the app)
+  role                   String?   @default("CONSUMER")
   cart                   Cart?
   reviews                Reviews[]
   order                  Order[]
+  accountApplication     AccountApplication?
+  quotes                 Quote[]
 }
+
+
+
+
+
+
+// Trade / NDIS coordinator account application.
+// A consumer applies for an upgraded account; an admin approves it,
+// which flips the user's role and grants access to the matching portal.
+model AccountApplication {
+  id              String   @id @default(dbgenerated("gen_random_uuid()"))
+  userId          String   @unique
+  // Which portal they are applying for: TRADE | NDIS_COORDINATOR
+  requestedRole   String
+  // PENDING | APPROVED | REJECTED
+  status          String   @default("PENDING")
+  // Business / organisation details
+  businessName    String?
+  abn             String?
+  businessType    String?
+  contactName     String?
+  contactPhone    String?
+  // NDIS-specific
+  organisation    String?
+  // 30-day account invoicing flag (admin sets on approval)
+  creditApproved  Boolean  @default(false)
+  notes           String?
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+}
+
+
 
 model Product {
   id            String       @id @default(dbgenerated("gen_random_uuid()"))
@@ -189,4 +230,154 @@ model Blog {
 
   @@index([slug])
   @@index([authorId])
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Global, admin-editable settings. Stored as key/value so the team can change
+// pricing rules without a code change. Values are JSON to allow numbers/bools/strings.
+// Known keys (with defaults applied in the pricing service):
+//   gstEnabled (bool)                 - whether GST is added at all
+//   gstRate (number, e.g. 0.10)       - GST rate when enabled
+//   ndisAnnualDiscountPct (number)    - % off for a 12-month NDIS supply
+//   consumerSubscriptionDiscountPct   - % off recurring consumer orders
+//   deliveryMode ("FLAT"|"POSTCODE")  - how delivery is charged
+//   deliveryFlatFee (number)          - flat delivery fee
+//   freeDeliveryThreshold (number)    - order total above which delivery is free (0 = off)
+model Setting {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+// Volume pricing tiers for B2B trade accounts. A tier applies to a product
+// when the ordered carton quantity is >= minQuantity. The highest matching
+// tier wins. If productId is null the tier is a global default.
+model PricingTier {
+  id           String   @id @default(dbgenerated("gen_random_uuid()"))
+  productId    String?
+  // null = TRADE default; could be extended to other roles later
+  role         String   @default("TRADE")
+  minQuantity  Int
+  pricePerUnit Float
+  label        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([productId, role, minQuantity])
+}
+
+
+
+
+
+// Per-product per-role price overrides (e.g. a specific NDIS price for a product).
+// Optional — when absent the pricing service falls back to the product's retail price.
+model PriceOverride {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  productId String
+  role      String
+  price     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, role])
+}
+
+
+
+// NDIS quote created by a support coordinator on behalf of a participant.
+model Quote {
+  id              String      @id @default(dbgenerated("gen_random_uuid()"))
+  quoteNumber     String      @unique
+  // Coordinator who created the quote
+  userId          String
+  // DRAFT | SENT | CONVERTED
+  status          String      @default("DRAFT")
+  participantRef  String?
+  planManagerEmail String?
+  // One-off | Monthly | Annual
+  supplyPeriod    String      @default("Monthly")
+  // Totals (computed via the pricing service's buildTotals)
+  subtotal        Float       @default(0)
+  discount        Float       @default(0)
+  delivery        Float       @default(0)
+  gst             Float       @default(0)
+  total           Float       @default(0)
+  validUntil      DateTime?
+  notes           String?
+  // Set when the quote is converted into a real order
+  convertedOrderId String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items           QuoteItem[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+
+
+model QuoteItem {
+  id           String   @id @default(dbgenerated("gen_random_uuid()"))
+  quoteId      String
+  productId    String
+  productName  String
+  size         String?
+  absorbency   String?
+  // Daily pads usage entered by the coordinator
+  dailyPads    Int      @default(0)
+  // Days in the chosen supply period (One-off=pack qty, Monthly=30, Annual=365)
+  days         Int      @default(0)
+  // total pads = dailyPads * days
+  totalPads    Int      @default(0)
+  unitPrice    Float    @default(0)
+  lineTotal    Float    @default(0)
+  createdAt    DateTime @default(now())
+  quote        Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  @@index([quoteId])
+}
+
+
+// General enquiry inbox. Covers the NDIS "funding support" path (a coordinator
+// asks for payment-plan / hardship options when funding doesn't cover a quote)
+// and B2B trade enquiries. Surfaced in the admin dashboard.
+model Enquiry {
+  id            String   @id @default(dbgenerated("gen_random_uuid()"))
+  // FUNDING_SUPPORT | TRADE | GENERAL
+  type          String   @default("GENERAL")
+  // NEW | IN_PROGRESS | RESOLVED
+  status        String   @default("NEW")
+  // Who raised it (logged-in user if available)
+  userId        String?
+  name          String?
+  email         String?
+  phone         String?
+  // Funding-support specifics
+  participantNeed String?
+  availableFunding String?
+  message       String?
+  // Optional link to the quote that triggered the enquiry
+  quoteId       String?
+  handledBy     String?
+  handledAt     DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([type])
+  @@index([status])
 }
