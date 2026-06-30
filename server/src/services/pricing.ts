@@ -33,16 +33,17 @@ export const setSetting = async (key: string, value: any) => {
   });
 };
 
-// ── Unit price resolution ────────────────────────────────────────────────────
 // Resolve the unit price for a product, given the buyer's role and quantity.
-//   1. PriceOverride for (product, role)  — explicit per-product price
+//   0. NegotiatedPrice for (user, product) — per-account custom rate (Phase 3)
+//   1. PriceOverride for (product, role)   — explicit per-product price
 //   2. TRADE: highest matching volume tier (minQuantity <= quantity)
 //   3. Fallback: product retail price (minus its own discount)
 export const resolveUnitPrice = async (params: {
   productId: string;
   role?: string | null;
   quantity?: number;
-}): Promise<number> => {
+  userId?: string | null;
+}) => {
   const { productId } = params;
   const role = normaliseRole(params.role);
   const quantity = params.quantity ?? 1;
@@ -53,29 +54,24 @@ export const resolveUnitPrice = async (params: {
   });
   if (!product) throw new Error("Product not found");
 
+  // 0. Per-account negotiated price wins over everything.
+  if (params.userId) {
+    const negotiated = await prisma.negotiatedPrice.findUnique({
+      where: { userId_productId: { userId: params.userId, productId } },
+    });
+    if (negotiated) return negotiated.price;
+  }
+
   // 1. Explicit override for this role.
   const override = await prisma.priceOverride.findUnique({
     where: { productId_role: { productId, role } },
   });
   if (override) return override.price;
+}
 
-  // 2. Trade volume tiers — highest minQuantity that the quantity satisfies.
-  if (role === ROLES.TRADE) {
-    const tier = await prisma.pricingTier.findFirst({
-      where: {
-        role: ROLES.TRADE,
-        minQuantity: { lte: quantity },
-        OR: [{ productId }, { productId: null }],
-      },
-      orderBy: [{ productId: "desc" }, { minQuantity: "desc" }],
-    });
-    if (tier) return tier.pricePerUnit;
-  }
 
-  // 3. Retail price with the product's own discount applied.
-  const discount = product.discount ?? 0;
-  return discount > 0 ? product.price - (product.price * discount) / 100 : product.price;
-};
+
+
 
 // ── Delivery & GST helpers ────────────────────────────────────────────────────
 export const calcDelivery = (settings: Settings, orderSubtotal: number): number => {

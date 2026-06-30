@@ -56,6 +56,27 @@ export const adminNavItems = [
         path: "/admin/users"
     },
 
+        {
+        label: "Applications",
+        icon: FaUsersGear,
+        path: "/admin/applications",
+    },
+    {
+        label: "Pricing",
+        icon: RiPriceTag2Fill,
+        path: "/admin/pricing",
+    },
+    {
+        label: "Enquiries",
+        icon: FaNewspaper,
+        path: "/admin/enquiries",
+    },
+    {
+        label: "Reports",
+        icon: AiFillDashboard,
+        path: "/admin/reports",
+    },
+
     {
         label: "Reviews",
         icon: MdReviews,

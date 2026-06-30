@@ -77,7 +77,7 @@ export const submitFundingEnquiry = async (req: AuthRequest, res: Response) => {
                <li><b>Message:</b> ${message ?? "-"}</li>
              </ul>`,
       attachments: attachments.length ? attachments : undefined,
-    }).catch(() => {});
+    }).catch(() => { });
 
     return res.status(200).json({
       success: true,
@@ -117,7 +117,7 @@ export const submitEnquiry = async (req: AuthRequest, res: Response) => {
                <li><b>From:</b> ${name ?? "-"} (${email ?? "-"}, ${phone ?? "-"})</li>
                <li><b>Message:</b> ${message}</li>
              </ul>`,
-    }).catch(() => {});
+    }).catch(() => { });
 
     return res.status(200).json({
       success: true,

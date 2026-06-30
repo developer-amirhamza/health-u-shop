@@ -46,7 +46,7 @@ export const computeQuote = async (params: {
     const totalPads = Math.max(0, Math.round(line.dailyPads * days));
 
     // NDIS coordinators are quoted at the NDIS price (override) or retail.
-    const unitPrice = await resolveUnitPrice({
+    const unitPrice:any = await resolveUnitPrice({
       productId: line.productId,
       role: ROLES.NDIS_COORDINATOR,
       quantity: totalPads,

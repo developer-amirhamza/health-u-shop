@@ -18,6 +18,14 @@ import accountApplicationRouter from "./routes/accountApplication.routes";
 import pricingRouter from "./routes/pricing.routes"
 import quoteRouter from "./routes/quote.routes"
 import enquiryRouter from "./routes/enquiry.routes"
+import tradeRouter from "./routes/trade.routes"
+import subscriptionRouter from "./routes/subscription.routes"
+import phase3Router from "./routes/phase3.routes"
+
+
+
+
+
 
 
 
@@ -52,6 +60,11 @@ app.use("/api/account-applications", accountApplicationRouter);
 app.use("/api/pricing", pricingRouter);
 app.use("/api/quotes", quoteRouter);
 app.use("/api/enquiries", enquiryRouter);
+app.use("/api/trade", tradeRouter)
+app.use("/api/subscriptions", subscriptionRouter);
+app.use("/api/phase3", phase3Router);
+
+
 
 
 

@@ -13,6 +13,7 @@ import CareGuidesSection from "./components/CareGuidesSection";
 import ProductFinderWizard from "./components/ProductFinderWizard";
 import { useDispatch, useSelector } from "react-redux";
 import FeatureSection from "./components/FeatureSection";
+import EntryPoints from "./components/EntryPoints";
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>()
@@ -27,6 +28,7 @@ export default function Home() {
   return (
     <div className="grid gap-0 mb-10 h-full bg-pr">
       <Hero />
+       <EntryPoints />
       <ProductFinderWizard />
 
       {/* Hero infographic strip */}

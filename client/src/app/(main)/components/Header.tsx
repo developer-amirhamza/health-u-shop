@@ -196,7 +196,7 @@ const Header = () => {
                                     {showUserMenu ? <GoTriangleUp size={14} /> : <GoTriangleDown size={14} />}
                                 </button>
                                 {showUserMenu && (
-                                    <div className="absolute top-11 right-0  shadow-lg w-44 rounded-lg border border-primary z-50">
+                                    <div className="absolute top-11 right-0 bg-background  shadow-lg w-44 rounded-lg border border-primary z-50">
                                         <UserMenu close={() => setShowUserMenu(false)} />
                                     </div>
                                 )}

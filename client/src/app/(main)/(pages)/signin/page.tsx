@@ -6,6 +6,7 @@ import { AppDispatch } from '@/redux/store';
 import Axios from '@/utils/Axios';
 import AxiosToastError from '@/utils/AxiosToastError';
 import IsAdmin from '@/utils/IsAdmin';
+import { portalPath } from '@/utils/roles';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -54,7 +55,7 @@ const SignIn = () => {
                 dispatch(fetchCart())
                 setFormData(initialFormData);
                 const role = response?.data?.data?.user?.role;
-                router.push(IsAdmin(role) ? "/admin" : "/")
+                router.push(portalPath(role))
             }
         } catch (error) {
             AxiosToastError(error);

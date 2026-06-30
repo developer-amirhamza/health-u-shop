@@ -257,4 +257,59 @@ deleteSubcategory: {
         method: "delete",
     },
 
+
+
+        // ── Bestiee portal: account applications ──
+    applyForAccount: { url: "/api/account-applications/apply", method: "post" },
+    getMyApplication: { url: "/api/account-applications/me", method: "get" },
+    listApplications: { url: "/api/account-applications", method: "get" },
+    approveApplication: { url: "/api/account-applications/approve", method: "put" },
+    rejectApplication: { url: "/api/account-applications/reject", method: "put" },
+
+    // ── Pricing engine ──
+    getPricingSettings: { url: "/api/pricing/settings", method: "get" },
+    updatePricingSettings: { url: "/api/pricing/settings", method: "put" },
+    listPricingTiers: { url: "/api/pricing/tiers", method: "get" },
+    upsertPricingTier: { url: "/api/pricing/tiers", method: "put" },
+    deletePricingTier: { url: "/api/pricing/tiers", method: "delete" },
+    upsertPriceOverride: { url: "/api/pricing/overrides", method: "put" },
+    deletePriceOverride: { url: "/api/pricing/overrides", method: "delete" },
+    quoteUnitPrice: { url: "/api/pricing/quote", method: "get" },
+
+    // ── NDIS quotes ──
+    previewQuote: { url: "/api/quotes/preview", method: "post" },
+    createQuote: { url: "/api/quotes", method: "post" },
+    getMyQuotes: { url: "/api/quotes", method: "get" },
+    duplicateQuote: { url: "/api/quotes/duplicate", method: "post" },
+    emailQuote: { url: "/api/quotes/email", method: "post" },
+    convertQuoteToOrder: { url: "/api/quotes/convert", method: "post" },
+
+    // ── Enquiries ──
+    submitFundingEnquiry: { url: "/api/enquiries/funding", method: "post" },
+    submitEnquiry: { url: "/api/enquiries", method: "post" },
+    listEnquiries: { url: "/api/enquiries", method: "get" },
+    updateEnquiryStatus: { url: "/api/enquiries/status", method: "put" },
+
+    // ── B2B trade ──
+    getTradeCatalogue: { url: "/api/trade/catalogue", method: "get" },
+    placeTradeOrder: { url: "/api/trade/order", method: "post" },
+    quickReorder: { url: "/api/trade/reorder", method: "post" },
+    listStandingOrders: { url: "/api/trade/standing-orders", method: "get" },
+    upsertStandingOrder: { url: "/api/trade/standing-orders", method: "put" },
+
+    // ── Consumer subscriptions ──
+    listSubscriptions: { url: "/api/subscriptions", method: "get" },
+    upsertSubscription: { url: "/api/subscriptions", method: "put" },
+    oneClickReorder: { url: "/api/subscriptions/reorder", method: "post" },
+
+
+        // ── Phase 3: multi-site, negotiated pricing, deeper reporting ──
+    listDeliverySites: { url: "/api/phase3/delivery-sites", method: "get" },
+    upsertDeliverySite: { url: "/api/phase3/delivery-sites", method: "put" },
+    deleteDeliverySite: { url: "/api/phase3/delivery-sites", method: "delete" },
+    listNegotiatedPrices: { url: "/api/phase3/negotiated-prices", method: "get" },
+    upsertNegotiatedPrice: { url: "/api/phase3/negotiated-prices", method: "put" },
+    deleteNegotiatedPrice: { url: "/api/phase3/negotiated-prices", method: "delete" },
+    getReport: { url: "/api/phase3/report", method: "get" },
+
 };
