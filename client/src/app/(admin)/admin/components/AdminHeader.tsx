@@ -46,38 +46,38 @@ const AdminHeader: React.FC<Props> = ({ sidebar }) => {
             setLoading(false);
         }
     };
-    return (
-        <div className="flex w-full h-full max-h-16 bg-[#000000] items-center z-100  ">
+        return (
+        <div className="flex w-full h-full max-h-16 bg-[#1a1a18] items-center border-b border-white/10 z-100">
             <button
                 onClick={sidebar}
-                className="bg-[#fc0404]  cursor-pointer  min-h-full p-4 flex "
+                className="cursor-pointer min-h-full p-4 flex bg-[#3d3b39] text-[#c9b89a] hover:bg-white/10 transition-colors"
             >
-                <IoMenuSharp className="text-white text-3xl " />
+                <IoMenuSharp className="text-2xl" />
             </button>
-            <div className="flex w-full h-full items-center justify-between px-2">
-                <Image className="max-h-12 object-scale-down max-w-fit" src={Logo} alt="" />
-                <ul className="flex items-center gap-4 px-2 ">
-                    <li className="relative cursor-pointer  h-full text-white">
-                        <FaRegBell size={20} />
-                        <span className="absolute bg-[#fc0404] text-xs  h-5 w-5 items-center justify-center flex -right-2.5 -top-4 rounded-full p-1">
+            <div className="flex w-full h-full items-center justify-between px-4">
+                <Image className="max-h-10 object-scale-down max-w-fit" src={Logo} alt="" />
+                <ul className="flex items-center gap-5 px-2">
+                    <li className="relative cursor-pointer text-gray-300 hover:text-white transition-colors">
+                        <FaRegBell size={19} />
+                        <span className="absolute bg-[#c9b89a] text-[#1a1a18] text-[10px] font-bold h-4 w-4 items-center justify-center flex -right-2 -top-2 rounded-full">
                             4
                         </span>
                     </li>
-                    <li className="relative cursor-pointer  h-full text-white">
-                        <BsQuestionCircleFill size={20} />
+                    <li className="relative cursor-pointer text-gray-300 hover:text-white transition-colors">
+                        <BsQuestionCircleFill size={19} />
                     </li>
-                    <li className="relative cursor-pointer  h-full text-white">
-                        <FaRegEnvelope size={20} />
-                        <span className="absolute bg-[#fc0404] text-xs  h-5 w-5 items-center justify-center flex -right-2.5 -top-4 rounded-full p-1">
+                    <li className="relative cursor-pointer text-gray-300 hover:text-white transition-colors">
+                        <FaRegEnvelope size={19} />
+                        <span className="absolute bg-[#c9b89a] text-[#1a1a18] text-[10px] font-bold h-4 w-4 items-center justify-center flex -right-2 -top-2 rounded-full">
                             4
                         </span>
                     </li>
                 </ul>
             </div>
-            <div className="bg-[#fc0404] relative z-100  min-w-fit px-4 py-2 items-center flex ">
-                <div className="flex w-full  gap-3 items-center z-100  ">
+            <div className="relative z-100 min-w-fit px-4 py-2 items-center flex border-l border-white/10 h-full">
+                <div className="flex w-full gap-3 items-center">
                     <img
-                        className=" w-12  object-cover rounded-full"
+                        className="w-10 h-10 object-cover rounded-full"
                         src={
                             user?.avatar ||
                             `https://themewagon.github.io/pluto/images/layout_img/user_img.jpg`
@@ -86,23 +86,23 @@ const AdminHeader: React.FC<Props> = ({ sidebar }) => {
                     />
                     <button
                         onClick={() => setIsActive(!isActive)}
-                        className="flex w-full text-white font-semibold cursor-pointer items-center"
+                        className="flex w-full text-white font-medium cursor-pointer items-center gap-1"
                     >
-                        <h1 className="text-sm capitalize ">{user?.name}</h1>
-                        <IoIosArrowDown size={18} />
+                        <h1 className="text-sm capitalize">{user?.name}</h1>
+                        <IoIosArrowDown size={16} className="text-[#c9b89a]" />
                     </button>
                 </div>
                 <ul
-                    className={`  ${isActive
-                        ? "translate-y-0 max-h-auto opacity-100 z-10 "
-                        : " opacity-0 max-h-0 -translate-y-36  "
-                        } -z-10 absolute top-16 w-full transition-all duration-500   bg-slate-100 grid shadow-md  left-0`}
+                    className={`${isActive
+                        ? "translate-y-0 opacity-100 z-10"
+                        : "opacity-0 max-h-0 -translate-y-36"
+                        } -z-10 absolute top-16 w-full transition-all duration-500 bg-white rounded-b-xl grid shadow-lg overflow-hidden left-0`}
                 >
                     <li
                         onClick={() => {
                             router.push(`/admin-profile`), setIsActive(false);
                         }}
-                        className=" cursor-pointer hover:bg-slate-700 text-slate-700 px-4 py-1.5 font-semibold  hover:text-white transition-colors duration-200"
+                        className="cursor-pointer hover:bg-[#f5f0eb] text-gray-700 px-4 py-2 text-sm font-medium transition-colors"
                     >
                         My Profile
                     </li>
@@ -110,16 +110,16 @@ const AdminHeader: React.FC<Props> = ({ sidebar }) => {
                         onClick={() => {
                             router.push(`/profile-setting`), setIsActive(false);
                         }}
-                        className=" cursor-pointer hover:bg-slate-700 text-slate-700 px-4 py-1.5 font-semibold  hover:text-white transition-colors duration-200"
+                        className="cursor-pointer hover:bg-[#f5f0eb] text-gray-700 px-4 py-2 text-sm font-medium transition-colors"
                     >
-                        Sittings
+                        Settings
                     </li>
                     <AdminPermission>
                         <li
                             onClick={() => {
                                 router.push(`/all-users`), setIsActive(false);
                             }}
-                            className=" cursor-pointer hover:bg-slate-700 text-slate-700 px-4 py-1.5 font-semibold  hover:text-white transition-colors duration-200"
+                            className="cursor-pointer hover:bg-[#f5f0eb] text-gray-700 px-4 py-2 text-sm font-medium transition-colors"
                         >
                             All Users
                         </li>
@@ -127,10 +127,10 @@ const AdminHeader: React.FC<Props> = ({ sidebar }) => {
 
                     <div
                         onClick={handleLogout}
-                        className=" hover:bg-slate-700 text-slate-700 cursor-pointer px-4 py-1.5 font-semibold  hover:text-white transition-colors duration-200 flex items-center gap-3"
+                        className="hover:bg-[#1a1a18] hover:text-white text-gray-700 cursor-pointer px-4 py-2 text-sm font-medium transition-colors flex items-center gap-3"
                     >
                         <span>{loading ? "Loading.." : "Logout"}</span>
-                        <TbLogout size={20} />
+                        <TbLogout size={18} />
                     </div>
                 </ul>
             </div>

@@ -18,6 +18,7 @@ import { fetchProductReviews, addReview, updateReview, deleteReview } from '@/re
 import { RootState, AppDispatch } from '@/redux/store';
 import AddToCartButton from '@/app/(main)/components/UI/AddToCartBtn';
 import Divider from '@/app/(main)/components/UI/Divider';
+import SizeFinder from '@/app/(main)/components/SizeFinder';
 
 const ProductDetailsPage = () => {
     const params = useParams();
@@ -192,7 +193,14 @@ const ProductDetailsPage = () => {
                         <AddToCartButton data={data} />
                     )}
                 </div>
-                <div className="my-4">
+                                <div className="my-4">
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                        <span className="text-sm font-medium text-neutral-600">Size</span>
+                        {/* Link to the Size guide tab below, plus the standalone page */}
+                        <a href="#size-guide" className="text-sm font-semibold text-[#2f7d6f] hover:underline">
+                            Find my size →
+                        </a>
+                    </div>
                     {data.sizes &&
                     <div className="flex gap-2 items-center flex-wrap">
                         {data.sizes?.map((size:any,index:number)=>(
@@ -209,6 +217,15 @@ const ProductDetailsPage = () => {
                     </div>
                 )}
                 <Divider />
+
+
+                {/* ========== SIZE GUIDE TAB ========== */}
+                <div id="size-guide" className="mt-6 scroll-mt-24">
+                    <SizeFinder product={data} />
+                </div>
+                <Divider />
+
+                {/* ========== REVIEWS SECTION ========== */}
 
                 {/* ========== REVIEWS SECTION ========== */}
                 <div className="mt-6">

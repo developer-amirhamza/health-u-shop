@@ -41,8 +41,8 @@ const AdminLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 
     if (status === "idle" || status === "loading") {
         return (
-            <div className="flex w-full h-screen items-center justify-center bg-slate-100">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900"></div>
+                        <div className="flex w-full h-screen items-center justify-center bg-[#f5f0eb]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1a1a18]"></div>
             </div>
         );
     }
@@ -53,8 +53,8 @@ const AdminLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 
     return (
         <>
-            <div className="flex w-full h-screen items-start bg-slate-100 overflow-x-hidden transition-all duration-700">
-                <div className={`w-full max-w-fit sticky h-screen overflow-y-auto no-scrollbar bg-[#000000] z-50 flex`}>
+            <div className="flex w-full h-screen items-start bg-[#f5f0eb] overflow-x-hidden transition-all duration-700">
+                <div   className={`w-full max-w-fit sticky h-screen overflow-y-auto no-scrollbar bg-[#1a1a18] z-50 flex`}>
                     <AdminSidebar activeSidebar={showSidebar} />
                 </div>
                 <div className="w-full h-screen flex  flex-col">

@@ -4,13 +4,15 @@ import banner1 from "@/assets/banners/banner1.webp"
 import banner2 from "@/assets/banners/banner2.webp"
 import banner3 from "@/assets/banners/banner3.webp"
 import banner4 from "@/assets/banners/banner4.webp"
-import { FaHome, FaNewspaper } from "react-icons/fa"
+import { FaFileSignature, FaHome, FaNewspaper } from "react-icons/fa"
 import { FaCartFlatbedSuitcase, FaUsersGear } from "react-icons/fa6";
 import { RiArticleFill, RiPriceTag2Fill } from "react-icons/ri"
 import { AiFillDashboard, AiFillProduct } from "react-icons/ai";
 import { GrArticle } from "react-icons/gr";
 import { MdCategory, MdReviews } from "react-icons/md"
 import { BiSolidCategory } from "react-icons/bi";
+import { MdOutlinePriceChange } from "react-icons/md";
+import { GiArchiveResearch } from "react-icons/gi";
 
 
 
@@ -58,17 +60,17 @@ export const adminNavItems = [
 
         {
         label: "Applications",
-        icon: FaUsersGear,
+        icon: FaFileSignature,
         path: "/admin/applications",
     },
     {
         label: "Pricing",
-        icon: RiPriceTag2Fill,
+        icon: MdOutlinePriceChange ,
         path: "/admin/pricing",
     },
     {
         label: "Enquiries",
-        icon: FaNewspaper,
+        icon: GiArchiveResearch ,
         path: "/admin/enquiries",
     },
     {

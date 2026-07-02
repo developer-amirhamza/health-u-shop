@@ -9,6 +9,14 @@ import { resolveUnitPrice, buildTotals } from "../services/pricing";
 interface AuthRequest extends Request {
   userId?: string;
 }
+interface OrderItemData {
+  productName: string;
+  productId: string;
+  productImage: string | null;
+  price: number;
+  quantity: number;
+  total: number;
+}
 
 interface LineInput {
   productId: string;
@@ -31,7 +39,7 @@ const generateOrderNumber = async () => {
 
 // Build consumer-priced order items for the given lines.
 const buildConsumerItems = async (lines: LineInput[]) => {
-  const items = [];
+  const items:OrderItemData[] = [];
   let net = 0;
   for (const line of lines) {
     const quantity = Math.max(1, Number(line.quantity) || 1);
@@ -41,11 +49,14 @@ const buildConsumerItems = async (lines: LineInput[]) => {
     });
     if (!product) throw new Error(`Product not found: ${line.productId}`);
 
-    const unitPrice = await resolveUnitPrice({
-      productId: product.id,
-      role: ROLES.CONSUMER,
-      quantity,
-    });
+
+     const unitPrice = Number(
+      (await resolveUnitPrice({
+        productId: product.id,
+        role: ROLES.CONSUMER,
+        quantity
+      })) ?? 0
+    );
     const lineTotal = +(unitPrice * quantity).toFixed(2);
     net += lineTotal;
 

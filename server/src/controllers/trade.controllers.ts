@@ -10,6 +10,16 @@ interface AuthRequest extends Request {
   userId?: string;
 }
 
+interface OrderItemData {
+  productName: string;
+  productId: string;
+  productImage: string | null;
+  price: number;
+  quantity: number;
+  total: number;
+}
+
+
 interface LineInput {
   productId: string;
   quantity: number;
@@ -29,10 +39,9 @@ const generateTradeOrderNumber = async () => {
   return orderNumber;
 };
 
-// Build order item rows at the trade (volume-tier) price for the given lines.
 // Build order item rows at the trade (volume-tier or negotiated) price.
 const buildTradeItems = async (lines: LineInput[], userId?: string) => {
-  const items = [];
+  const items: OrderItemData[] = [];
   let net = 0;
   for (const line of lines) {
     const quantity = Math.max(1, Number(line.quantity) || 1);
@@ -42,13 +51,16 @@ const buildTradeItems = async (lines: LineInput[], userId?: string) => {
     });
     if (!product) throw new Error(`Product not found: ${line.productId}`);
 
-    const unitPrice = await resolveUnitPrice({
-      productId: product.id,
-      role: ROLES.TRADE,
-      quantity,
-      userId,
-    });
+    const unitPrice = Number(
+      (await resolveUnitPrice({
+        productId: product.id,
+        role: ROLES.TRADE,
+        quantity,
+        userId,
+      })) ?? 0
+    );
     const lineTotal = +(unitPrice * quantity).toFixed(2);
+
     net += lineTotal;
 
     items.push({
