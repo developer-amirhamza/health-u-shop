@@ -12,9 +12,9 @@ import { useEffect, useRef, useState } from "react";
 // Once per session · skippable · reduced-motion aware · SR-safe.
 // Brand: dark #1a1a18 · water teal #e9dcc8 · logo coral #C9573F · sand #c9b89a
 const SESSION_KEY = "aidble_intro_seen";
-const SEQUENCE_MS = 6200;   // sequence length before the reveal (6–10s range)
+const SEQUENCE_MS = 6200;   // minimum time the intro stays up (6–10s range)
 const REVEAL_MS = 900;      // window-open slide-up duration
-
+const MAX_MS = 15000;       // safety cap — reveal even if load never fires
 export default function IntroOverlay() {
   const [show, setShow] = useState(false);
   const [revealing, setRevealing] = useState(false);
@@ -46,11 +46,33 @@ export default function IntroOverlay() {
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-    const holdMs = prefersReduced ? 1200 : SEQUENCE_MS;
 
-    // Baseline (works without GSAP): reveal after the hold, unmount after slide.
-    timers.current.push(setTimeout(() => triggerReveal(), holdMs));
+       const holdMs = prefersReduced ? 1200 : SEQUENCE_MS;
 
+    // Reveal only when BOTH are true: the minimum display time has elapsed AND
+    // the page has fully loaded (window "load" — all content/images ready). A
+    // safety cap reveals anyway if load never fires.
+    let minElapsed = false;
+    let loaded = document.readyState === "complete";
+    const maybeReveal = () => {
+      if (minElapsed && loaded) triggerReveal();
+    };
+
+    timers.current.push(
+      setTimeout(() => {
+        minElapsed = true;
+        maybeReveal();
+      }, holdMs)
+    );
+
+    const onLoad = () => {
+      loaded = true;
+      maybeReveal();
+    };
+    if (!loaded) window.addEventListener("load", onLoad);
+
+    // Hard safety cap so the intro can never get stuck.
+    timers.current.push(setTimeout(() => triggerReveal(), MAX_MS));
     // Optional GSAP enhancement of the intro visuals (not the reveal).
     if (!prefersReduced) {
       (async () => {
