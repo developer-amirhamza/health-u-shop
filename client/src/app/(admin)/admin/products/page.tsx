@@ -151,7 +151,7 @@ const AdminProductsPage = () => {
                       className="w-10 h-10 object-cover rounded"
                     />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap font-medium line-clamp-1 max-w-30 text-gray-900">
                     {product.title}
                   </td>
                   {/* <td className="px-6 py-4 whitespace-nowrap text-gray-500">

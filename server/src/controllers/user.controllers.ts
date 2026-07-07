@@ -46,13 +46,17 @@ const SignUp = async (req: Request, res: Response) => {
             },
         });
         const verifyEmailUrl = `${process.env.CLIENT}/verify-email?code=${user.id}`;
+        // Email failure shouldn't fail the signup — the account is already created.
         const emailResult = await sendEmail({
             sendTo: email,
-            subject: "Verify email from Health U Shop",
+            subject: "Verify email from MyBestiee",
             html: verifyEmailTemplate({
                 name,
                 url: verifyEmailUrl,
             }),
+        }).catch((err) => {
+            console.error("Verify email failed:", err.message);
+            return null;
         });
 
 

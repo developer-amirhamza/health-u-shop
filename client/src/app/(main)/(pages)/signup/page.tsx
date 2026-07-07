@@ -64,11 +64,11 @@ const SingUp = () => {
     }
     const validInput = Object.values(formData).every(el => el);
     return (
-        <section className=' flex w-full h-full bg-amber-50  '
+        <section className=' flex w-full h-full bg-background  '
          //style={{ backgroundImage: `url(${image})` }}
          >
             <div className="container px-5 mx-auto flex w-full justify-center py-10">
-                <div className="bg-amber-100 shadow-2xl p-5 flex justify-center items-center w-full max-w-md h-full flex-col
+                <div className="bg-primary shadow-2xl p-5 flex justify-center items-center w-full max-w-md h-full flex-col
             rounded-md gap-5  ">
                     <h1 className="text-2xl text-slate-900 text-center uppercase font-semibold">Create your account</h1>
                     <form onSubmit={handleSubmit} className="grid gap-5 w-full text-lg">

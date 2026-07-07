@@ -14,6 +14,7 @@ import ProductFinderWizard from "./components/ProductFinderWizard";
 import { useDispatch, useSelector } from "react-redux";
 import FeatureSection from "./components/FeatureSection";
 import EntryPoints from "./components/EntryPoints";
+import TrustedStrip from "./components/TrustedStrip";
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>()
@@ -59,6 +60,7 @@ export default function Home() {
       <FeatureSection />
       <CareGuidesSection />
       <TestimonialsSection />
+      {/* <TrustedStrip /> */}
       {/* <div className="grid container bg-primary  gap-10">
         {home_posts.map((post, index) => (
           <PostCard image={post.image} key={index} title={post.title} subtitle={post.subtitle} paragraph={post.paragraph} buttons={post.buttons} />

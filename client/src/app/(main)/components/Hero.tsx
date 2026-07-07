@@ -10,7 +10,7 @@ import banner from '@/assets/banners/image.png'
 
 const Hero = () => {
     return (
-        <section className="relative h-[90vh] pt-20 min-h-150 w-full overflow-hidden">
+        <section className="relative h-[90vh] -mt-20 min-h-150 w-full overflow-hidden">
 
             {/* Background video */}
             <video
