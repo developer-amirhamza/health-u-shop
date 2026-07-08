@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import Axios from "@/utils/Axios";
 import { SummeryApi } from "@/app/common/SummeryApi";
 
-const money = (n: number) => `$${(n ?? 0).toFixed(2)}`;
+const money = (n: number) => `$${(Number.isFinite(n) ? n : 0).toFixed(2)}`;
 
 // Derive the sales channel from the order's number prefix / payment method.
 const channelOf = (o: any): string => {

@@ -69,18 +69,18 @@ const SignIn = () => {
         //style={{ backgroundImage: `url(${image})` }}
         >
             <div className="container px-5 mx-auto flex w-full justify-center py-6">
-                <div className="bg-blue-300/50 text-white shadow-2xl p-10 flex justify-center items-center w-full max-w-md h-full flex-col rounded-md gap-5  ">
-                    <h1 className="text-2xl text-blue-900 text-center uppercase font-semibold">Login your account</h1>
+                <div className="bg-primary text-white shadow-2xl p-10 flex justify-center items-center w-full max-w-md h-full flex-col rounded-md gap-5  ">
+                    <h1 className="text-2xl text-text text-center uppercase font-semibold">Login your account</h1>
                     <form onSubmit={handleSubmit} className="grid gap-5 w-full text-lg">
                         <div className="grid gap-2 place-items-start">
-                            <label htmlFor="email" className="font-medium text-blue-950">Email:</label>
-                            <input className='w-full font-medium text-blue-900 p-2 outline-none border-2 border-blue-300 rounded focus-within:border-blue-900'
+                            <label htmlFor="email" className="font-medium text-text-hover">Email:</label>
+                            <input className='w-full font-medium text-text p-2 outline-none border-2 border-secondary rounded focus-within:border-text'
                                 value={formData.email} type="text" onChange={handleOnChange} name="email" id="email" placeholder='Enter your email' />
                         </div>
                         <div className="grid gap-2 place-items-start">
-                            <label htmlFor="password" className="font-medium text-blue-950">Password:</label>
+                            <label htmlFor="password" className="font-medium text-text-hover">Password:</label>
                             <div className="relative w-full flex">
-                                <input className='w-full font-medium text-blue-900 p-2 flex outline-none border-2 border-blue-300 rounded focus-within:border-blue-900'
+                                <input className='w-full font-medium text-text p-2 flex outline-none border-2 border-secondary rounded focus-within:border-text'
                                     placeholder='Enter your password'
                                     value={formData.password}
                                     onChange={handleOnChange}
@@ -88,7 +88,7 @@ const SignIn = () => {
                                     name="password"
                                     id="password"
                                 />
-                                <div className="absolute right-3.5 text-xl text-slate-700 cursor-pointer top-3.5 ">
+                                <div className="absolute right-3.5 text-xl text-secondary-hover cursor-pointer top-3.5 ">
                                     {showPassword ?
                                         <FaEye onClick={() => setShowPassword(false)} />
                                         : <FaEyeSlash onClick={() => setShowPassword(true)} />}
@@ -96,11 +96,11 @@ const SignIn = () => {
                             </div>
                         </div>
                         <input disabled={!validInput} type="submit" value={loading ? "Processing.." : "Login"}
-                            className={`${validInput ? "bg-blue-400 text-white cursor-pointer hover:bg-blue-500" : "bg-slate-400   cursor-not-allowed"}  p-2 text-neutral-900
+                            className={`${validInput ? "bg-secondary-hover text-white cursor-pointer hover:bg-secondary" : "bg-primary-hover   cursor-not-allowed"}  p-2 text-secondary
                                   text-xl font-semibold rounded   `} />
                         <div className="flex justify-between w-full px-1">
                             <h1 className="text-slate-600 font-medium">Don't have an account?</h1>
-                            <Link href={"/signup"} className='text-xl font-bold text-blue-800'>Signup</Link>
+                            <Link href={"/signup"} className='text-xl font-bold text-secondary'>Signup</Link>
                         </div>
                     </form>
                 </div>

@@ -46,11 +46,11 @@ const AdminHeader: React.FC<Props> = ({ sidebar }) => {
             setLoading(false);
         }
     };
-        return (
+    return (
         <div className="flex w-full h-full max-h-16 bg-[#1a1a18] items-center border-b border-white/10 z-100">
             <button
                 onClick={sidebar}
-                className="cursor-pointer min-h-full p-4 flex bg-[#3d3b39] text-[#c9b89a] hover:bg-white/10 transition-colors"
+                className="cursor-pointer min-h-full p-4 flex text-[#c9b89a] hover:bg-white/10 transition-colors"
             >
                 <IoMenuSharp className="text-2xl" />
             </button>

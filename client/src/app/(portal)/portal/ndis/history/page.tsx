@@ -8,7 +8,7 @@ import Axios from "@/utils/Axios";
 import AxiosToastError from "@/utils/AxiosToastError";
 import { SummeryApi } from "@/app/common/SummeryApi";
 
-const money = (n: number) => `$${(n ?? 0).toFixed(2)}`;
+const money = (n: number) => `$${(Number.isFinite(n) ? n : 0).toFixed(2)}`;
 const statusColor: Record<string, string> = {
   DRAFT: "bg-gray-100 text-gray-600",
   SENT: "bg-blue-100 text-blue-700",
@@ -20,6 +20,9 @@ function HistoryInner() {
   const [quotes, setQuotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [convertTarget, setConvertTarget] = useState<any>(null);
+  const [shippingAddress, setShippingAddress] = useState("");
+  const [phone, setPhone] = useState("");
 
   const load = () => {
     setLoading(true);
@@ -45,6 +48,26 @@ function HistoryInner() {
     }
   };
 
+  const openConvert = (q: any) => {
+    setConvertTarget(q);
+    setShippingAddress("");
+    setPhone("");
+  };
+
+  const confirmConvert = async () => {
+    if (!shippingAddress || !phone) {
+      toast.error("Delivery address and phone are required");
+      return;
+    }
+    await act(
+      SummeryApi.convertQuoteToOrder,
+      { id: convertTarget.id, shippingAddress, phone },
+      "Converted to order",
+      convertTarget.id
+    );
+    setConvertTarget(null);
+  };
+
   return (
     <div className="p-8">
       <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-500">NDIS Coordinator</p>
@@ -54,7 +77,7 @@ function HistoryInner() {
           onClick={() => router.push("/portal/ndis")}
           className="px-5 py-2.5 rounded-full text-sm font-semibold bg-[#2f7d6f] text-white hover:bg-[#27675b]"
         >
-          + New quote 
+          + New quote
         </button>
       </div>
 
@@ -105,7 +128,7 @@ function HistoryInner() {
                     {q.status !== "CONVERTED" && (
                       <button
                         disabled={busyId === q.id}
-                        onClick={() => act(SummeryApi.convertQuoteToOrder, { id: q.id }, "Converted to order", q.id)}
+                        onClick={() => openConvert(q)}
                         className="text-green-600 hover:underline text-xs"
                       >
                         Convert
@@ -116,6 +139,54 @@ function HistoryInner() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Delivery details modal — required before converting a quote to a real order */}
+      {convertTarget && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => setConvertTarget(null)}
+        >
+          <div
+            className="bg-white rounded-2xl w-full max-w-md p-7"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="font-serif text-2xl text-gray-900 mb-1">Convert to order</h3>
+            <p className="text-sm text-gray-500 mb-5">
+              Add the delivery details for quote <b>{convertTarget.quoteNumber}</b> to place the order.
+            </p>
+            <div className="grid gap-4">
+              <label className="flex flex-col gap-1.5">
+                <span className="text-xs font-medium text-gray-600">Delivery address</span>
+                <input
+                  value={shippingAddress}
+                  onChange={(e) => setShippingAddress(e.target.value)}
+                  className="w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:border-[#2f7d6f] text-sm"
+                />
+              </label>
+              <label className="flex flex-col gap-1.5">
+                <span className="text-xs font-medium text-gray-600">Phone</span>
+                <input
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:border-[#2f7d6f] text-sm"
+                />
+              </label>
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <button onClick={() => setConvertTarget(null)} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-800">
+                Cancel
+              </button>
+              <button
+                onClick={confirmConvert}
+                disabled={busyId === convertTarget.id}
+                className="px-5 py-2.5 rounded-full text-sm font-semibold bg-[#2f7d6f] text-white hover:bg-[#27675b] disabled:opacity-50"
+              >
+                {busyId === convertTarget.id ? "Converting…" : "Convert to order"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

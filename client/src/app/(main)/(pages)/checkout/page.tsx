@@ -5,6 +5,8 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { createCheckoutSession, clearStripeUrl } from "@/redux/slices/orderSlice";
 import { fetchCart } from "@/redux/slices/cartSlice";
 import { DisplayPriceInAud } from "@/utils/DisplayPriceInAud";
+import { normaliseRole, portalPath, ROLES } from "@/utils/roles";
+import Link from "next/link";
 import toast from "react-hot-toast";
 
 interface FormData {
@@ -24,7 +26,7 @@ const CheckoutPage = () => {
   const { stripeUrl, status: orderStatus, error } = useSelector((state: RootState) => state.orderSlice);
   const user = useSelector((state: RootState) => state.userSlice.user);
 
-  
+
   const [form, setForm] = useState<FormData>({
     name: "",
     email: "",
@@ -119,8 +121,28 @@ const CheckoutPage = () => {
     grandTotal += itemTotal;
   }
 
+  const role = normaliseRole(user?.role);
+  const hasPortal = role === ROLES.TRADE || role === ROLES.NDIS_COORDINATOR;
+
   return (
     <section className="bg-blue-50 min-h-screen py-8">
+      <div className="container mx-auto p-4">
+        {hasPortal && (
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3">
+            <p className="text-sm text-amber-800">
+              You're checking out at <b>retail price</b>. Your{" "}
+              {role === ROLES.TRADE ? "trade wholesale pricing" : "NDIS quote pricing"} is
+              only available in your portal.
+            </p>
+            <Link
+              href={portalPath(role)}
+              className="shrink-0 rounded-md bg-amber-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-amber-700"
+            >
+              Go to my portal →
+            </Link>
+          </div>
+        )}
+      </div>
       <div className="container mx-auto gap-6 flex flex-col lg:flex-row items-start justify-between p-4">
         {/* Checkout Form */}
         <div className="w-full bg-white rounded-lg shadow p-6">

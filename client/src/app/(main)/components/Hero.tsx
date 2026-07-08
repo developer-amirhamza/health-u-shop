@@ -83,7 +83,7 @@ const Hero = () => {
 
                 </div>
                 {/* Floating review card — top right */}
-                    <div className="absolute top-4 right-0 bg-white rounded-2xl shadow-lg px-4 py-3 flex flex-col gap-1 min-w-45 border border-gray-100">
+                    <div className="absolute top-18 right-0 bg-white rounded-2xl shadow-lg px-4 py-3 flex flex-col gap-1 min-w-45 border border-gray-100">
                         <div className="flex gap-0.5">
                             {[1,2,3,4,5].map(i => <FaStar key={i} className="text-amber-400 text-xs" />)}
                         </div>

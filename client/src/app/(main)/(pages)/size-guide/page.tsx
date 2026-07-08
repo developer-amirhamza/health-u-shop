@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function SizeGuidePage() {
   return (
-    <main className="bg-white min-h-screen py-10">
+    <main className="bg-background min-h-screen py-10">
       <div className="container mx-auto px-6">
         <SizeFinder />
       </div>

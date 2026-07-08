@@ -3,56 +3,46 @@ import { setLogout } from "@/redux/slices/userSlices";
 import { RootState } from "@/redux/store";
 import Axios from "@/utils/Axios";
 import AxiosToastError from "@/utils/AxiosToastError";
+import { normaliseRole, portalPath, ROLES } from "@/utils/roles";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import toast from "react-hot-toast";
-import { FaExternalLinkAlt } from "react-icons/fa";
+import { FaExternalLinkAlt, FaStore } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import Divider from "./Divider";
 import { VscSignOut } from "react-icons/vsc";
 
 interface Type {
-    close:any
+    close: any
 }
 
-const UserMenu:React.FC<Type> = ({ close }) => {
+const UserMenu: React.FC<Type> = ({ close }) => {
     const dispatch = useDispatch();
-    const {user }= useSelector((state:RootState) => state.userSlice);
-    const [loading, setLoading] = useState(false);
+    const user = useSelector((state: RootState) => state.userSlice?.user);
     const router = useRouter();
-    //  const handleSignout = async () => {
-    //     try {
-    //         const response = await Axios({
-    //             ...SummeryApi.signout,
-    //         });
-    //         dispatch(setLogout());
-    //         localStorage.clear();
-    //         toast.success(response?.data?.message);
-    //     } catch (error) {
-    //         AxiosToastError(error);
-    //     }
-    // };
-
+    const role = normaliseRole(user?.role);
+    // Trade/NDIS accounts have a dedicated portal — surface a direct link so
+    // they're never stuck only in the regular consumer nav.
+    const hasPortal = role === ROLES.TRADE || role === ROLES.NDIS_COORDINATOR;
     const handleSignout = async () => {
         try {
-            setLoading(true);
             const response = await Axios({
                 ...SummeryApi.signout,
             });
-            if (response.data?.success) {
-                toast.success(response.data?.message);
-                dispatch(setLogout());
-                localStorage.clear();
-                router.push("/");
-            }
+            toast.success(response?.data?.message);
         } catch (error) {
             AxiosToastError(error);
         } finally {
-            setLoading(false);
+            // Always clear the local session and close the menu, even if the
+            // signout request itself fails (e.g. expired token).
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            dispatch(setLogout());
+            if (close) close();
+            router.push("/");
         }
     };
-
 
     const handleCloseMenu = () => {
         if (close) {
@@ -63,85 +53,40 @@ const UserMenu:React.FC<Type> = ({ close }) => {
     return (
         <div>
             <div className="flex  flex-col pt-3 gap-1.5 z-50  ">
-                <h2 className="font-semibold px-2 text-neutral-800 ">My Account</h2>
+                <h2 className="font-semibold px-2 text-text ">My Account</h2>
                 <Link
                     onClick={handleCloseMenu}
                     href={"/my-profile/"}
-                    className="text-neutral-700 flex gap-4 hover:text-primary cursor-pointer hover:bg-amber-100 items-center  font-medium px-2"
+                    className="text-text-hover flex gap-4 hover:text-text cursor-pointer hover:bg-primary items-center  font-medium px-2"
                 >
                     <span className="">
                         {user?.name || user?.mobile}
-                        <span>{user?.role === "ADMIN" ? "(Admin)" : ""}</span>
-                         </span>
+                    </span>
                     <FaExternalLinkAlt size={16} />
                 </Link>
                 <Divider />
                 <div className="grid gap-2">
-                    {/* {isAdmin(user?.role) && (
+                    {hasPortal && (
                         <Link
                             onClick={handleCloseMenu}
-                            to={"/dashboard/category"}
-                            className="text-neutral-600 px-2 font-medium cursor-pointer hover:bg-amber-200"
+                            href={portalPath(role)}
+                            className="text-text-hover hover:text-text px-2 font-semibold cursor-pointer hover:bg-primary flex items-center gap-2"
                         >
-                            Category
+                            <FaStore size={16} />
+                            {role === ROLES.TRADE ? "Trade Portal" : "NDIS Portal"}
                         </Link>
                     )}
-
-                    {isAdmin(user?.role) && (
-                        <Link
-                            onClick={handleCloseMenu}
-                            to={"/dashboard/sub-category"}
-                            className="text-neutral-600 px-2 font-medium cursor-pointer hover:bg-amber-200"
-                        >
-                            Sub Category
-                        </Link>
-                    )}
-
-                    {isAdmin(user?.role) && (
-                        <Link
-                            onClick={handleCloseMenu}
-                            to={"/dashboard/admin-products"}
-                            className="text-neutral-600 px-2 font-medium cursor-pointer hover:bg-amber-200"
-                        >
-                            Products
-                        </Link>
-                    )}
-                    {isAdmin(user?.role) && (
-                        <Link
-                            onClick={handleCloseMenu}
-                            to={"/dashboard/upload-product"}
-                            className="text-neutral-600 px-2 font-medium cursor-pointer hover:bg-amber-200"
-                        >
-                            Upload Product
-                        </Link>
-                    )} */}
 
                     <Link
                         onClick={handleCloseMenu}
                         href={"/order/my-orders"}
-                        className="text-neutral-600 hover:text-primary px-2 font-medium cursor-pointer hover:bg-amber-200"
+                        className="text-text-hover hover:text-text px-2 font-medium cursor-pointer hover:bg-primary"
                     >
                         My Orders
                     </Link>
-                    {/* {isAdmin(user?.role) && (
-                        <Link
-                            onClick={handleCloseMenu}
-                            to={"/dashboard/admin-orders"}
-                            className="text-neutral-600 px-2 font-medium cursor-pointer hover:bg-amber-200"
-                        >
-                        All Orders
-                        </Link>
-                    )} */}
-                    {/* <Link
-                        onClick={handleCloseMenu}
-                        href={"/dashboard/address"}
-                        className="text-neutral-600 px-2 font-medium cursor-pointer hover:bg-amber-200"
-                    >
-                        Save Address
-                    </Link> */}
                 </div>
                 <button onClick={handleSignout}
-                    className="text-md font-medium hover:bg-amber-100 cursor-pointer px-3 py-2 rounded hover:text-primary  flex items-center gap-2 t text-neutral-800">
+                    className="text-md font-medium hover:bg-primary cursor-pointer px-3 py-2 rounded hover:text-text  flex items-center gap-2 t text-text-hover">
                     <VscSignOut size={24} /> <span className="text-xl font-bold  ">Signout</span>
                 </button>
             </div>

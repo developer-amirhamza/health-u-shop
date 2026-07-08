@@ -19,14 +19,17 @@ interface TradeProduct {
   tiers: Tier[];
 }
 
-const money = (n: number) => `$${(n ?? 0).toFixed(2)}`;
+// NaN-safe formatter — `?? 0` alone does NOT catch NaN (only null/undefined),
+// so a cleared/invalid quantity input used to render "$NaN" in the order panel.
+const money = (n: number) => `$${(Number.isFinite(n) ? n : 0).toFixed(2)}`;
 
 // Resolve the unit price for a given carton quantity using the volume tiers.
 const priceForQty = (p: TradeProduct, qty: number) => {
   const applicable = [...p.tiers]
     .filter((t) => qty >= t.minQuantity)
     .sort((a, b) => b.minQuantity - a.minQuantity)[0];
-  return applicable ? applicable.pricePerUnit : p.tradePrice;
+  const price = applicable ? applicable.pricePerUnit : p.tradePrice;
+  return Number.isFinite(price) ? price : 0;
 };
 
 export default function TradeCatalogue() {
@@ -48,8 +51,11 @@ export default function TradeCatalogue() {
   const setQty = (id: string, qty: number) =>
     setCart((c) => {
       const next = { ...c };
-      if (qty <= 0) delete next[id];
-      else next[id] = qty;
+      // Guard against NaN from a cleared/invalid number input — without this,
+      // an empty cartons field would store NaN and silently poison the totals.
+      const safeQty = Number.isFinite(qty) ? Math.max(0, Math.floor(qty)) : 0;
+      if (safeQty <= 0) delete next[id];
+      else next[id] = safeQty;
       return next;
     });
 
@@ -181,13 +187,13 @@ export default function TradeCatalogue() {
             placeholder="Delivery address"
             value={shippingAddress}
             onChange={(e) => setShippingAddress(e.target.value)}
-            className="mt-3 w-full p-2.5 rounded-lg text-sm text-gray-900 outline-none"
+            className="mt-3 w-full p-2.5 rounded-lg text-sm bg-white text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-[#c9b89a]"
           />
           <input
             placeholder="Phone"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="w-full p-2.5 rounded-lg text-sm text-gray-900 outline-none"
+            className="w-full p-2.5 rounded-lg text-sm bg-white text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-[#c9b89a]"
           />
 
           <div className="flex gap-2 mt-1">

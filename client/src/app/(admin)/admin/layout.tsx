@@ -27,10 +27,12 @@ const AdminLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     // Guard: redirect non-admins away from the admin area.
     useEffect(() => {
         const accessToken = localStorage.getItem("accessToken");
+        // No token at all -> send to sign in.
         if (!accessToken) {
             router.replace("/signin");
             return;
         }
+        // User has been loaded and is not an admin -> kick out.
         if (status === "succeeded" && !IsAdmin(user?.role)) {
             router.replace("/");
         }
@@ -39,14 +41,16 @@ const AdminLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         }
     }, [status, user, router]);
 
+    // While we don't yet know who the user is, don't flash the admin UI.
     if (status === "idle" || status === "loading") {
         return (
-                        <div className="flex w-full h-screen items-center justify-center bg-[#f5f0eb]">
+            <div className="flex w-full h-screen items-center justify-center bg-[#f5f0eb]">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1a1a18]"></div>
             </div>
         );
     }
 
+    // Loaded but not an admin -> render nothing while the redirect happens.
     if (!IsAdmin(user?.role)) {
         return null;
     }
@@ -54,12 +58,14 @@ const AdminLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     return (
         <>
             <div className="flex w-full h-screen items-start bg-[#f5f0eb] overflow-x-hidden transition-all duration-700">
-                <div   className={`w-full max-w-fit sticky h-screen overflow-y-auto no-scrollbar bg-[#1a1a18] z-50 flex`}>
+                <div
+                    className={`w-full max-w-fit sticky h-screen overflow-y-auto no-scrollbar bg-[#1a1a18] z-50 flex`}
+                >
                     <AdminSidebar activeSidebar={showSidebar} />
                 </div>
                 <div className="w-full h-screen flex  flex-col">
                     <AdminHeader sidebar={() => setShowSidebar(!showSidebar)} />
-                    <div className=" no-scrollbar py-5 overflow-y-auto">
+                    <div className=" no-scrollbar overflow-y-auto">
                         {children}
                     </div>
                 </div>

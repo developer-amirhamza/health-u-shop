@@ -6,7 +6,7 @@ import Axios from "@/utils/Axios";
 import AxiosToastError from "@/utils/AxiosToastError";
 import { SummeryApi } from "@/app/common/SummeryApi";
 
-const money = (n: number) => `$${(n ?? 0).toFixed(2)}`;
+const money = (n: number) => `$${(Number.isFinite(n) ? n : 0).toFixed(2)}`;
 const fmt = (d: string) => new Date(d).toLocaleDateString("en-AU");
 
 export default function ConsumerOrders() {

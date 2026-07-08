@@ -30,7 +30,7 @@ interface Totals {
 }
 
 const PERIODS = ["One-off", "Monthly", "Annual"];
-const money = (n: number) => `$${(n ?? 0).toFixed(2)}`;
+const money = (n: number) => `$${(Number.isFinite(n) ? n : 0).toFixed(2)}`;
 
 export default function QuoteBuilder() {
   const [step, setStep] = useState(0);

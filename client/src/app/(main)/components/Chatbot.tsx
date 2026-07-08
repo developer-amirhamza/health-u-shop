@@ -1,0 +1,286 @@
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { RiChat3Fill, RiCloseFill, RiSendPlaneFill } from "react-icons/ri";
+import { BsChevronDown } from "react-icons/bs";
+import Axios from "@/utils/Axios";
+import { SummeryApi } from "@/app/common/SummeryApi";
+import { DisplayPriceInAud } from "@/utils/DisplayPriceInAud";
+import { validURLConvert } from "@/utils/validURLConvart";
+
+type Sender = "bot" | "user";
+
+interface ResultProduct {
+    id: string;
+    title: string;
+    price: number;
+    images: string[];
+}
+
+interface Message {
+    id: number;
+    sender: Sender;
+    text?: string;
+    quickReplies?: string[];
+    products?: ResultProduct[];
+}
+
+const QUICK_REPLIES = ["Find a product", "Track my order", "Shipping info", "Talk to a human"];
+
+let idSeq = 1;
+
+const Chatbot = () => {
+    const [open, setOpen] = useState(false);
+    const [minimised, setMinimised] = useState(false);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [input, setInput] = useState("");
+    const [searching, setSearching] = useState(false);
+    const [awaitingSearch, setAwaitingSearch] = useState(false);
+    const bottomRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (open && messages.length === 0) {
+            setMessages([
+                {
+                    id: idSeq++,
+                    sender: "bot",
+                    text: "Hi! It's Bestiee, your virtual assistant at Health U Shop.",
+                },
+                {
+                    id: idSeq++,
+                    sender: "bot",
+                    text: "I can help you find products, check stock, or point you to your orders.",
+                },
+                {
+                    id: idSeq++,
+                    sender: "bot",
+                    text: "How can I help you?",
+                    quickReplies: QUICK_REPLIES,
+                },
+            ]);
+        }
+    }, [open, messages.length]);
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages, open]);
+
+    const pushBot = (msg: Omit<Message, "id" | "sender">) => {
+        setMessages((prev) => [...prev, { id: idSeq++, sender: "bot", ...msg }]);
+    };
+
+    const pushUser = (text: string) => {
+        setMessages((prev) => [...prev, { id: idSeq++, sender: "user", text }]);
+    };
+
+    const runProductSearch = async (query: string) => {
+        pushUser(query);
+        setSearching(true);
+        try {
+            const response = await Axios({
+                ...SummeryApi.searchProduct,
+                params: { q: query, page: 1, limit: 5 },
+            });
+            const products: ResultProduct[] = response.data?.data || [];
+            if (products.length === 0) {
+                pushBot({
+                    text: `I couldn't find anything for "${query}". Try a different keyword, or browse our shop.`,
+                    quickReplies: QUICK_REPLIES,
+                });
+            } else {
+                pushBot({ text: `Here's what I found for "${query}":`, products });
+                pushBot({ text: "Need anything else?", quickReplies: QUICK_REPLIES });
+            }
+        } catch {
+            pushBot({
+                text: "Sorry, I couldn't reach the shop right now — please try again shortly.",
+                quickReplies: QUICK_REPLIES,
+            });
+        } finally {
+            setSearching(false);
+            setAwaitingSearch(false);
+        }
+    };
+
+    const handleQuickReply = (reply: string) => {
+        if (reply === "Find a product") {
+            pushUser(reply);
+            pushBot({ text: "Sure — what product are you looking for?" });
+            setAwaitingSearch(true);
+            return;
+        }
+        if (reply === "Track my order") {
+            pushUser(reply);
+            pushBot({
+                text: "You can view all your orders and their status here:",
+            });
+            pushBot({
+                text: "→ /order/my-orders",
+                quickReplies: QUICK_REPLIES,
+            });
+            return;
+        }
+        if (reply === "Shipping info") {
+            pushUser(reply);
+            pushBot({
+                text: "We offer free, discreet shipping Australia-wide on orders over $99. Standard delivery is 2-5 business days.",
+                quickReplies: QUICK_REPLIES,
+            });
+            return;
+        }
+        if (reply === "Talk to a human") {
+            pushUser(reply);
+            pushBot({
+                text: "No problem — you can reach our team via the Contact page, or call 1300 243 253.",
+                quickReplies: QUICK_REPLIES,
+            });
+            return;
+        }
+    };
+
+    const handleSend = () => {
+        const text = input.trim();
+        if (!text) return;
+        setInput("");
+        if (awaitingSearch) {
+            runProductSearch(text);
+        } else {
+            runProductSearch(text);
+        }
+    };
+
+    if (!open) {
+        return (
+            <button
+                onClick={() => setOpen(true)}
+                aria-label="Chat with Bestiee"
+                className="fixed bottom-5 right-5 z-50 flex items-center justify-center w-12 h-12 rounded-full bg-[#394624] text-white shadow-lg hover:bg-secondary-hover transition-colors"
+            >
+                <RiChat3Fill size={26} />
+            </button>
+        );
+    }
+
+    return (
+        <div className="fixed bottom-5 right-5 z-50 w-[92vw] max-w-sm flex flex-col rounded-xl overflow-hidden shadow-2xl border border-gray-200 bg-white">
+            {/* Header */}
+            <div className="flex items-center justify-between bg-[#394624] text-white px-4 py-3">
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                        <RiChat3Fill size={16} />
+                    </div>
+                    <span className="font-semibold">Chat with Bestiee</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setMinimised((m) => !m)}
+                        aria-label="Minimise"
+                        className="hover:bg-white/10 rounded p-1 transition-colors"
+                    >
+                        <BsChevronDown size={16} className={`transition-transform ${minimised ? "rotate-180" : ""}`} />
+                    </button>
+                    <button
+                        onClick={() => setOpen(false)}
+                        aria-label="Close chat"
+                        className="hover:bg-white/10 rounded p-1 transition-colors"
+                    >
+                        <RiCloseFill size={18} />
+                    </button>
+                </div>
+            </div>
+
+            {!minimised && (
+                <>
+                    {/* Messages */}
+                    <div className="flex-1 max-h-[60vh] overflow-y-auto px-4 py-4 space-y-3 bg-[#f5f7fb]">
+                        {messages.map((m) => (
+                            <div key={m.id} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
+                                <div className="max-w-[85%] flex flex-col gap-2">
+                                    {m.text && (
+                                        <div
+                                            className={`rounded-2xl px-3.5 py-2 text-sm leading-snug ${
+                                                m.sender === "bot"
+                                                    ? "bg-[#5b6fd6] text-white rounded-bl-sm"
+                                                    : "bg-white border border-gray-200 text-gray-800 rounded-br-sm"
+                                            }`}
+                                        >
+                                            {m.text}
+                                        </div>
+                                    )}
+
+                                    {m.products && (
+                                        <div className="flex flex-col gap-2">
+                                            {m.products.map((p) => (
+                                                <Link
+                                                    key={p.id}
+                                                    href={`/product/${validURLConvert(p.title)}_${p.id}`}
+                                                    onClick={() => setOpen(false)}
+                                                    className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2 hover:border-blue-400 transition-colors"
+                                                >
+                                                    {p.images?.[0] && (
+                                                        // eslint-disable-next-line @next/next/no-img-element
+                                                        <img
+                                                            src={p.images[0]}
+                                                            alt={p.title}
+                                                            className="w-10 h-10 object-contain rounded shrink-0"
+                                                        />
+                                                    )}
+                                                    <div className="min-w-0">
+                                                        <p className="text-xs font-medium text-gray-800 truncate">{p.title}</p>
+                                                        <p className="text-xs text-blue-600 font-semibold">{DisplayPriceInAud(p.price)}</p>
+                                                    </div>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {m.quickReplies && (
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {m.quickReplies.map((r) => (
+                                                <button
+                                                    key={r}
+                                                    onClick={() => handleQuickReply(r)}
+                                                    className="border border-[#394624] text-[#394624] text-xs font-medium rounded-md px-2 py-2 hover:bg-blue-50 transition-colors"
+                                                >
+                                                    {r}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                        {searching && (
+                            <div className="flex justify-start">
+                                <div className="rounded-2xl px-3.5 py-2 text-sm bg-[#5b6fd6] text-white rounded-bl-sm">
+                                    Searching…
+                                </div>
+                            </div>
+                        )}
+                        <div ref={bottomRef} />
+                    </div>
+
+                    {/* Input */}
+                    <div className="flex items-center gap-2 border-t border-gray-200 bg-white px-3 py-2">
+                        <input
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                            placeholder="How can I help you?"
+                            className="flex-1 text-sm outline-none px-2 py-2 bg-transparent text-gray-700 placeholder:text-gray-400"
+                        />
+                        <button
+                            onClick={handleSend}
+                            aria-label="Send"
+                            className="flex items-center justify-center w-9 h-9 rounded-full bg-[#394624] text-white hover:bg-blue-700 transition-colors shrink-0"
+                        >
+                            <RiSendPlaneFill size={14} />
+                        </button>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+};
+
+export default Chatbot;

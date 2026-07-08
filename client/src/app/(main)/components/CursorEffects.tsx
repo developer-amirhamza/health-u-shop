@@ -65,7 +65,7 @@ export default function CursorEffects() {
         const onOver = (e: MouseEvent) => {
           const target = (e.target as Element)?.closest?.(INTERACTIVE);
           if (!target || (target as HTMLElement).dataset.noHoverFx !== undefined) return;
-          gsap.to(ring, { scale: 1.5, borderColor: "#4F5B3A", duration: 0.3 });
+          gsap.to(ring, { scale: 1.8, borderColor: "#4F5B3A", duration: 0.3 });
           gsap.to(dot, { scale: 0.5, duration: 0.3 });
           if (!lifted.has(target)) {
             lifted.add(target);

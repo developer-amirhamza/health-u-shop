@@ -22,6 +22,7 @@ const AutoScrollSlider: React.FC<Props> = ({
   return (
     <div
       className={`ass-viewport ${pauseOnHover ? "ass-pause" : ""} ${className}`}
+      // Fade the edges so items enter/exit smoothly.
       style={{
         maskImage:
           "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
@@ -48,6 +49,7 @@ const AutoScrollSlider: React.FC<Props> = ({
       `}</style>
 
       <div className="ass-track">
+        {/* Two identical groups → translating -50% loops seamlessly. */}
         <div className="ass-group" style={{ gap, paddingRight: gap }} aria-hidden="false">
           {children}
         </div>

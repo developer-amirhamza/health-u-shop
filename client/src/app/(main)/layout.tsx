@@ -1,5 +1,6 @@
 // app/(main)/layout.tsx
 
+import Chatbot from "./components/Chatbot";
 import CursorEffects from "./components/CursorEffects";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
@@ -21,6 +22,7 @@ export default function MainLayout({
       <CursorEffects />
       {children}
       <Footer />
+      <Chatbot/>
     </>
   );
 }

@@ -22,7 +22,7 @@ interface Props {
   chatHref?: string;
 }
 
-const TEAL = "#2f7d6f";
+const TEAL = "#4F5B3A";
 
 const SizeFinder: React.FC<Props> = ({ product, chatHref = "/contact-us" }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -61,7 +61,7 @@ const SizeFinder: React.FC<Props> = ({ product, chatHref = "/contact-us" }) => {
       : "That measurement is just outside our current range. Please chat to us.";
 
   return (
-    <div className="max-w-4xl">
+    <div className="max-w-4xl mx-auto ">
       <h2 className="text-3xl font-bold text-gray-900">Find your perfect fit</h2>
       <p className="text-gray-500 mt-1 mb-6 text-base">
         Takes about 10 seconds — for you, or someone you care for.
@@ -69,7 +69,7 @@ const SizeFinder: React.FC<Props> = ({ product, chatHref = "/contact-us" }) => {
 
       {/* ── 1. Fit Finder ── */}
       <section
-        className="rounded-2xl border-2 border-[#2f7d6f]/25 bg-[#e6f0ee] p-6 md:p-7"
+        className="rounded-2xl border-2 border-[#4F5B3A]/25 bg-[#e6f0ee] p-6 md:p-7"
         aria-labelledby="fitfinder-heading"
       >
         <div className="flex items-center gap-2 mb-5">
@@ -93,7 +93,7 @@ const SizeFinder: React.FC<Props> = ({ product, chatHref = "/contact-us" }) => {
               value={displayValue}
               onChange={(e) => setFromDisplay(Number(e.target.value))}
               aria-label={`Waist measurement in ${unit === "cm" ? "centimetres" : "inches"}`}
-              className="w-full accent-[#2f7d6f] h-2 cursor-pointer"
+              className="w-full accent-[#4F5B3A] h-2 cursor-pointer"
             />
 
             <div className="flex items-center gap-3 mt-4">
@@ -103,7 +103,7 @@ const SizeFinder: React.FC<Props> = ({ product, chatHref = "/contact-us" }) => {
                 inputMode="numeric"
                 value={displayValue}
                 onChange={(e) => setFromDisplay(Number(e.target.value))}
-                className="w-24 text-3xl font-bold text-gray-900 bg-white rounded-lg px-3 py-2 border border-gray-300 outline-none focus:border-[#2f7d6f]"
+                className="w-24 text-3xl font-bold text-gray-900 bg-white rounded-lg px-3 py-2 border border-gray-300 outline-none focus:border-[#4F5B3A]"
               />
               <span className="text-lg text-gray-500">{unit}</span>
 
@@ -119,7 +119,7 @@ const SizeFinder: React.FC<Props> = ({ product, chatHref = "/contact-us" }) => {
                     onClick={() => setUnit(u)}
                     aria-pressed={unit === u}
                     className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${
-                      unit === u ? "bg-[#2f7d6f] text-white" : "text-gray-500"
+                      unit === u ? "bg-[#4F5B3A] text-white" : "text-gray-500"
                     }`}
                   >
                     {u}
@@ -144,7 +144,7 @@ const SizeFinder: React.FC<Props> = ({ product, chatHref = "/contact-us" }) => {
                     </p>
                   </div>
                   <span
-                    className="w-7 h-7 rounded-full bg-[#2f7d6f] text-white flex items-center justify-center text-sm shrink-0"
+                    className="w-7 h-7 rounded-full bg-[#4F5B3A] text-white flex items-center justify-center text-sm shrink-0"
                     aria-hidden="true"
                   >
                     ✓
@@ -184,7 +184,7 @@ const SizeFinder: React.FC<Props> = ({ product, chatHref = "/contact-us" }) => {
                 </p>
                 <Link
                   href={chatHref}
-                  className="block text-center w-full mt-4 bg-[#2f7d6f] hover:bg-[#27675b] text-white font-bold py-3 rounded-lg transition-colors"
+                  className="block text-center w-full mt-4 bg-[#4F5B3A] hover:bg-[#27675b] text-white font-bold py-3 rounded-lg transition-colors"
                 >
                   Chat to us
                 </Link>
@@ -245,7 +245,7 @@ const SizeFinder: React.FC<Props> = ({ product, chatHref = "/contact-us" }) => {
         <div className="overflow-x-auto rounded-2xl border border-gray-100">
           <table className="w-full text-left">
             <caption className="sr-only">Size chart by waist measurement in centimetres and inches</caption>
-            <thead className="bg-[#2f7d6f] text-white text-sm">
+            <thead className="bg-[#4F5B3A] text-white text-sm">
               <tr>
                 <th scope="col" className="px-4 py-3 font-semibold">Size</th>
                 <th scope="col" className="px-4 py-3 font-semibold">Waist (cm)</th>
@@ -259,7 +259,7 @@ const SizeFinder: React.FC<Props> = ({ product, chatHref = "/contact-us" }) => {
                 return (
                   <tr key={s.short} className={i % 2 ? "bg-[#faf3ee]" : "bg-white"} aria-current={active ? "true" : undefined}>
                     <th scope="row" className="px-4 py-3 font-bold text-[#b4472b]">
-                      {s.short}{active && <span className="ml-1 text-[#2f7d6f]" aria-label="your size">✓</span>}
+                      {s.short}{active && <span className="ml-1 text-[#4F5B3A]" aria-label="your size">✓</span>}
                     </th>
                     <td className="px-4 py-3 text-gray-700">{s.minCm} – {s.maxCm}</td>
                     <td className="px-4 py-3 text-gray-700">{s.inches}</td>
@@ -275,9 +275,9 @@ const SizeFinder: React.FC<Props> = ({ product, chatHref = "/contact-us" }) => {
       {/* Closing reassurance */}
       <Link
         href={chatHref}
-        className="mt-8 flex items-center gap-3 rounded-2xl border-2 border-[#2f7d6f]/25 bg-[#e6f0ee] px-5 py-4 hover:bg-[#dcebe8] transition-colors"
+        className="mt-8 flex items-center gap-3 rounded-2xl border-2 border-[#4F5B3A]/25 bg-[#e6f0ee] px-5 py-4 hover:bg-[#dcebe8] transition-colors"
       >
-        <span className="w-8 h-8 rounded-full bg-[#2f7d6f] text-white flex items-center justify-center shrink-0" aria-hidden="true">?</span>
+        <span className="w-8 h-8 rounded-full bg-[#4F5B3A] text-white flex items-center justify-center shrink-0" aria-hidden="true">?</span>
         <span className="font-bold text-gray-800">Still unsure? Chat to us — we’ll help you get the fit right.</span>
       </Link>
     </div>
@@ -286,7 +286,7 @@ const SizeFinder: React.FC<Props> = ({ product, chatHref = "/contact-us" }) => {
 
 function Step({ n }: { n: number }) {
   return (
-    <span className="w-7 h-7 rounded-full bg-[#2f7d6f] text-white flex items-center justify-center text-sm font-bold shrink-0" aria-hidden="true">
+    <span className="w-7 h-7 rounded-full bg-[#4F5B3A] text-white flex items-center justify-center text-sm font-bold shrink-0" aria-hidden="true">
       {n}
     </span>
   );
@@ -295,7 +295,7 @@ function Step({ n }: { n: number }) {
 function MeasureStep({ n, title, body }: { n: number; title: string; body: string }) {
   return (
     <div className="flex gap-3">
-      <span className="w-8 h-8 rounded-full bg-[#2f7d6f] text-white flex items-center justify-center text-sm font-bold shrink-0" aria-hidden="true">{n}</span>
+      <span className="w-8 h-8 rounded-full bg-[#4F5B3A] text-white flex items-center justify-center text-sm font-bold shrink-0" aria-hidden="true">{n}</span>
       <p className="text-gray-700 text-base">
         <span className="font-bold text-gray-900">{title}</span> {body}
       </p>

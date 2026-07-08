@@ -99,7 +99,7 @@ const Header1 = () => {
                     ${topbarVisible ? " max-h-10 opacity-100" : " max-h-0 opacity-0"} `}
             >
             <AutoScrollSlider speed={30} gap={50}
-            className="container mx-auto flex items-center w-full overflow-x-hidden justify-between px-4 h-9 text-sm"
+            className="container mx-auto flex items-center w-full overflow-x-hidden justify-between px-4 h-7 text-sm"
             >
                     <div className="flex items-center gap-2 whitespace-nowrap">
                         <FaTruck className="text-primary shrink-0" />
