@@ -1,12 +1,15 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 import { RiChat3Fill, RiCloseFill, RiSendPlaneFill } from "react-icons/ri";
 import { BsChevronDown } from "react-icons/bs";
 import Axios from "@/utils/Axios";
 import { SummeryApi } from "@/app/common/SummeryApi";
 import { DisplayPriceInAud } from "@/utils/DisplayPriceInAud";
 import { validURLConvert } from "@/utils/validURLConvart";
+import { RootState } from "@/redux/store";
+import { normaliseRole, portalPath, ROLES } from "@/utils/roles";
 
 type Sender = "bot" | "user";
 
@@ -17,15 +20,27 @@ interface ResultProduct {
     images: string[];
 }
 
+// Quick replies are either an action button (triggers a bot response) or a
+// direct nav link (routes straight to a page in the site).
+interface QuickReply {
+    label: string;
+    action?: string;
+    href?: string;
+}
+
 interface Message {
     id: number;
     sender: Sender;
     text?: string;
-    quickReplies?: string[];
+    quickReplies?: QuickReply[];
     products?: ResultProduct[];
 }
 
-const QUICK_REPLIES = ["Find a product", "Track my order", "Shipping info", "Talk to a human"];
+const ACTION_REPLIES: QuickReply[] = [
+    { label: "Find a product", action: "find-product" },
+    { label: "Shipping info", action: "shipping-info" },
+    { label: "Talk to a human", action: "talk-human" },
+];
 
 let idSeq = 1;
 
@@ -37,6 +52,25 @@ const Chatbot = () => {
     const [searching, setSearching] = useState(false);
     const [awaitingSearch, setAwaitingSearch] = useState(false);
     const bottomRef = useRef<HTMLDivElement>(null);
+
+    const user = useSelector((state: RootState) => state.userSlice?.user);
+    const isLoggedIn = !!user;
+    const role = normaliseRole(user?.role);
+
+    // Nav quick replies are computed from login state / role so the bot only
+    // offers links the visitor can actually use.
+    const navReplies: QuickReply[] = [
+        ...(isLoggedIn ? [{ label: "Track my order", href: "/order/my-orders" }] : []),
+        { label: "Fit Finder", href: "/size-guide" },
+        ...(isLoggedIn
+            ? [{ label: "My Portal", href: portalPath(role) }]
+            : [{ label: "User Portal", href: "/signin" }]),
+        ...(isLoggedIn && role === ROLES.NDIS_COORDINATOR
+            ? [{ label: "Get a Quote", href: "/portal/ndis" }]
+            : [{ label: "Get a Quote", href: "/apply/ndis" }]),
+    ];
+
+    const QUICK_REPLIES: QuickReply[] = [...navReplies, ...ACTION_REPLIES];
 
     useEffect(() => {
         if (open && messages.length === 0) {
@@ -102,34 +136,21 @@ const Chatbot = () => {
         }
     };
 
-    const handleQuickReply = (reply: string) => {
-        if (reply === "Find a product") {
-            pushUser(reply);
+    const handleQuickReply = (reply: QuickReply) => {
+        pushUser(reply.label);
+        if (reply.action === "find-product") {
             pushBot({ text: "Sure — what product are you looking for?" });
             setAwaitingSearch(true);
             return;
         }
-        if (reply === "Track my order") {
-            pushUser(reply);
-            pushBot({
-                text: "You can view all your orders and their status here:",
-            });
-            pushBot({
-                text: "→ /order/my-orders",
-                quickReplies: QUICK_REPLIES,
-            });
-            return;
-        }
-        if (reply === "Shipping info") {
-            pushUser(reply);
+        if (reply.action === "shipping-info") {
             pushBot({
                 text: "We offer free, discreet shipping Australia-wide on orders over $99. Standard delivery is 2-5 business days.",
                 quickReplies: QUICK_REPLIES,
             });
             return;
         }
-        if (reply === "Talk to a human") {
-            pushUser(reply);
+        if (reply.action === "talk-human") {
             pushBot({
                 text: "No problem — you can reach our team via the Contact page, or call 1300 243 253.",
                 quickReplies: QUICK_REPLIES,
@@ -154,7 +175,7 @@ const Chatbot = () => {
             <button
                 onClick={() => setOpen(true)}
                 aria-label="Chat with Bestiee"
-                className="fixed bottom-5 right-5 z-50 flex items-center justify-center w-12 h-12 rounded-full bg-[#394624] text-white shadow-lg hover:bg-secondary-hover transition-colors"
+                className="fixed bottom-5 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-secondary text-white shadow-lg hover:bg-blue-700 transition-colors"
             >
                 <RiChat3Fill size={26} />
             </button>
@@ -164,7 +185,7 @@ const Chatbot = () => {
     return (
         <div className="fixed bottom-5 right-5 z-50 w-[92vw] max-w-sm flex flex-col rounded-xl overflow-hidden shadow-2xl border border-gray-200 bg-white">
             {/* Header */}
-            <div className="flex items-center justify-between bg-[#394624] text-white px-4 py-3">
+            <div className="flex items-center justify-between bg-secondary text-white px-4 py-3">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                         <RiChat3Fill size={16} />
@@ -227,7 +248,7 @@ const Chatbot = () => {
                                                     )}
                                                     <div className="min-w-0">
                                                         <p className="text-xs font-medium text-gray-800 truncate">{p.title}</p>
-                                                        <p className="text-xs text-blue-600 font-semibold">{DisplayPriceInAud(p.price)}</p>
+                                                        <p className="text-xs text-secondary font-semibold">{DisplayPriceInAud(p.price)}</p>
                                                     </div>
                                                 </Link>
                                             ))}
@@ -236,15 +257,26 @@ const Chatbot = () => {
 
                                     {m.quickReplies && (
                                         <div className="grid grid-cols-2 gap-2">
-                                            {m.quickReplies.map((r) => (
-                                                <button
-                                                    key={r}
-                                                    onClick={() => handleQuickReply(r)}
-                                                    className="border border-[#394624] text-[#394624] text-xs font-medium rounded-md px-2 py-2 hover:bg-blue-50 transition-colors"
-                                                >
-                                                    {r}
-                                                </button>
-                                            ))}
+                                            {m.quickReplies.map((r) =>
+                                                r.href ? (
+                                                    <Link
+                                                        key={r.label}
+                                                        href={r.href}
+                                                        onClick={() => setOpen(false)}
+                                                        className="text-center border border-secondary text-secondary text-xs font-medium rounded-md px-2 py-2 hover:bg-blue-50 transition-colors"
+                                                    >
+                                                        {r.label}
+                                                    </Link>
+                                                ) : (
+                                                    <button
+                                                        key={r.label}
+                                                        onClick={() => handleQuickReply(r)}
+                                                        className="border border-secondary text-secondary text-xs font-medium rounded-md px-2 py-2 hover:bg-blue-50 transition-colors"
+                                                    >
+                                                        {r.label}
+                                                    </button>
+                                                )
+                                            )}
                                         </div>
                                     )}
                                 </div>
@@ -272,7 +304,7 @@ const Chatbot = () => {
                         <button
                             onClick={handleSend}
                             aria-label="Send"
-                            className="flex items-center justify-center w-9 h-9 rounded-full bg-[#394624] text-white hover:bg-blue-700 transition-colors shrink-0"
+                            className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary text-white hover:bg-blue-700 transition-colors shrink-0"
                         >
                             <RiSendPlaneFill size={14} />
                         </button>
