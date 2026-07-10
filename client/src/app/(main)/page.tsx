@@ -1,30 +1,17 @@
-"use client"
-import { fetchUser } from "@/redux/slices/userSlices";
-import { AppDispatch, RootState } from "@/redux/store";
-import { useEffect } from "react";
+
 import Hero from "./components/Hero";
 import CategoryWiseProducts from "./components/CategoryWiseProducts";
-import { fetchCategories } from "@/redux/slices/categorySlice";
 import InfoGraphicCard from "./components/InfoGraphicCard";
 import { home_posts, infographic_cards } from "@/config/page";
-import PostCard from "./components/PostCard";
 import TestimonialsSection from "./components/TestimonialsSection";
 import CareGuidesSection from "./components/CareGuidesSection";
 import ProductFinderWizard from "./components/ProductFinderWizard";
-import { useDispatch, useSelector } from "react-redux";
 import FeatureSection from "./components/FeatureSection";
 import EntryPoints from "./components/EntryPoints";
-import TrustedStrip from "./components/TrustedStrip";
+
 
 export default function Home() {
-  const dispatch = useDispatch<AppDispatch>()
-  const { categories, status } = useSelector((state: RootState) => state.categorySlice);
 
-  useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchCategories())
-    }
-  }, [dispatch, status])
 
   return (
     <div className="grid gap-0 mb-10 h-full bg-pr">

@@ -6,6 +6,7 @@ import Axios from "@/utils/Axios";
 import AxiosToastError from "@/utils/AxiosToastError";
 import { SummeryApi } from "@/app/common/SummeryApi";
 import FundingSupportModal from "./FundingSupportModal";
+import { useSearchParams } from "next/navigation";
 
 interface ProductOption {
   id: string;
@@ -48,6 +49,7 @@ export default function QuoteBuilder() {
   const [savedQuote, setSavedQuote] = useState<any>(null);
   const [busy, setBusy] = useState(false);
   const [fundingOpen, setFundingOpen] = useState(false);
+  const [textSearch, setTextSearch] = useState("")
 
   useEffect(() => {
     Axios({ ...SummeryApi.fetchProducts })
@@ -60,6 +62,15 @@ export default function QuoteBuilder() {
       })
       .catch(() => {});
   }, []);
+
+  const searchProduct = async (e:any)=>{
+    const text = e.target.value;
+    const response = await Axios({
+      ...SummeryApi.searchProduct,
+      params:{q:text,page:1}
+    })
+    setProducts(response.data.data)
+  }
 
   const validLines = useMemo(
     () => lines.filter((l) => l.productId && l.dailyPads > 0),
@@ -218,8 +229,8 @@ export default function QuoteBuilder() {
                     onClick={() => setSupplyPeriod(p)}
                     className={`flex-1 py-2.5 rounded-lg text-sm font-medium border transition-colors ${
                       supplyPeriod === p
-                        ? "bg-[#2f7d6f] text-white border-[#2f7d6f]"
-                        : "bg-white text-gray-600 border-gray-300 hover:border-[#2f7d6f]"
+                        ? "bg-secondary text-white border-secondary"
+                        : "bg-white text-gray-600 border-gray-300 hover:border-secondary"
                     }`}
                   >
                     {p}
@@ -227,7 +238,7 @@ export default function QuoteBuilder() {
                 ))}
               </div>
               {supplyPeriod === "Annual" && (
-                <p className="text-xs text-[#2f7d6f] mt-1">
+                <p className="text-xs text-secondary mt-1">
                   Annual supply applies the NDIS 12-month discount automatically.
                 </p>
               )}
@@ -251,6 +262,7 @@ export default function QuoteBuilder() {
               <div key={i} className="bg-white rounded-2xl border border-gray-100 p-5 grid md:grid-cols-12 gap-3 items-end">
                 <div className="md:col-span-4">
                   <Field label="Product">
+                    <input type="text"   onChange={(e)=>searchProduct(e)} />
                     <select
                       value={line.productId}
                       onChange={(e) => {

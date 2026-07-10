@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 // Reliability first: if GSAP fails to load (or reduced-motion is set), the
 // logo just fades in on plain CSS and the intro still reveals on schedule.
 //
-// Brand: dark #1a1a18 · water teal #2E7D71 / #4FA99B · sand #c9b89a · coral #C9573F
+// Brand: dark #1a1a18 · water teal #EDE6DC / #4FA99B · sand #c9b89a · coral #C9573F
 const SESSION_KEY = "aidble_intro_seen";
 const LOGO_AT_MS = 1500;     // when the logo starts fading in (matches splash choreography)
 const LOGO_HOLD_MS = 1400;   // how long the logo sits before the curtain lifts
@@ -272,7 +272,7 @@ const introStyles = `
   font-family:var(--font-serif,Georgia),serif;
   font-size:64px; font-weight:700; color:#C9573F; letter-spacing:-1px; line-height:1;
 }
-.intro-dot{ width:11px; height:11px; border-radius:50%; background:#2E7D71; margin-top:8px; }
+.intro-dot{ width:11px; height:11px; border-radius:50%; background:#EDE6DC; margin-top:8px; }
 
 .intro-skip{
   position:absolute; bottom:28px; right:28px; z-index:2;
@@ -281,7 +281,7 @@ const introStyles = `
   padding:8px 18px; font-size:13px; font-weight:600; cursor:pointer;
 }
 .intro-skip:hover{ background:rgba(255,255,255,.16); }
-.intro-skip:focus-visible{ outline:3px solid #2E7D71; outline-offset:2px; }
+.intro-skip:focus-visible{ outline:3px solid #EDE6DC; outline-offset:2px; }
 
 @media (max-width:640px){ .intro-wordmark{ font-size:48px; } }
 
