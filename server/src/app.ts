@@ -21,6 +21,7 @@ import enquiryRouter from "./routes/enquiry.routes"
 import tradeRouter from "./routes/trade.routes"
 import subscriptionRouter from "./routes/subscription.routes"
 import phase3Router from "./routes/phase3.routes"
+import testEmail from "./routes/health.routes";
 
 
 
@@ -63,6 +64,7 @@ app.use("/api/enquiries", enquiryRouter);
 app.use("/api/trade", tradeRouter)
 app.use("/api/subscriptions", subscriptionRouter);
 app.use("/api/phase3", phase3Router);
+app.use("/api/health",testEmail);
 
 
 

@@ -4,6 +4,9 @@ export const ROLES = {
   TRADE: "TRADE",
   NDIS_COORDINATOR: "NDIS_COORDINATOR",
   ADMIN: "ADMIN",
+  // Site owner: full admin access; the account itself can't be modified,
+  // demoted or deleted by anyone (enforced server-side).
+  OWNER: "OWNER",
 } as const;
 
 // Legacy "USER" is treated as CONSUMER.
@@ -13,6 +16,7 @@ export const normaliseRole = (role?: string | null): string =>
 // Which landing route a logged-in user should be sent to.
 export const portalPath = (role?: string | null): string => {
   switch (normaliseRole(role)) {
+    case ROLES.OWNER:
     case ROLES.ADMIN:
       return "/admin";
     case ROLES.TRADE:

@@ -22,7 +22,8 @@ export const admin = async (req: AuthRequest, res: Response, next: NextFunction)
       select: { role: true },
     });
 
-    if (!user || user.role !== "ADMIN") {
+    // OWNER is the site owner and has full admin access.
+    if (!user || (user.role !== "ADMIN" && user.role !== "OWNER")) {
       return res.status(403).json({
         success: false,
         error: true,

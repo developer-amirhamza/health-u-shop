@@ -7,11 +7,15 @@ interface AuthRequest extends Request {
 }
 
 // Canonical role values used across the platform.
+// OWNER is the site owner: full admin access, but the account itself is
+// untouchable — no one (including other admins) can change its role/status
+// or delete it, and OWNER can never be granted through the API.
 export const ROLES = {
   CONSUMER: "CONSUMER",
   TRADE: "TRADE",
   NDIS_COORDINATOR: "NDIS_COORDINATOR",
   ADMIN: "ADMIN",
+  OWNER: "OWNER",
 } as const;
 
 export type Role = (typeof ROLES)[keyof typeof ROLES];
@@ -39,7 +43,11 @@ export const requireRole =
       });
 
       const role = normaliseRole(user?.role);
-      if (!user || !allowed.includes(role)) {
+      // OWNER has every permission ADMIN has (and passes any role gate that
+      // admits ADMIN), on top of any gate that names OWNER explicitly.
+      const permitted =
+        allowed.includes(role) || (role === ROLES.OWNER && allowed.includes(ROLES.ADMIN));
+      if (!user || !permitted) {
         return res.status(403).json({
           success: false,
           error: true,

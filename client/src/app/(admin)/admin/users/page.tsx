@@ -13,6 +13,26 @@ interface User {
     verify_email: boolean; last_login_date: string | null; createdAt: string;
 }
 
+// Legacy "USER" accounts are consumers.
+const normalise = (role: string) => (role === 'USER' || !role ? 'CONSUMER' : role);
+
+// Roles an admin can assign. OWNER is deliberately absent — it's set once,
+// directly in the database, and can never be granted or changed via the UI.
+const ASSIGNABLE_ROLES = [
+    { value: 'CONSUMER', label: 'Consumer' },
+    { value: 'TRADE', label: 'Trade' },
+    { value: 'NDIS_COORDINATOR', label: 'NDIS Coordinator' },
+    { value: 'ADMIN', label: 'Admin' },
+];
+
+const ROLE_BADGE: Record<string, string> = {
+    OWNER: 'bg-amber-100 text-amber-800 border-amber-300',
+    ADMIN: 'bg-purple-100 text-purple-800 border-purple-300',
+    TRADE: 'bg-blue-100 text-blue-800 border-blue-300',
+    NDIS_COORDINATOR: 'bg-teal-100 text-teal-800 border-teal-300',
+    CONSUMER: 'bg-gray-100 text-gray-700 border-gray-300',
+};
+
 const AdminUsersPage = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [filtered, setFiltered] = useState<User[]>([]);
@@ -39,7 +59,7 @@ const AdminUsersPage = () => {
             const q = search.toLowerCase();
             result = result.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
         }
-        if (roleFilter !== 'ALL') result = result.filter(u => u.role === roleFilter);
+        if (roleFilter !== 'ALL') result = result.filter(u => normalise(u.role) === roleFilter);
         if (statusFilter !== 'ALL') result = result.filter(u => u.status === statusFilter);
         setFiltered(result);
     }, [users, search, roleFilter, statusFilter]);
@@ -81,7 +101,12 @@ const AdminUsersPage = () => {
                     className="border border-gray-300 rounded px-3 py-2 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 <select value={roleFilter} onChange={e => setRoleFilter(e.target.value)}
                     className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="ALL">All Roles</option><option value="USER">User</option><option value="ADMIN">Admin</option>
+                    <option value="ALL">All Roles</option>
+                    <option value="CONSUMER">Consumer</option>
+                    <option value="TRADE">Trade</option>
+                    <option value="NDIS_COORDINATOR">NDIS Coordinator</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="OWNER">Owner</option>
                 </select>
                 <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
                     className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -111,18 +136,31 @@ const AdminUsersPage = () => {
                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{user.email}</td>
                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{user.mobile || '—'}</td>
                                     <td className="px-4 py-3 whitespace-nowrap">
-                                        <select value={user.role} disabled={actionLoading === user.id}
-                                            onChange={e => handleUpdateUser(user.id, { role: e.target.value })}
-                                            className={`text-xs rounded border px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400 ${user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800 border-purple-300' : 'bg-gray-100 text-gray-700 border-gray-300'}`}>
-                                            <option value="USER">User</option><option value="ADMIN">Admin</option>
-                                        </select>
+                                        {normalise(user.role) === 'OWNER' ? (
+                                            // The owner's role is permanent — no dropdown, just a badge.
+                                            <span className={`inline-block text-xs font-semibold rounded border px-2 py-1 ${ROLE_BADGE.OWNER}`}>
+                                                👑 Owner
+                                            </span>
+                                        ) : (
+                                            <select value={normalise(user.role)} disabled={actionLoading === user.id}
+                                                onChange={e => handleUpdateUser(user.id, { role: e.target.value })}
+                                                className={`text-xs rounded border px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400 ${ROLE_BADGE[normalise(user.role)] ?? ROLE_BADGE.CONSUMER}`}>
+                                                {ASSIGNABLE_ROLES.map(r => (
+                                                    <option key={r.value} value={r.value}>{r.label}</option>
+                                                ))}
+                                            </select>
+                                        )}
                                     </td>
                                     <td className="px-4 py-3 whitespace-nowrap">
-                                        <button disabled={actionLoading === user.id}
-                                            onClick={() => handleUpdateUser(user.id, { status: user.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE' })}
-                                            className={`px-2 py-1 rounded text-xs font-medium disabled:opacity-50 ${user.status === 'ACTIVE' ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200'}`}>
-                                            {user.status === 'ACTIVE' ? 'Active' : 'Inactive'}
-                                        </button>
+                                        {normalise(user.role) === 'OWNER' ? (
+                                            <span className="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">Active</span>
+                                        ) : (
+                                            <button disabled={actionLoading === user.id}
+                                                onClick={() => handleUpdateUser(user.id, { status: user.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE' })}
+                                                className={`px-2 py-1 rounded text-xs font-medium disabled:opacity-50 ${user.status === 'ACTIVE' ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200'}`}>
+                                                {user.status === 'ACTIVE' ? 'Active' : 'Inactive'}
+                                            </button>
+                                        )}
                                     </td>
                                     <td className="px-4 py-3 whitespace-nowrap">
                                         <span className={`px-2 py-1 rounded text-xs font-medium ${user.verify_email ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'}`}>
@@ -132,10 +170,14 @@ const AdminUsersPage = () => {
                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{formatDate(user.last_login_date)}</td>
                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{formatDate(user.createdAt)}</td>
                                     <td className="px-4 py-3 whitespace-nowrap">
-                                        <button disabled={actionLoading === user.id} onClick={() => handleDelete(user.id, user.name)}
-                                            className="text-red-600 hover:text-red-900 text-sm disabled:opacity-50">
-                                            {actionLoading === user.id ? '...' : 'Delete'}
-                                        </button>
+                                        {normalise(user.role) === 'OWNER' ? (
+                                            <span className="text-xs text-gray-400">Protected</span>
+                                        ) : (
+                                            <button disabled={actionLoading === user.id} onClick={() => handleDelete(user.id, user.name)}
+                                                className="text-red-600 hover:text-red-900 text-sm disabled:opacity-50">
+                                                {actionLoading === user.id ? '...' : 'Delete'}
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                             ))}

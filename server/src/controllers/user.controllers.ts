@@ -49,7 +49,7 @@ const SignUp = async (req: Request, res: Response) => {
         // Email failure shouldn't fail the signup — the account is already created.
         const emailResult = await sendEmail({
             sendTo: email,
-            subject: "Verify email from MyBestiee",
+            subject: "Verify email from Health U Shop",
             html: verifyEmailTemplate({
                 name,
                 url: verifyEmailUrl,
@@ -260,10 +260,25 @@ orderBy: { createdAt: 'desc' }
     }
 };
 
+const ASSIGNABLE_ROLES = ["CONSUMER", "USER", "TRADE", "NDIS_COORDINATOR", "ADMIN"];
+
 export const updateUserByAdmin = async (req: Request, res: Response) => {
     try {
         const { id, status, role } = req.body;
         if (!id) return errorHandler(res, 400, "User ID is required", true);
+
+        const target = await prisma.user.findUnique({ where: { id }, select: { role: true } });
+        if (!target) return errorHandler(res, 404, "User not found", true);
+
+        // The OWNER account is untouchable — no role/status change by anyone.
+        if (target.role === "OWNER") {
+            return errorHandler(res, 403, "The owner account cannot be modified", true);
+        }
+        // OWNER can never be granted through the API (DB-only, set once).
+        if (role && !ASSIGNABLE_ROLES.includes(role)) {
+            return errorHandler(res, 400, "Invalid role", true);
+        }
+
         const updatedData: any = {};
         if (status) updatedData.status = status;
         if (role) updatedData.role = role;
@@ -320,7 +335,10 @@ const updateUserDetails = async (req: AuthRequest, res: Response) => {
         if(mobile) updatedData.mobile = mobile;
         if(password) updatedData.password = hashPassword;
         if(avatar) updatedData.avatar = avatar;
-        if(role) updatedData.role = role;
+        // SECURITY: role is intentionally NOT updatable here — this is the
+        // self-service profile endpoint, and honouring a role from the request
+        // body would let any user promote themselves (e.g. to ADMIN/OWNER).
+        // Role changes go through updateUserByAdmin only.
 
         const updatedUser = await prisma.user.update({
             where : {id:userId},
@@ -348,6 +366,12 @@ const deleteUser = async (req: Request, res: Response) => {
         if (!id) {
             return errorHandler(res, 400, "User ID is required", false);
         };
+        // The OWNER account can never be deleted.
+        const target = await prisma.user.findUnique({ where: { id }, select: { role: true } });
+        if (!target) return errorHandler(res, 404, "User not found", true);
+        if (target.role === "OWNER") {
+            return errorHandler(res, 403, "The owner account cannot be deleted", true);
+        }
         await prisma.user.delete({ where: { id: id } });
         res.status(200).json({
             success: true,
