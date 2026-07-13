@@ -6,6 +6,7 @@ import { createCheckoutSession, clearStripeUrl } from "@/redux/slices/orderSlice
 import { fetchCart } from "@/redux/slices/cartSlice";
 import { DisplayPriceInAud } from "@/utils/DisplayPriceInAud";
 import { normaliseRole, portalPath, ROLES } from "@/utils/roles";
+import { planForDays } from "@/config/subscriptionPlans";
 import Link from "next/link";
 import toast from "react-hot-toast";
 
@@ -112,7 +113,11 @@ const CheckoutPage = () => {
   for (const item of cart.items) {
     const price = item.product.price;
     const discount = item.product.discount || 0;
-    const discountedPrice = price - (price * discount) / 100;
+    const subscriptionPlan = planForDays(item.subscriptionIntervalDays);
+    // Subscribe & Save discount takes priority over the product's own
+    // discount — matches the price the backend actually charges at checkout.
+    const effectivePct = subscriptionPlan ? subscriptionPlan.discountPct : discount;
+    const discountedPrice = price - (price * effectivePct) / 100;
     const itemTotal = discountedPrice * item.quantity;
     const itemOriginalTotal = price * item.quantity;
     subtotal += itemOriginalTotal;

@@ -1,12 +1,11 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import Axios from "@/utils/Axios";
 import AxiosToastError from "@/utils/AxiosToastError";
 import { SummeryApi } from "@/app/common/SummeryApi";
 import FundingSupportModal from "./FundingSupportModal";
-import { useSearchParams } from "next/navigation";
 
 interface ProductOption {
   id: string;
@@ -30,7 +29,34 @@ interface Totals {
   total: number;
 }
 
-const PERIODS = ["One-off", "Monthly", "Annual"];
+// Supply periods must match the backend's SUPPLY_PERIOD_DAYS keys. Recurring
+// periods earn the tiered Subscribe & Save discount shown in the hint.
+const PERIODS = [
+  { value: "One-off", hint: null },
+  { value: "Monthly", hint: null },
+  { value: "Every 2 Months", hint: "10% off" },
+  { value: "Every 4 Months", hint: "15% off" },
+  { value: "Every 6 Months", hint: "18% off" },
+  { value: "Annual", hint: "20% off" },
+];
+
+// Standard continence-product absorbency levels (drops scale).
+const ABSORBENCY_OPTIONS = [
+  "1 Drop (Light)",
+  "2 Drops",
+  "3 Drops",
+  "4 Drops",
+  "5 Drops",
+  "6 Drops (Super)",
+  "7 Drops",
+  "8 Drops (Maxi)",
+  "9 Drops",
+  "10 Drops (Ultra)",
+];
+
+// Fallback sizes when the selected product doesn't define its own.
+const DEFAULT_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+
 const money = (n: number) => `$${(Number.isFinite(n) ? n : 0).toFixed(2)}`;
 
 export default function QuoteBuilder() {
@@ -46,10 +72,10 @@ export default function QuoteBuilder() {
   // Calculator + persistence
   const [totals, setTotals] = useState<Totals | null>(null);
   const [previewing, setPreviewing] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
   const [savedQuote, setSavedQuote] = useState<any>(null);
   const [busy, setBusy] = useState(false);
   const [fundingOpen, setFundingOpen] = useState(false);
-  const [textSearch, setTextSearch] = useState("")
 
   useEffect(() => {
     Axios({ ...SummeryApi.fetchProducts })
@@ -63,15 +89,6 @@ export default function QuoteBuilder() {
       .catch(() => {});
   }, []);
 
-  const searchProduct = async (e:any)=>{
-    const text = e.target.value;
-    const response = await Axios({
-      ...SummeryApi.searchProduct,
-      params:{q:text,page:1}
-    })
-    setProducts(response.data.data)
-  }
-
   const validLines = useMemo(
     () => lines.filter((l) => l.productId && l.dailyPads > 0),
     [lines]
@@ -81,10 +98,12 @@ export default function QuoteBuilder() {
   useEffect(() => {
     if (step !== 2 || validLines.length === 0) {
       setTotals(null);
+      setPreviewError(null);
       return;
     }
     let cancelled = false;
     setPreviewing(true);
+    setPreviewError(null);
     Axios({
       ...SummeryApi.previewQuote,
       data: {
@@ -99,9 +118,20 @@ export default function QuoteBuilder() {
       },
     })
       .then((res) => {
-        if (!cancelled && res.data?.success) setTotals(res.data.data);
+        if (cancelled) return;
+        if (res.data?.success) {
+          setTotals(res.data.data);
+        }
       })
-      .catch(() => {})
+      .catch((err) => {
+        if (cancelled) return;
+        setTotals(null);
+        // Surface the real reason (e.g. "X has an invalid retail price")
+        // instead of silently leaving a blank/zeroed-out calculator.
+        setPreviewError(
+          err?.response?.data?.message || "Couldn't calculate this quote — please try again."
+        );
+      })
       .finally(() => !cancelled && setPreviewing(false));
     return () => {
       cancelled = true;
@@ -222,26 +252,41 @@ export default function QuoteBuilder() {
               />
             </Field>
             <Field label="Supply period">
-              <div className="flex gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 {PERIODS.map((p) => (
                   <button
-                    key={p}
-                    onClick={() => setSupplyPeriod(p)}
-                    className={`flex-1 py-2.5 rounded-lg text-sm font-medium border transition-colors ${
-                      supplyPeriod === p
-                        ? "bg-secondary text-white border-secondary"
-                        : "bg-white text-gray-600 border-gray-300 hover:border-secondary"
+                    key={p.value}
+                    onClick={() => setSupplyPeriod(p.value)}
+                    className={`py-2.5 px-2 rounded-lg text-sm font-medium border transition-colors ${
+                      supplyPeriod === p.value
+                        ? "bg-[#2f7d6f] text-white border-[#2f7d6f]"
+                        : "bg-white text-gray-600 border-gray-300 hover:border-[#2f7d6f]"
                     }`}
                   >
-                    {p}
+                    {p.value}
+                    {p.hint && (
+                      <span
+                        className={`block text-[11px] font-semibold ${
+                          supplyPeriod === p.value ? "text-[#c9e8e2]" : "text-[#2f7d6f]"
+                        }`}
+                      >
+                        {p.hint}
+                      </span>
+                    )}
                   </button>
                 ))}
               </div>
-              {supplyPeriod === "Annual" && (
-                <p className="text-xs text-secondary mt-1">
-                  Annual supply applies the NDIS 12-month discount automatically.
-                </p>
-              )}
+              {(() => {
+                const active = PERIODS.find((p) => p.value === supplyPeriod);
+                if (!active?.hint) return null;
+                return (
+                  <p className="text-xs text-[#2f7d6f] mt-1">
+                    {supplyPeriod === "Annual"
+                      ? "Annual supply applies the 12-month discount automatically."
+                      : `Recurring ${supplyPeriod.toLowerCase()} supply — ${active.hint} is applied automatically.`}
+                  </p>
+                );
+              })()}
             </Field>
           </motion.div>
         )}
@@ -262,32 +307,48 @@ export default function QuoteBuilder() {
               <div key={i} className="bg-white rounded-2xl border border-gray-100 p-5 grid md:grid-cols-12 gap-3 items-end">
                 <div className="md:col-span-4">
                   <Field label="Product">
-                    <input type="text"   onChange={(e)=>searchProduct(e)} />
-                    <select
+                    <ProductPicker
+                      products={products}
                       value={line.productId}
-                      onChange={(e) => {
-                        const p = products.find((x) => x.id === e.target.value);
-                        updateLine(i, { productId: e.target.value, productName: p?.title ?? "" });
-                      }}
-                      className={inputCls}
-                    >
-                      <option value="">Select…</option>
-                      {products.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.title}
-                        </option>
-                      ))}
-                    </select>
+                      valueLabel={line.productName}
+                      onSelect={(p) => updateLine(i, { productId: p.id, productName: p.title })}
+                    />
                   </Field>
                 </div>
                 <div className="md:col-span-2">
                   <Field label="Size">
-                    <input value={line.size ?? ""} onChange={(e) => updateLine(i, { size: e.target.value })} className={inputCls} />
+                    <select
+                      value={line.size ?? ""}
+                      onChange={(e) => updateLine(i, { size: e.target.value })}
+                      className={inputCls}
+                    >
+                      <option value="">Select…</option>
+                      {(() => {
+                        const selected = products.find((p) => p.id === line.productId);
+                        const sizes = selected?.sizes?.length ? selected.sizes : DEFAULT_SIZES;
+                        return sizes.map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ));
+                      })()}
+                    </select>
                   </Field>
                 </div>
                 <div className="md:col-span-2">
                   <Field label="Absorbency">
-                    <input value={line.absorbency ?? ""} onChange={(e) => updateLine(i, { absorbency: e.target.value })} className={inputCls} />
+                    <select
+                      value={line.absorbency ?? ""}
+                      onChange={(e) => updateLine(i, { absorbency: e.target.value })}
+                      className={inputCls}
+                    >
+                      <option value="">Select…</option>
+                      {ABSORBENCY_OPTIONS.map((a) => (
+                        <option key={a} value={a}>
+                          {a}
+                        </option>
+                      ))}
+                    </select>
                   </Field>
                 </div>
                 <div className="md:col-span-2">
@@ -343,7 +404,13 @@ export default function QuoteBuilder() {
             className="grid lg:grid-cols-3 gap-6"
           >
             {/* Line items */}
-            <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <div className="lg:col-span-2 flex flex-col gap-3">
+              {previewError && (
+                <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  {previewError}
+                </div>
+              )}
+              <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
                   <tr>
@@ -378,6 +445,7 @@ export default function QuoteBuilder() {
                   )}
                 </tbody>
               </table>
+              </div>
             </div>
 
             {/* Totals + actions */}
@@ -385,7 +453,11 @@ export default function QuoteBuilder() {
               <h3 className="font-serif text-xl mb-2">Quote summary</h3>
               <Row label="Subtotal" value={money(totals?.subtotal ?? 0)} />
               {(totals?.discount ?? 0) > 0 && (
-                <Row label="Annual discount" value={`-${money(totals!.discount)}`} accent />
+                <Row
+                  label={supplyPeriod === "Annual" ? "Annual discount" : "Recurring supply discount"}
+                  value={`-${money(totals!.discount)}`}
+                  accent
+                />
               )}
               <Row label="Delivery" value={money(totals?.delivery ?? 0)} />
               <Row label="GST" value={money(totals?.gst ?? 0)} />
@@ -450,6 +522,82 @@ export default function QuoteBuilder() {
 
 const inputCls =
   "w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:border-[#2f7d6f] text-sm";
+
+// Type-to-search product picker — filters the already-loaded product list
+// by title as the coordinator types, instead of scrolling a long <select>.
+function ProductPicker({
+  products,
+  value,
+  valueLabel,
+  onSelect,
+}: {
+  products: ProductOption[];
+  value: string;
+  valueLabel?: string;
+  onSelect: (p: ProductOption) => void;
+}) {
+  const [query, setQuery] = useState(valueLabel ?? "");
+  const [open, setOpen] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, []);
+
+  const matches = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return products.slice(0, 20);
+    return products.filter((p) => p.title.toLowerCase().includes(q)).slice(0, 20);
+  }, [products, query]);
+
+  return (
+    <div className="relative" ref={boxRef}>
+      <input
+        value={query}
+        onChange={(e) => {
+          const next = e.target.value;
+          setQuery(next);
+          setOpen(true);
+          // Clearing the field fully invalidates the current pick; otherwise
+          // keep the last confirmed selection until the user clicks a match.
+          if (value && next.trim() === "") onSelect({ id: "", title: "" });
+        }}
+        onFocus={() => setOpen(true)}
+        placeholder="Type to search products…"
+        className={inputCls}
+      />
+      {open && matches.length > 0 && (
+        <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg">
+          {matches.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => {
+                onSelect(p);
+                setQuery(p.title);
+                setOpen(false);
+              }}
+              className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 ${
+                p.id === value ? "bg-[#2f7d6f]/10 text-[#2f7d6f] font-medium" : "text-gray-700"
+              }`}
+            >
+              {p.title}
+            </button>
+          ))}
+        </div>
+      )}
+      {open && query.trim() && matches.length === 0 && (
+        <div className="absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm text-gray-400">
+          No products match "{query}"
+        </div>
+      )}
+    </div>
+  );
+}
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

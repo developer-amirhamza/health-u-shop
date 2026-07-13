@@ -6,18 +6,27 @@ import { prisma } from "../lib/prisma";
 
 export const createProduct = async (req: Request, res: Response) => {
     try {
-        console.log("controllers works", req.body)
         const { title, price, description, colors, sizes, discount, more_details, category, stock, images,categoryId, subcategoryId } = req.body;
         if (!title || !price || !discount) {
             return errorHandler(res, 400, "Please provide the required fields", true)
         }
+        // Reject NaN/negative price or discount — a bad value here corrupts
+        // every quote/order total downstream (they'd all silently become NaN).
+        const priceNum = Number(price);
+        const discountNum = Number(discount);
+        if (!Number.isFinite(priceNum) || priceNum <= 0) {
+            return errorHandler(res, 400, "Price must be a valid number greater than 0", true)
+        }
+        if (!Number.isFinite(discountNum) || discountNum < 0 || discountNum > 100) {
+            return errorHandler(res, 400, "Discount must be a valid number between 0 and 100", true)
+        }
 
         const newProduct = await prisma.product.create({
-            data: { title, price, description, colors, sizes, discount, more_details, category, stock, images,categoryId, subcategoryId }
+            data: { title, price: priceNum, description, colors, sizes, discount: discountNum, more_details, category, stock, images,categoryId, subcategoryId }
         });
         return errorHandler(res, 200, "Tha product has been created successfully!", false, newProduct)
     } catch (error: any) {
-        errorHandler(res, 500, error.message || "Internal server error!", true);
+        return errorHandler(res, 500, error.message || "Internal server error!", true);
     }
 };
 
@@ -30,15 +39,30 @@ export const updateProduct = async (req: Request, res: Response) => {
     const existing = await prisma.product.findUnique({ where: { id } });
     if (!existing) return errorHandler(res, 404, "Product not found");
 
+    // Same guard as create — only reject when the caller actually sent a
+    // price/discount; omitted fields (undefined) leave the existing value.
+    if (price !== undefined) {
+      const priceNum = Number(price);
+      if (!Number.isFinite(priceNum) || priceNum <= 0) {
+        return errorHandler(res, 400, "Price must be a valid number greater than 0", true)
+      }
+    }
+    if (discount !== undefined) {
+      const discountNum = Number(discount);
+      if (!Number.isFinite(discountNum) || discountNum < 0 || discountNum > 100) {
+        return errorHandler(res, 400, "Discount must be a valid number between 0 and 100", true)
+      }
+    }
+
     const updated = await prisma.product.update({
       where: { id },
       data: {
         title,
-        price,
+        price: price !== undefined ? Number(price) : undefined,
         description,
         colors,
         sizes,
-        discount,
+        discount: discount !== undefined ? Number(discount) : undefined,
         more_details,
         categoryId,
         subcategoryId,
@@ -60,20 +84,20 @@ export const deleteProduct = async (req: Request, res: Response) => {
         const { id } = req.body;
         if (!id) return errorHandler(res, 404, "Product id is required!");
         const existingProduct = await prisma.product.findUnique({ where: { id: id } });
-        if (!existingProduct) return errorHandler(res, 404, "The product not found!",)
-        await prisma.product.delete({ where: { id: id } });
-        await prisma.product.update({
+        if (!existingProduct) return errorHandler(res, 404, "The product not found!");
+
+        // Soft delete only — a hard delete would violate foreign key
+        // constraints from any existing OrderItem/CartItem/Reviews rows, and
+        // break every part of the pricing engine and order history that still
+        // references this product. The rest of the app already filters on
+        // deletedAt/isActive (trade catalogue, order builders, etc).
+        const product = await prisma.product.update({
             where: { id },
             data: { deletedAt: new Date(), isActive: false },
         });
-        // Example: get all products
-        const products = await prisma.product.findMany({
-            where: { deletedAt: null, isActive: true },
-            // ...
-        });
-        return errorHandler(res, 200, "The product has been deleted!", false);
+        return errorHandler(res, 200, "The product has been deleted!", false, product);
     } catch (error: any) {
-        errorHandler(res, 500, error.message || "Internal server error!", true);
+        return errorHandler(res, 500, error.message || "Internal server error!", true);
     }
 };
 export const getProductDetails = async (req: Request, res: Response) => {
@@ -126,7 +150,7 @@ export const getAllProductDetails = async (req: Request, res: Response) => {
         if (!allProducts) return errorHandler(res, 404, "Products not found!");
         return errorHandler(res, 200, "The product got successfully!", false, allProducts);
     } catch (error: any) {
-        errorHandler(res, 500, error.message || "Internal server error!", true);
+        return errorHandler(res, 500, error.message || "Internal server error!", true);
     }
 };
 

@@ -41,8 +41,11 @@ const userSlice = createSlice({
         setUserDetails: (state, action) => {
             state.user = action.payload
         },
-        setLogout: (state) => {
+            setLogout: (state) => {
             state.user = null;
+            // Reset status so the UI stops treating the session as signed-in.
+            state.status = "idle";
+            state.error = null;
         }
     },
     extraReducers: (builder) => {

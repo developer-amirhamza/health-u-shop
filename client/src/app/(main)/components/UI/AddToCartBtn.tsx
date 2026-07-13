@@ -113,7 +113,7 @@ const AddToCartButton: React.FC<Type> = ({ data }) => {
                         onClick={decreaseQty}
                         className="text-white bg-secondary  cursor-pointer rounded-sm py-1 px-1"
                     >
-                        <FaMinus />
+                        <FaMinus  />
                     </button>
                     <p className="mx-1 font-semibold text-neutral-700 min-w-6 text-center">{quantity}</p>
                     <button

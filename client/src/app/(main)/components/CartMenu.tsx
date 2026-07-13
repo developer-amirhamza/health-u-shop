@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { AppDispatch, RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
 import { fetchCart } from '@/redux/slices/cartSlice';
+import { planForDays } from '@/config/subscriptionPlans';
 
 interface Type {
     close: any;
@@ -45,7 +46,9 @@ const CartMenu: React.FC<Type> = ({ close }) => {
         for (const item of cart.items) {
             const price = item.product.price;
             const discount = item?.product?.discount || 0;
-            const discountedPrice = price - (price * discount) / 100;
+            const subscriptionPlan = planForDays((item as any).subscriptionIntervalDays);
+            const effectivePct = subscriptionPlan ? subscriptionPlan.discountPct : discount;
+            const discountedPrice = price - (price * effectivePct) / 100;
             const itemTotal = discountedPrice * item.quantity;
             const itemOriginalTotal = price * item.quantity;
             subtotal += itemOriginalTotal;
@@ -93,10 +96,18 @@ const CartMenu: React.FC<Type> = ({ close }) => {
                                             <p className="text-neutral-400">{item.product.unit}</p>
                                             <p className="font-semibold">
                                                 {DisplayPriceInAud(
-                                                    item.product.price -
-                                                    (item.product.price * (item.product.discount || 0)) / 100
+                                                    (() => {
+                                                        const plan = planForDays((item as any).subscriptionIntervalDays);
+                                                        const pct = plan ? plan.discountPct : item.product.discount || 0;
+                                                        return item.product.price - (item.product.price * pct) / 100;
+                                                    })()
                                                 )}
                                             </p>
+                                            {(item as any).subscriptionIntervalDays && (
+                                                <span className="inline-block mt-1 text-[10px] font-medium text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded-full">
+                                                    Subscribed
+                                                </span>
+                                            )}
                                         </div>
                                         <div>
                                             <AddToCartButton data={item.product} />

@@ -15,6 +15,8 @@ export interface CartItem {
         discount:number,
     };
     quantity: number;
+    // Set when the shopper chose "Subscribe & Save" for this line (days).
+    subscriptionIntervalDays?: number | null;
 }
 
 interface Cart {
@@ -49,11 +51,14 @@ export const fetchCart = createAsyncThunk(
 
 export const addToCart = createAsyncThunk(
     "cart/addToCart",
-    async ({ productId, quantity }: { productId: string; quantity: number }, { rejectWithValue }) => {
+    async (
+        { productId, quantity, subscriptionIntervalDays }: { productId: string; quantity: number; subscriptionIntervalDays?: number | null },
+        { rejectWithValue }
+    ) => {
         try {
             const response = await Axios({
                 ...SummeryApi.addCart,
-                data: { productId, quantity },
+                data: { productId, quantity, subscriptionIntervalDays },
             });
             return response.data?.data; // updated cart
         } catch (error: any) {
@@ -64,11 +69,14 @@ export const addToCart = createAsyncThunk(
 
 export const updateCartItem = createAsyncThunk(
     "cart/updateCartItem",
-    async ({ itemId, quantity }: { itemId: string; quantity: number }, { rejectWithValue }) => {
+    async (
+        { itemId, quantity, subscriptionIntervalDays }: { itemId: string; quantity: number; subscriptionIntervalDays?: number | null },
+        { rejectWithValue }
+    ) => {
         try {
             const response = await Axios({
                 ...SummeryApi.updateCart,
-                data: { itemId, quantity },
+                data: { itemId, quantity, subscriptionIntervalDays },
             });
             return response.data?.data; // updated cart
         } catch (error: any) {

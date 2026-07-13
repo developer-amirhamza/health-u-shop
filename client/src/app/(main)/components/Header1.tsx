@@ -198,7 +198,7 @@ const Header1 = () => {
                         </Link> */}
 
                         {/* Account */}
-                        {user.status === 'succeeded' && accessToken ? (
+                        {user.status === 'succeeded' && user.user ? (
                             <div className="relative">
                                 <button
                                     onClick={() => setShowUserMenu(!showUserMenu)}
