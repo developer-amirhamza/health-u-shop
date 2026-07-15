@@ -7,7 +7,8 @@ interface OrderItem {
 }
 
 interface OrderEmailData {
-    name: string;
+    first_name: string;
+    last_name: string;
     orderNumber: string;
     createdAt: Date | string;
     items: OrderItem[];
@@ -20,6 +21,7 @@ interface OrderEmailData {
 }
 
 export const orderConfirmationTemplate = (data: OrderEmailData): string => {
+    const name = data.first_name + " " + data?.last_name;
     const itemRows = data.items.map((item) => `
     <tr>
       <td style="padding:12px 16px;border-bottom:1px solid #F3F4F6;font-size:14px;color:#374151;">
@@ -62,7 +64,7 @@ export const orderConfirmationTemplate = (data: OrderEmailData): string => {
           <!-- Greeting -->
           <tr>
             <td style="padding:32px 40px 0;">
-              <h2 style="margin:0 0 8px;font-size:20px;color:#111827;font-weight:700;">Thank you, ${data.name}! 🎉</h2>
+              <h2 style="margin:0 0 8px;font-size:20px;color:#111827;font-weight:700;">Thank you, ${name}  ! 🎉</h2>
               <p style="margin:0;font-size:14px;color:#6B7280;line-height:1.6;">
                 We've received your order and it's being processed. Your invoice is attached to this email as a PDF.
               </p>

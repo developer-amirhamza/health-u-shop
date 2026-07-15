@@ -64,7 +64,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       {/* Sidebar */}
       <aside className="w-64 shrink-0 bg-[#1a1a18] text-white flex flex-col">
         <Link href="/" className="px-6 py-5 border-b border-white/10 block">
-          <span className="font-serif text-xl">Aidble Care</span>
+          <span className="font-serif text-xl">Bestiee</span>
           <span className="block text-[10px] uppercase tracking-[0.2em] text-[#c9b89a] mt-1">
             {portalTitle}
           </span>

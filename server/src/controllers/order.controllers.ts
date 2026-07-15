@@ -24,7 +24,7 @@ const generateOrderNumber = async () => {
 
 export const placeOrder = async (req: AuthRequest, res: Response) => {
     try {
-        const { name, phone, shippingAddress, paymentMethod = "COD" } = req.body;
+        const { first_name, last_name, phone, shippingAddress, paymentMethod = "COD" } = req.body;
         const token = await getCartToken(req, res);
         const userId = req.userId;
 
@@ -72,7 +72,8 @@ export const placeOrder = async (req: AuthRequest, res: Response) => {
             data: {
                 orderNumber,
                 shippingAddress,
-                name,
+                first_name,
+                last_name,
                 phone,
                 email,
                 subtotal,
@@ -91,7 +92,8 @@ export const placeOrder = async (req: AuthRequest, res: Response) => {
             const invoiceData = {
                 orderNumber: order.orderNumber,
                 createdAt: order.createdAt,
-                name: order.name || name,
+                first_name: order.first_name || first_name,
+                last_name: order.last_name || last_name,
                 email,
                 phone: order.phone,
                 shippingAddress: order.shippingAddress,
@@ -165,7 +167,7 @@ export const getOrdersByOrderNumber = async (req: Request, res: Response) => {
 export const getAllOrdersByAdmin = async (req: Request, res: Response) => {
     try {
         const orders = await prisma.order.findMany({
-            include: { items: true, user: { select: { id: true, name: true, email: true } } },
+            include: { items: true, user: { select: { id: true, first_name:true, last_name:true, email: true } } },
             orderBy: { createdAt: "desc" },
         });
         if (!orders || orders.length === 0) {

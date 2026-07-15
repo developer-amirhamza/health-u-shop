@@ -9,7 +9,8 @@ datasource db {
 
 model User {
   id                     String              @id @default(dbgenerated("gen_random_uuid()"))
-  name                   String
+  first_name             String
+  last_name              String
   email                  String              @unique
   password               String
   verify_email           Boolean?            @default(false)
@@ -322,7 +323,8 @@ model Order {
   updatedAt             DateTime    @updatedAt
   stripeSessionId       String?     @unique
   stripePaymentIntentId String?
-  name                  String?
+  first_name                  String?
+  last_name                  String?
   discount              Float       @default(0)
   items                 OrderItem[]
   user                  User?       @relation(fields: [userId], references: [id])
