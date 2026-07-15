@@ -17,6 +17,8 @@ import Loader from '@/app/(main)/components/UI/Loader';
 interface UserProfile {
   id: any;
   name: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   phone?: string;
   avatar?: string;
@@ -38,7 +40,8 @@ const ProfilePage = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
   });
@@ -63,15 +66,20 @@ const ProfilePage = () => {
   // Load user data
   useEffect(() => {
     if (user) {
+      const u: any = user;
       setProfile({
         id: user.id,
         name: user.name || '',
+        firstName: u.firstName || '',
+        lastName: u.lastName || '',
         email: user.email || '',
         phone: user.mobile || '',
         avatar: user.avatar || '',
       });
       setEditForm({
-        name: user.name || '',
+        // Legacy accounts have only `name` — split it as a starting point.
+        firstName: u.firstName || (user.name || '').split(' ')[0] || '',
+        lastName: u.lastName || (user.name || '').split(' ').slice(1).join(' ') || '',
         email: user.email || '',
         phone: user.mobile || '',
       });
@@ -92,7 +100,8 @@ const ProfilePage = () => {
       const response = await Axios({
         ...SummeryApi.updateUserDetails,
         data: {
-          name: editForm.name,
+          firstName: editForm.firstName,
+          lastName: editForm.lastName,
           email: editForm.email,
           phone: editForm.phone,
         },
@@ -101,7 +110,9 @@ const ProfilePage = () => {
         toast.success('Profile updated successfully');
         setProfile({
           ...profile,
-          name: editForm.name,
+          firstName: editForm.firstName,
+          lastName: editForm.lastName,
+          name: [editForm.firstName, editForm.lastName].filter(Boolean).join(' '),
           email: editForm.email,
           phone: editForm.phone,
         });
@@ -248,14 +259,25 @@ const ProfilePage = () => {
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
             <div className="space-y-3">
-              <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
-                <input
-                  type="text"
-                  value={editForm.name}
-                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                  className="w-full border rounded px-3 py-2"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium mb-1">First Name</label>
+                  <input
+                    type="text"
+                    value={editForm.firstName}
+                    onChange={(e) => setEditForm({ ...editForm, firstName: e.target.value })}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Last Name</label>
+                  <input
+                    type="text"
+                    value={editForm.lastName}
+                    onChange={(e) => setEditForm({ ...editForm, lastName: e.target.value })}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Email</label>

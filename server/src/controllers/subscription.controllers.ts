@@ -164,7 +164,7 @@ export const oneClickReorder = async (req: AuthRequest, res: Response) => {
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { name: true, email: true },
+      select: { firstName: true, lastName:true, email: true },
     });
 
     const orderNumber = await generateOrderNumber();
@@ -174,7 +174,8 @@ export const oneClickReorder = async (req: AuthRequest, res: Response) => {
         data: {
           orderNumber,
           userId,
-          name: user?.name ?? previous.name ?? "",
+          firstName: user?.firstName ?? previous.firstName ?? "",
+          lastName: user?.lastName ?? previous.lastName ?? "",
           email: user?.email ?? previous.email,
           phone: previous.phone,
           shippingAddress: previous.shippingAddress,
@@ -194,11 +195,13 @@ export const oneClickReorder = async (req: AuthRequest, res: Response) => {
     // Confirmation email + invoice, same as every other order path.
     const email = user?.email ?? previous.email;
     if (email) {
-      const displayName = order.name || previous.name || "";
+      const firstName = `${order.firstName}` || previous.firstName || "";
+      const lastName = `${order.lastName}` || previous.lastName || "";
       const invoiceData = {
         orderNumber: order.orderNumber,
         createdAt: order.createdAt,
-        name: displayName,
+        firstName,
+        lastName,
         email,
         phone: order.phone,
         shippingAddress: order.shippingAddress,
@@ -219,7 +222,7 @@ export const oneClickReorder = async (req: AuthRequest, res: Response) => {
           sendEmail({
             sendTo: email,
             subject: `Order Confirmed – ${order.orderNumber}`,
-            html: `<p>Hi ${displayName},</p><p>Your reorder <b>${order.orderNumber}</b> has been placed. Invoice attached.</p>`,
+            html: `<p>Hi ${firstName + " " + lastName},</p><p>Your reorder <b>${order.orderNumber}</b> has been placed. Invoice attached.</p>`,
             attachments: [{ filename: `invoice-${order.orderNumber}.pdf`, content: pdf }],
           })
         )
@@ -243,7 +246,7 @@ export const runDueSubscriptions = async () => {
   const now = new Date();
   const due = await prisma.subscription.findMany({
     where: { status: "ACTIVE", nextRunAt: { lte: now } },
-    include: { user: { select: { name: true, email: true } } },
+    include: { user: { select: { firstName: true, lastName:true, email: true } } },
   });
 
   for (const sub of due) {
@@ -261,7 +264,8 @@ export const runDueSubscriptions = async () => {
           data: {
             orderNumber,
             userId: sub.userId,
-            name: sub.user.name,
+            firstName: sub.user.firstName,
+            lastName: sub.user.lastName,
             email: sub.user.email,
             phone: sub.phone,
             shippingAddress: sub.shippingAddress,
@@ -285,13 +289,16 @@ export const runDueSubscriptions = async () => {
         where: { id: sub.id },
         data: { nextRunAt: next },
       });
+        const firstName = `${order.firstName}` || sub?.user?.firstName || "";
+      const lastName = `${order.lastName}` || sub?.user?.lastName || "";
 
       // Discreet confirmation email with invoice.
       if (sub.user.email) {
         const invoiceData = {
           orderNumber: order.orderNumber,
           createdAt: order.createdAt,
-          name: order.name || sub.user.name,
+          firstName,
+          lastName,
           email: sub.user.email,
           phone: order.phone,
           shippingAddress: order.shippingAddress,
@@ -312,7 +319,7 @@ export const runDueSubscriptions = async () => {
             sendEmail({
               sendTo: sub.user.email!,
               subject: `Your subscription order ${order.orderNumber} is on its way`,
-              html: `<p>Hi ${sub.user.name},</p><p>Your recurring order <b>${order.orderNumber}</b> has been placed and will be shipped in plain, discreet packaging. Invoice attached.</p>`,
+              html: `<p>Hi ${sub.user.firstName + " " + sub.user.lastName},</p><p>Your recurring order <b>${order.orderNumber}</b> has been placed and will be shipped in plain, discreet packaging. Invoice attached.</p>`,
               attachments: [{ filename: `invoice-${order.orderNumber}.pdf`, content: pdf }],
             })
           )

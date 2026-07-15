@@ -7,8 +7,8 @@ interface OrderItem {
 }
 
 interface OrderEmailData {
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     orderNumber: string;
     createdAt: Date | string;
     items: OrderItem[];
@@ -21,7 +21,7 @@ interface OrderEmailData {
 }
 
 export const orderConfirmationTemplate = (data: OrderEmailData): string => {
-    const name = data.first_name + " " + data?.last_name;
+    const name = data.firstName + " " + data?.lastName;
     const itemRows = data.items.map((item) => `
     <tr>
       <td style="padding:12px 16px;border-bottom:1px solid #F3F4F6;font-size:14px;color:#374151;">

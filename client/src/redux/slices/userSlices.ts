@@ -6,7 +6,10 @@ import toast from "react-hot-toast";
 interface User {
     id: number,
     email: string,
+    // Combined display name ("firstName lastName"); kept for compatibility.
     name: string,
+    firstName?: string,
+    lastName?: string,
     mobile: string,
     role:string,
     avatar:any,
@@ -41,7 +44,7 @@ const userSlice = createSlice({
         setUserDetails: (state, action) => {
             state.user = action.payload
         },
-            setLogout: (state) => {
+        setLogout: (state) => {
             state.user = null;
             // Reset status so the UI stops treating the session as signed-in.
             state.status = "idle";

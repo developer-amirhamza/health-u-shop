@@ -10,8 +10,8 @@ interface OrderItem {
 interface InvoiceData {
     orderNumber: string;
     createdAt: Date | string;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
     shippingAddress: string;
@@ -57,8 +57,8 @@ export const generateInvoicePdf = (data: InvoiceData): Promise<Buffer> => {
         doc.fillColor(primaryColor).fontSize(9).font('Helvetica-Bold')
             .text('BILL TO', col1X, sectionY);
         doc.fillColor(darkGray).fontSize(10).font('Helvetica-Bold')
-            .text(data.first_name, col1X, sectionY + 14)
-            .text(data.last_name, col1X, sectionY + 14)
+            .text(data.firstName, col1X, sectionY + 14)
+            .text(data.lastName, col1X, sectionY + 14)
         doc.fillColor(darkGray).fontSize(9).font('Helvetica')
             .text(data.email, col1X, sectionY + 28)
             .text(data.phone, col1X, sectionY + 42)

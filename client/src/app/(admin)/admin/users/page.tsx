@@ -8,7 +8,8 @@ import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 
 interface User {
-    id: string; name: string; email: string; mobile: string | null;
+    id: string; name: string; firstName?: string | null; lastName?: string | null;
+    email: string; mobile: string | null;
     avatar: string | null; role: string; status: string;
     verify_email: boolean; last_login_date: string | null; createdAt: string;
 }
@@ -130,7 +131,9 @@ const AdminUsersPage = () => {
                                         <div className="flex items-center gap-3">
                                             {user.avatar ? <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full object-cover" /> :
                                                 <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-sm font-bold">{user.name.charAt(0).toUpperCase()}</div>}
-                                            <span className="font-medium text-gray-900 text-sm">{user.name}</span>
+                                            <span className="font-medium text-gray-900 text-sm">
+                                                {user.firstName ? `${user.firstName} ${user.lastName ?? ''}`.trim() : user.name}
+                                            </span>
                                         </div>
                                     </td>
                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{user.email}</td>

@@ -20,10 +20,11 @@ interface AuthRequest extends Request {
 
 const SignUp = async (req: Request, res: Response) => {
     try {
-        const { first_name, last_name, email, mobile, password, } = req.body;
+        console.log(req.body, "test user")
+        const { firstName, lastName, email, mobile, password, } = req.body;
 
         const id = uuidv4();
-        if (!first_name || !email || !password) {
+        if (!firstName || !email || !password) {
             return res.status(400).json({
                 success: false,
                 error: true,
@@ -40,8 +41,8 @@ const SignUp = async (req: Request, res: Response) => {
         const user = await prisma.user.create({
             data: {
                 id,
-                first_name,
-                last_name,
+                firstName,
+                lastName,
                 email,
                 password: hashPassword,
                 verify_email: false,
@@ -55,7 +56,7 @@ const SignUp = async (req: Request, res: Response) => {
             sendTo: email,
             subject: "Verify email from Bestiee",
             html: verifyEmailTemplate({
-                first_name,
+                firstName,
                 url: verifyEmailUrl,
             }),
         }).catch((err) => {
@@ -216,8 +217,8 @@ const GetUserDetails = async (req: AuthRequest, res: Response) => {
              where: { id: id },
             select:{
                 id:true,
-                first_name:true,
-                last_name:true,
+                firstName:true,
+                lastName:true,
                 email:true,
                 mobile:true,
                 avatar:true,
@@ -246,7 +247,7 @@ const getAllUsers = async (req: Request, res: Response) => {
     try {
         const users = await prisma.user.findMany({
            select:{
-    id:true, first_name:true, last_name:true, email:true, mobile:true, avatar:true,
+    id:true, firstName:true, lastName:true, email:true, mobile:true, avatar:true,
     role:true, status:true, verify_email:true, last_login_date:true, createdAt:true,
 },
 orderBy: { createdAt: 'desc' }
@@ -289,7 +290,7 @@ export const updateUserByAdmin = async (req: Request, res: Response) => {
         if (role) updatedData.role = role;
         const updatedUser = await prisma.user.update({
             where: { id }, data: updatedData,
-            select: { id: true, first_name:true, last_name:true, email: true, role: true, status: true }
+            select: { id: true, firstName:true, lastName:true, email: true, role: true, status: true }
         });
         res.status(200).json({ success: true, error: false, message: "User updated successfully", data: updatedUser });
     } catch (error: any) {
@@ -328,15 +329,15 @@ const updateUserDetails = async (req: AuthRequest, res: Response) => {
         if (!userId) {
             return errorHandler(res, 400, "User ID is required", true);
         };
-        const {first_name,last_name,email,password,mobile,avatar,role} = req.body;
+        const {firstName,lastName,email,password,mobile,avatar,role} = req.body;
         let hashPassword = "";
         if(password){
             const salt = await bcrypt.genSalt(10);
             hashPassword = await bcrypt.hash(password,salt);
         };
         const updatedData:any = {};
-        if(first_name) updatedData.first_name = first_name;
-        if(last_name) updatedData.last_name = last_name;
+        if(firstName) updatedData.firstName = firstName;
+        if(lastName) updatedData.lastName = lastName;
         if(email) updatedData.email = email;
         if(mobile) updatedData.mobile = mobile;
         if(password) updatedData.password = hashPassword;
