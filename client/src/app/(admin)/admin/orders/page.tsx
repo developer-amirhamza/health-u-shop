@@ -6,7 +6,9 @@ import { SummeryApi } from "@/app/common/SummeryApi";
 import AxiosToastError from "@/utils/AxiosToastError";
 import toast from "react-hot-toast";
 import OrderDetailModal from "./components/OrderDetailModal";
-import { FaEye, FaFilter } from "react-icons/fa";
+import { FaEye, FaFilter, FaFileExcel, FaFilePdf } from "react-icons/fa";
+import { format } from "date-fns";
+import { baseUrl } from "@/app/common/SummeryApi";
 
 interface OrderItem {
     id: string;
@@ -54,6 +56,10 @@ const AdminOrdersPage = () => {
     const [statusFilter, setStatusFilter] = useState<FilterType>("all");
     const [paymentFilter, setPaymentFilter] = useState<PaymentFilterType>("all");
     const [searchTerm, setSearchTerm] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [exporting, setExporting] = useState(false);
+    const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
     const fetchOrders = async () => {
         try {
@@ -90,6 +96,16 @@ const AdminOrdersPage = () => {
             filtered = filtered.filter((order) => order.paymentStatus === paymentFilter);
         }
 
+        // Date range filter
+        if (startDate) {
+            const from = new Date(`${startDate}T00:00:00`);
+            filtered = filtered.filter((order) => new Date(order.createdAt) >= from);
+        }
+        if (endDate) {
+            const to = new Date(`${endDate}T23:59:59.999`);
+            filtered = filtered.filter((order) => new Date(order.createdAt) <= to);
+        }
+
         // Search filter
         if (searchTerm) {
             filtered = filtered.filter((order) =>
@@ -100,7 +116,7 @@ const AdminOrdersPage = () => {
         }
 
         setFilteredOrders(filtered);
-    }, [orders, statusFilter, paymentFilter, searchTerm]);
+    }, [orders, statusFilter, paymentFilter, searchTerm, startDate, endDate]);
 
     const handleViewDetails = (order: Order) => {
         setSelectedOrder(order);
@@ -120,6 +136,98 @@ const AdminOrdersPage = () => {
             prev.map((order) => (order.id === updatedOrder.id ? updatedOrder : order))
         );
         handleCloseModal();
+    };
+
+    // Rows for one order's line items — shared by both Excel exports.
+    const orderRows = (order: Order) =>
+        order.items.map((it) => ({
+            "Order #": order.orderNumber,
+            Date: format(new Date(order.createdAt), "dd MMM yyyy"),
+            Customer: order.name,
+            Email: order.email,
+            Phone: order.phone,
+            "Shipping Address": order.shippingAddress,
+            Product: it.productName,
+            Quantity: it.quantity,
+            "Unit Price": +it.price.toFixed(2),
+            "Line Total": +it.total.toFixed(2),
+            Subtotal: +order.subtotal.toFixed(2),
+            Delivery: +order.shippingCost.toFixed(2),
+            Tax: +order.tax.toFixed(2),
+            "Order Total": +order.total.toFixed(2),
+            "Payment Method": order.paymentMethod,
+            "Payment Status": order.paymentStatus,
+            "Order Status": order.orderStatus,
+        }));
+
+    const ORDER_COLS = [
+        { wch: 18 }, { wch: 13 }, { wch: 20 }, { wch: 26 }, { wch: 14 }, { wch: 34 },
+        { wch: 34 }, { wch: 9 }, { wch: 11 }, { wch: 11 }, { wch: 10 }, { wch: 9 },
+        { wch: 8 }, { wch: 12 }, { wch: 15 }, { wch: 15 }, { wch: 13 },
+    ];
+
+    // Export the currently filtered order list (one row per line item).
+    const handleExportList = async () => {
+        try {
+            setExporting(true);
+            const XLSX = await import("xlsx");
+            const rows = filteredOrders.flatMap(orderRows);
+            const ws = XLSX.utils.json_to_sheet(rows);
+            ws["!cols"] = ORDER_COLS;
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Orders");
+            XLSX.writeFile(wb, `orders-export-${format(new Date(), "yyyy-MM-dd")}.xlsx`);
+            toast.success(`Exported ${filteredOrders.length} orders`);
+        } catch (e) {
+            console.error(e);
+            toast.error("Export failed");
+        } finally {
+            setExporting(false);
+        }
+    };
+
+    // Export one order to its own workbook.
+    const handleExportSingle = async (order: Order) => {
+        try {
+            const XLSX = await import("xlsx");
+            const ws = XLSX.utils.json_to_sheet(orderRows(order));
+            ws["!cols"] = ORDER_COLS;
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, order.orderNumber.slice(0, 31));
+            XLSX.writeFile(wb, `order-${order.orderNumber}.xlsx`);
+            toast.success(`Exported ${order.orderNumber}`);
+        } catch (e) {
+            console.error(e);
+            toast.error("Export failed");
+        }
+    };
+
+    // Download the server-generated PDF invoice for one order.
+    const handleDownloadInvoice = async (order: Order) => {
+        try {
+            setDownloadingId(order.id);
+            const token = localStorage.getItem("accessToken");
+            const response = await fetch(`${baseUrl}/api/orders/admin/invoice/${order.id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+                credentials: "include",
+            });
+            if (!response.ok) throw new Error("Invoice download failed");
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `invoice-${order.orderNumber}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            toast.success(`Invoice ${order.orderNumber} downloaded`);
+        } catch (e) {
+            console.error(e);
+            toast.error("Invoice download failed");
+        } finally {
+            setDownloadingId(null);
+        }
     };
 
     const getStatusBadgeColor = (status: string) => {
@@ -168,9 +276,19 @@ const AdminOrdersPage = () => {
     return (
         <div className="container mx-auto p-4">
             {/* Header */}
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">Orders Management</h1>
-                <p className="text-gray-600">Manage and track all customer orders</p>
+            <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
+                <div>
+                    <h1 className="text-3xl font-bold text-gray-800 mb-2">Orders Management</h1>
+                    <p className="text-gray-600">Manage and track all customer orders</p>
+                </div>
+                <button
+                    onClick={handleExportList}
+                    disabled={exporting || loading || filteredOrders.length === 0}
+                    className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-4 py-2 rounded disabled:opacity-50"
+                >
+                    <FaFileExcel />
+                    {exporting ? "Exporting…" : "Export to Excel"}
+                </button>
             </div>
 
             {/* Statistics Cards */}
@@ -206,7 +324,7 @@ const AdminOrdersPage = () => {
                     <h3 className="font-semibold text-gray-800">Filters</h3>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                     {/* Search */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -258,6 +376,28 @@ const AdminOrdersPage = () => {
                         </select>
                     </div>
 
+                    {/* Date range */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                        <input
+                            type="date"
+                            value={startDate}
+                            max={endDate || undefined}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                        <input
+                            type="date"
+                            value={endDate}
+                            min={startDate || undefined}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+
                     {/* Clear Filters Button */}
                     <div className="flex items-end">
                         <button
@@ -265,6 +405,8 @@ const AdminOrdersPage = () => {
                                 setStatusFilter("all");
                                 setPaymentFilter("all");
                                 setSearchTerm("");
+                                setStartDate("");
+                                setEndDate("");
                             }}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition font-medium"
                         >
@@ -355,13 +497,31 @@ const AdminOrdersPage = () => {
                                         {new Date(order.createdAt).toLocaleDateString()}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                        <button
-                                            onClick={() => handleViewDetails(order)}
-                                            className="text-blue-600 hover:text-blue-900 font-semibold transition flex items-center gap-1"
-                                        >
-                                            <FaEye size={14} />
-                                            View
-                                        </button>
+                                        <div className="flex items-center gap-3">
+                                            <button
+                                                onClick={() => handleViewDetails(order)}
+                                                title="View details"
+                                                className="text-blue-600 hover:text-blue-900 font-semibold transition flex items-center gap-1"
+                                            >
+                                                <FaEye size={14} />
+                                                View
+                                            </button>
+                                            <button
+                                                onClick={() => handleExportSingle(order)}
+                                                title="Export this order to Excel"
+                                                className="text-green-600 hover:text-green-800 transition"
+                                            >
+                                                <FaFileExcel size={15} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDownloadInvoice(order)}
+                                                disabled={downloadingId === order.id}
+                                                title="Download PDF invoice"
+                                                className="text-red-600 hover:text-red-800 transition disabled:opacity-50"
+                                            >
+                                                <FaFilePdf size={15} />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))

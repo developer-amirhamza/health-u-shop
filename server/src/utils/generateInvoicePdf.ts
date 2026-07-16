@@ -43,7 +43,7 @@ export const generateInvoicePdf = (data: InvoiceData): Promise<Buffer> => {
         doc.fillColor('#FFFFFF').fontSize(22).font('Helvetica-Bold')
             .text('INVOICE', 60, 60);
         doc.fontSize(10).font('Helvetica')
-            .text('Health U Shop', 60, 86);
+            .text('Bestiee Limited', 60, 86);
         doc.fillColor('#FFFFFF').fontSize(10)
             .text(`Invoice #${data.orderNumber}`, 400, 60, { align: 'right', width: pageWidth - 350 })
             .text(`Date: ${new Date(data.createdAt).toLocaleDateString('en-AU', { day: '2-digit', month: 'long', year: 'numeric' })}`, 400, 76, { align: 'right', width: pageWidth - 350 });
@@ -129,7 +129,7 @@ export const generateInvoicePdf = (data: InvoiceData): Promise<Buffer> => {
 
         // Footer
         doc.fillColor(mutedGray).fontSize(8).font('Helvetica')
-            .text('Thank you for your order! If you have any questions, please contact support@healthushop.com.au', col1X, rowY + 20, { align: 'center', width: pageWidth });
+            .text('Thank you for your order! If you have any questions, please contact hello@mybestiee.com.au', col1X, rowY + 20, { align: 'center', width: pageWidth });
 
         doc.end();
     });

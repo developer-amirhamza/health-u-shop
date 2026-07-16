@@ -122,6 +122,11 @@ export const SummeryApi = {
         url: "/api/orders/admin/update-order",
         method: "put",
     },
+    downloadInvoiceByAdmin: {
+        // GET /api/orders/admin/invoice/:orderId — returns the PDF file
+        url: "/api/orders/admin/invoice",
+        method: "get",
+    },
 
     // Payment (Stripe)
     createCheckoutSession: {
@@ -130,7 +135,8 @@ export const SummeryApi = {
     },
 
     // review
-        getAllReviews: {
+
+    getAllReviews: {
         url: "/api/reviews/all-reviews",
         method: "get"
     },
@@ -151,7 +157,7 @@ export const SummeryApi = {
         method: "delete"
     },
 
-        // testimonials
+    // testimonials
     getTestimonials: {
         url: "/api/testimonials",
         method: "get",
@@ -199,6 +205,26 @@ export const SummeryApi = {
 
     // subcategory
 
+    // fetchSubcategoriesByCategory: {
+    //     url: "/api/subcategories/category/subcategories-by-categories",
+    //     method: "post",
+    // },
+    // fetchSubcategoryBySlug: {
+    //     url: "/api/subcategories",
+    //     method: "get",
+    // },
+    // createSubcategory: {
+    //     url: "/api/subcategories",
+    //     method: "post",
+    // },
+    // updateSubcategory: {
+    //     url: "/api/subcategories",
+    //     method: "put",
+    // },
+    // deleteSubcategory: {
+    //     url: "/api/subcategories",
+    //     method: "delete",
+    // },
 fetchSubcategoriesByCategory: {
     url: "/api/subcategories/category/subcategories-by-categories",
     method: "post",
@@ -257,9 +283,7 @@ deleteSubcategory: {
         method: "delete",
     },
 
-
-
-        // ── Bestiee portal: account applications ──
+    // ── Bestiee portal: account applications ──
     applyForAccount: { url: "/api/account-applications/apply", method: "post" },
     getMyApplication: { url: "/api/account-applications/me", method: "get" },
     listApplications: { url: "/api/account-applications", method: "get" },
@@ -302,8 +326,7 @@ deleteSubcategory: {
     upsertSubscription: { url: "/api/subscriptions", method: "put" },
     oneClickReorder: { url: "/api/subscriptions/reorder", method: "post" },
 
-
-        // ── Phase 3: multi-site, negotiated pricing, deeper reporting ──
+    // ── Phase 3: multi-site, negotiated pricing, deeper reporting ──
     listDeliverySites: { url: "/api/phase3/delivery-sites", method: "get" },
     upsertDeliverySite: { url: "/api/phase3/delivery-sites", method: "put" },
     deleteDeliverySite: { url: "/api/phase3/delivery-sites", method: "delete" },
