@@ -8,7 +8,8 @@ import { FaStar, FaRegStar, FaTrash, FaSearch } from "react-icons/fa";
 
 interface ReviewUser {
     id: string;
-    name: string;
+    firstName: string;
+    lastName?:string;
     avatar?: string;
     email?: string;
 }
@@ -92,7 +93,7 @@ const AdminReviewsPage = () => {
     const filtered = reviews.filter((r) => {
         const matchesSearch =
             search === "" ||
-            r.user?.name?.toLowerCase().includes(search.toLowerCase()) ||
+            r.user?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
             r.product?.title?.toLowerCase().includes(search.toLowerCase()) ||
             r.comment?.toLowerCase().includes(search.toLowerCase());
         const matchesRating = filterRating === "" || r.rating === Number(filterRating);
@@ -227,12 +228,12 @@ const AdminReviewsPage = () => {
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
                                             <img
-                                                src={review.user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(review.user?.name || "U")}&background=3b82f6&color=fff`}
-                                                alt={review.user?.name}
+                                                src={review.user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(review.user?.firstName || "U")}&background=3b82f6&color=fff`}
+                                                alt={review.user?.firstName}
                                                 className="w-8 h-8 rounded-full object-cover shrink-0"
                                             />
                                             <div>
-                                                <p className="text-sm font-semibold text-gray-800">{review.user?.name}</p>
+                                                <p className="text-sm font-semibold flex gap-2 text-gray-800">{review.user?.firstName} {review.user?.lastName} </p>
                                                 {review.user?.email && (
                                                     <p className="text-xs text-gray-500">{review.user.email}</p>
                                                 )}

@@ -34,7 +34,7 @@ const AdminSidebar: React.FC<Props> = ({ activeSidebar }) => {
                     alt=""
                 />
                 <div className={`${activeSidebar ? "flex flex-col" : "hidden"} min-w-0`}>
-                    <span className="text-white text-sm font-medium capitalize truncate">{user?.name || "N/A"}</span>
+                    <span className="text-white text-sm font-medium capitalize flex gap-2 truncate">{`${user?.firstName} ${user?.lastName} `  || "N/A"}</span>
                     <span className="flex items-center gap-1.5 text-[11px] text-green-400">
                         <span className="h-2 w-2 bg-green-500 rounded-full" /> Online
                     </span>

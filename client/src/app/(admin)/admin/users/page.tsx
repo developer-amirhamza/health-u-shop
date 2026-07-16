@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 
 interface User {
-    id: string; name: string; firstName?: string | null; lastName?: string | null;
+    id: string; firstName: string; lastName?: string | null;
     email: string; mobile: string | null;
     avatar: string | null; role: string; status: string;
     verify_email: boolean; last_login_date: string | null; createdAt: string;
@@ -58,7 +58,7 @@ const AdminUsersPage = () => {
         let result = users;
         if (search.trim()) {
             const q = search.toLowerCase();
-            result = result.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
+            result = result.filter(u => u.firstName.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
         }
         if (roleFilter !== 'ALL') result = result.filter(u => normalise(u.role) === roleFilter);
         if (statusFilter !== 'ALL') result = result.filter(u => u.status === statusFilter);
@@ -129,10 +129,10 @@ const AdminUsersPage = () => {
                                 <tr key={user.id} className="hover:bg-gray-50">
                                     <td className="px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-3">
-                                            {user.avatar ? <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full object-cover" /> :
-                                                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-sm font-bold">{user.name.charAt(0).toUpperCase()}</div>}
+                                            {user.avatar ? <img src={user.avatar} alt={user.firstName} className="w-8 h-8 rounded-full object-cover" /> :
+                                                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-sm font-bold">{user.firstName? user?.firstName.charAt(0).toUpperCase() : user?.email.charAt(0).toUpperCase()}</div>}
                                             <span className="font-medium text-gray-900 text-sm">
-                                                {user.firstName ? `${user.firstName} ${user.lastName ?? ''}`.trim() : user.name}
+                                                {`${user.firstName} ${user.lastName ?? ''}`.trim()}
                                             </span>
                                         </div>
                                     </td>
@@ -176,7 +176,7 @@ const AdminUsersPage = () => {
                                         {normalise(user.role) === 'OWNER' ? (
                                             <span className="text-xs text-gray-400">Protected</span>
                                         ) : (
-                                            <button disabled={actionLoading === user.id} onClick={() => handleDelete(user.id, user.name)}
+                                            <button disabled={actionLoading === user.id} onClick={() => handleDelete(user.id, user.firstName)}
                                                 className="text-red-600 hover:text-red-900 text-sm disabled:opacity-50">
                                                 {actionLoading === user.id ? '...' : 'Delete'}
                                             </button>

@@ -16,8 +16,7 @@ import Loader from '@/app/(main)/components/UI/Loader';
 
 interface UserProfile {
   id: any;
-  name: string;
-  firstName?: string;
+  firstName: string;
   lastName?: string;
   email: string;
   phone?: string;
@@ -33,7 +32,8 @@ const ProfilePage = () => {
   // Profile form state
   const [profile, setProfile] = useState<UserProfile>({
     id: '',
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     avatar: '',
@@ -69,7 +69,6 @@ const ProfilePage = () => {
       const u: any = user;
       setProfile({
         id: user.id,
-        name: user.name || '',
         firstName: u.firstName || '',
         lastName: u.lastName || '',
         email: user.email || '',
@@ -78,8 +77,8 @@ const ProfilePage = () => {
       });
       setEditForm({
         // Legacy accounts have only `name` — split it as a starting point.
-        firstName: u.firstName || (user.name || '').split(' ')[0] || '',
-        lastName: u.lastName || (user.name || '').split(' ').slice(1).join(' ') || '',
+        firstName: u.firstName || '',
+        lastName: u.lastName  || '',
         email: user.email || '',
         phone: user.mobile || '',
       });
@@ -112,7 +111,6 @@ const ProfilePage = () => {
           ...profile,
           firstName: editForm.firstName,
           lastName: editForm.lastName,
-          name: [editForm.firstName, editForm.lastName].filter(Boolean).join(' '),
           email: editForm.email,
           phone: editForm.phone,
         });
@@ -180,13 +178,13 @@ const ProfilePage = () => {
 
             {profile.avatar ? <Image
               src={profile.avatar || '/default-avatar.png'}
-              alt={profile.name}
+              alt={"name"}
               className="w-full h-full rounded-full object-cover border-4 border-gray-200"
             />:
-            <h1 className="text-6xl w-full h-full flex items-center justify-center rounded-full font-semibold object-cover text-white border-4 bg-gray-700 border-gray-200 text-center ">{profile.name[0]} </h1>
+            <h1 className="text-6xl w-full h-full flex items-center justify-center rounded-full font-semibold object-cover text-white border-4 bg-gray-700 border-gray-200 text-center ">{profile?.firstName[0] ?? ""} </h1>
             }
           </div>
-          <h2 className="text-xl font-semibold">{profile.name}</h2>
+          <h2 className="text-xl font-semibold">{profile?.firstName}{" "} {profile?.lastName} </h2>
           <p className="text-gray-500">{profile.email}</p>
           {profile.phone && <p className="text-gray-500 mt-1">{profile.phone}</p>}
           <button

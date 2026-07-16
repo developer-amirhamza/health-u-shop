@@ -65,35 +65,35 @@ const SingUp = () => {
     // Last name is optional; first name, email and password are required.
     const validInput = Boolean(formData.firstName && formData.email && formData.password);
     return (
-        <section className=' flex w-full h-full bg-amber-50  '
+        <section className=' flex w-full h-full bg-background  '
          //style={{ backgroundImage: `url(${image})` }}
          >
             <div className="container px-5 mx-auto flex w-full justify-center py-10">
-                <div className="bg-amber-100 shadow-2xl p-5 flex justify-center items-center w-full max-w-md h-full flex-col
+                <div className="bg-primary shadow-2xl p-5 flex justify-center items-center w-full max-w-md h-full flex-col
             rounded-md gap-5  ">
-                    <h1 className="text-2xl text-slate-900 text-center uppercase font-semibold">Create your account</h1>
+                    <h1 className="text-2xl text-text text-center uppercase font-semibold">Create your account</h1>
                     <form onSubmit={handleSubmit} className="grid gap-5 w-full text-lg">
                         <div className="grid grid-cols-2 gap-3">
                             <div className="grid gap-2 place-items-start">
-                                <label htmlFor="firstName" className="font-medium text-slate-800">First Name:</label>
-                                <input className='w-full font-medium text-neutral-700 p-2 outline-none border-2 border-slate-500 rounded focus-within:border-blue-900'
+                                <label htmlFor="firstName" className="font-medium text-text">First Name:</label>
+                                <input className='w-full font-medium text-neutral-700 p-2 outline-none border-2 border-secondary-hover rounded focus-within:border-secondary'
                                     value={formData.firstName} type="text" onChange={handleOnChange} name="firstName" id="firstName" placeholder='First name' />
                             </div>
                             <div className="grid gap-2 place-items-start">
-                                <label htmlFor="lastName" className="font-medium text-slate-800">Last Name:</label>
-                                <input className='w-full font-medium text-neutral-700 p-2 outline-none border-2 border-slate-500 rounded focus-within:border-blue-900'
+                                <label htmlFor="lastName" className="font-medium text-text">Last Name:</label>
+                                <input className='w-full font-medium text-neutral-700 p-2 outline-none border-2 border-secondary-hover rounded focus-within:border-secondary'
                                     value={formData.lastName} type="text" onChange={handleOnChange} name="lastName" id="lastName" placeholder='Last name' />
                             </div>
                         </div>
                         <div className="grid gap-2 place-items-start">
-                            <label htmlFor="email" className="font-medium text-slate-800">Email:</label>
-                            <input className='w-full font-medium text-neutral-700 p-2 outline-none border-2 border-slate-500 rounded focus-within:border-blue-900'
+                            <label htmlFor="email" className="font-medium text-text">Email:</label>
+                            <input className='w-full font-medium text-neutral-700 p-2 outline-none border-2 border-secondary-hover rounded focus-within:border-secondary'
                                 value={formData.email} type="email" onChange={handleOnChange} name="email" id="email" placeholder='Enter your email' />
                         </div>
                         <div className="grid gap-2 place-items-start">
-                            <label htmlFor="password" className="font-medium text-slate-800">Password:</label>
+                            <label htmlFor="password" className="font-medium text-text">Password:</label>
                             <div className="relative w-full flex">
-                                <input className='w-full font-medium text-neutral-700 p-2 flex outline-none border-2 border-slate-500 rounded focus-within:border-blue-900'
+                                <input className='w-full font-medium text-neutral-700 p-2 flex outline-none border-2 border-secondary-hover rounded focus-within:border-secondary'
                                     placeholder='Enter your password'
                                     value={formData.password}
                                     onChange={handleOnChange}
@@ -109,7 +109,7 @@ const SingUp = () => {
                             </div>
                         </div>
                         <button disabled={!validInput} type="submit" value="Submit"
-                            className={`${validInput ? "bg-amber-400  cursor-pointer hover:bg-amber-500" : "bg-slate-400   cursor-not-allowed"}  p-2 text-neutral-900
+                            className={`${validInput ? "bg-secondary-hover text-white  cursor-pointer hover:bg-secondary" : "bg-primary-hover   cursor-not-allowed"}  p-2 text-neutral-900
                             text-xl font-semibold rounded   `} >Signup</button>
                         <div className="flex justify-between w-full px-1">
                             <h1 className="text-neutral-600 font-medium">Already have an account?</h1>

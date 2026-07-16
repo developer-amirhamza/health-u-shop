@@ -60,7 +60,7 @@ const UserMenu: React.FC<Type> = ({ close }) => {
                     className="text-text-hover flex gap-4 hover:text-text cursor-pointer hover:bg-primary items-center  font-medium px-2"
                 >
                     <span className="">
-                        {user?.name || user?.mobile}
+                        {`${user?.firstName} ${user?.lastName}`|| user?.mobile}
                     </span>
                     <FaExternalLinkAlt size={16} />
                 </Link>
