@@ -439,3 +439,31 @@ model Blog {
   @@index([slug])
   @@index([authorId])
 }
+
+
+
+// Internal admin-team task / note board ("Team Tasks" admin page).
+// Any admin can write a task/requirement/note; any admin can accept a task
+// and move it through OPEN → IN_PROGRESS → DONE.
+model TeamTask {
+  id             String    @id @default(dbgenerated("gen_random_uuid()"))
+  // TASK | REQUIREMENT | NOTE
+  type           String    @default("TASK")
+  title          String
+  description    String?
+  // OPEN | IN_PROGRESS | DONE
+  status         String    @default("OPEN")
+  // LOW | NORMAL | HIGH
+  priority       String    @default("NORMAL")
+  createdById    String
+  createdByName  String
+  acceptedById   String?
+  acceptedByName String?
+  acceptedAt     DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}

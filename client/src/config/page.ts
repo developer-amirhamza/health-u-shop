@@ -4,15 +4,12 @@ import banner1 from "@/assets/banners/banner1.webp"
 import banner2 from "@/assets/banners/banner2.webp"
 import banner3 from "@/assets/banners/banner3.webp"
 import banner4 from "@/assets/banners/banner4.webp"
-import { FaFileSignature, FaHome, FaNewspaper } from "react-icons/fa"
+import { FaHome, FaNewspaper } from "react-icons/fa"
 import { FaCartFlatbedSuitcase, FaUsersGear } from "react-icons/fa6";
 import { RiArticleFill, RiPriceTag2Fill } from "react-icons/ri"
 import { AiFillDashboard, AiFillProduct } from "react-icons/ai";
 import { GrArticle } from "react-icons/gr";
-import { MdCategory, MdReviews } from "react-icons/md"
-import { BiSolidCategory } from "react-icons/bi";
-import { MdOutlinePriceChange } from "react-icons/md";
-import { GiArchiveResearch } from "react-icons/gi";
+import { MdCategory, MdReviews, MdTaskAlt } from "react-icons/md"
 
 
 
@@ -44,7 +41,7 @@ export const adminNavItems = [
     },
     {
         label: "Categories",
-        icon: BiSolidCategory,
+        icon: MdCategory,
         path: "/admin/categories",
     },
         {
@@ -53,48 +50,55 @@ export const adminNavItems = [
         path: "/admin/subcategories",
     },
     {
+        label: "Articles",
+        icon: RiArticleFill,
+        path: "/admin/articles",
+    },
+    {
         label: "All Users",
         icon: FaUsersGear,
         path: "/admin/users"
     },
-
-        {
+    {
         label: "Applications",
-        icon: FaFileSignature,
+        icon: FaUsersGear,
         path: "/admin/applications",
     },
     {
         label: "Pricing",
-        icon: MdOutlinePriceChange ,
+        icon: RiPriceTag2Fill,
         path: "/admin/pricing",
     },
     {
         label: "Enquiries",
-        icon: GiArchiveResearch ,
+        icon: FaNewspaper,
         path: "/admin/enquiries",
+    },
+    {
+        label: "Team Tasks",
+        icon: MdTaskAlt,
+        path: "/admin/tasks",
     },
     {
         label: "Reports",
         icon: AiFillDashboard,
         path: "/admin/reports",
     },
-
     {
         label: "Reviews",
         icon: MdReviews,
         path: "/admin/reviews",
     },
     {
-    label: "Testimonials",
-    icon: MdReviews,
-    path: "/admin/testimonials",
-},
-     {
-        label: "Articles",
-        icon: RiArticleFill,
-        path: "/admin/articles",
+        label: "Testimonials",
+        icon: MdReviews,
+        path: "/admin/testimonials",
     },
-
+    {
+        label: "Contact",
+        icon: FaNewspaper,
+        path: "/admin/admin-contact",
+    },
 ]
 
 export const footer_nav_items = [
@@ -153,6 +157,7 @@ export const infographic_cards = {
         { label: "Easy Returns", subtitle: "Hassle-free returns", icon: return_box, path: "/" },
     ]
 }
+
 export const home_posts = [
     {
         title: "Explore TENA's Incontinence Range", subtitle: "",

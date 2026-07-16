@@ -128,6 +128,13 @@ export const SummeryApi = {
         method: "get",
     },
 
+    // ── Team tasks (internal admin board) ──
+    listTeamTasks: { url: "/api/team-tasks", method: "get" },
+    createTeamTask: { url: "/api/team-tasks", method: "post" },
+    acceptTeamTask: { url: "/api/team-tasks/accept", method: "post" },
+    updateTeamTask: { url: "/api/team-tasks", method: "put" },
+    deleteTeamTask: { url: "/api/team-tasks", method: "delete" },
+
     // Payment (Stripe)
     createCheckoutSession: {
         url: "/api/payment/create-checkout-session",
