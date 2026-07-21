@@ -108,7 +108,7 @@ export default function AdminWaitlistPage() {
 
     return (
         <div className="container mx-auto p-4 py-8">
-            <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
+            <div className="flex flex-wrap items-start justify-between gap-3 mt-4 mb-2">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Waitlist</h1>
                     <p className="text-sm text-gray-500">Pre-launch signups from the marketing popup.</p>

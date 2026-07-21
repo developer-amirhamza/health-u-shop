@@ -5,7 +5,7 @@ import Axios from "@/utils/Axios";
 import { SummeryApi } from "@/app/common/SummeryApi";
 
 // ── Brand palette (per launch design rules) ──
-const CORAL = "#C9573F";
+const CORAL = "#394624";
 const TEAL = "#2E7D71";
 const CREAM = "#FFF7F1";
 
@@ -127,7 +127,7 @@ export default function WaitlistPopup() {
             <button
                 onClick={() => setOpen(true)}
                 aria-label="Join the waitlist"
-                className="fixed bottom-5 left-5 z-40 rounded-full px-5 py-3 text-sm font-semibold text-white shadow-lg transition-transform hover:-translate-y-0.5"
+                className="fixed bottom-20 right-5 cursor-pointer  z-40 rounded-full px-5 py-3 text-sm font-semibold text-white shadow-lg transition-transform hover:-translate-y-0.5"
                 style={{ backgroundColor: CORAL }}
             >
                 ✨ Join the waitlist
@@ -136,16 +136,16 @@ export default function WaitlistPopup() {
     }
 
     const inputCls =
-        "w-full rounded-lg border border-gray-300 px-3 py-2.5 text-[16px] outline-none focus:border-[#2E7D71] focus:ring-1 focus:ring-[#2E7D71]";
+        "w-full rounded-lg border border-gray-300 text-text px-3 py-2.5 text-[16px] outline-none focus:border-[#2E7D71] focus:ring-1 focus:ring-[#2E7D71]";
 
     return (
         <div
-            className="fixed inset-0 z-[9998] flex items-center justify-center p-4 overflow-y-auto"
+            className="fixed inset-0 z-9998 flex items-center justify-center p-4 "
             style={{ backgroundColor: "rgba(58,46,40,0.55)" }}
             onClick={close}
         >
             <div
-                className="relative w-full max-w-md rounded-2xl shadow-2xl my-8"
+                className="relative w-full max-w-md rounded-2xl min-h-full overflow-y-scroll no-scrollbar flex flex-col h-full shadow-2xl my-4"
                 style={{ backgroundColor: CREAM }}
                 onClick={(e) => e.stopPropagation()}
             >
@@ -153,7 +153,7 @@ export default function WaitlistPopup() {
                 <button
                     onClick={close}
                     aria-label="Close"
-                    className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/70 text-gray-500 hover:bg-white"
+                    className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-primary cursor-pointer text-gray-500 hover:bg-white"
                 >
                     ✕
                 </button>
@@ -190,14 +190,14 @@ export default function WaitlistPopup() {
                         )}
                         <button
                             onClick={() => setOpen(false)}
-                            className="mt-6 rounded-full px-6 py-2.5 text-sm font-semibold text-white"
+                            className="mt-6 rounded-full px-6 py-2.5 text-sm cursor-pointer font-semibold text-white"
                             style={{ backgroundColor: TEAL }}
                         >
                             Done
                         </button>
                     </div>
                 ) : (
-                    <div className="p-5">
+                    <div className="p-5  ">
                         {/* Hero — emotion first */}
                         <div
                             className="rounded-xl px-6 py-6 text-center text-white"
@@ -290,7 +290,7 @@ export default function WaitlistPopup() {
                             <button
                                 type="submit"
                                 disabled={submitting}
-                                className="w-full rounded-full py-3 text-base font-semibold text-white transition-opacity disabled:opacity-60"
+                                className="w-full rounded-full py-3 cursor-pointer text-base font-semibold text-white transition-opacity disabled:opacity-60"
                                 style={{ backgroundColor: CORAL }}
                             >
                                 {submitting ? "Joining…" : "Join the waitlist"}
