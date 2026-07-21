@@ -135,6 +135,10 @@ export const SummeryApi = {
     updateTeamTask: { url: "/api/team-tasks", method: "put" },
     deleteTeamTask: { url: "/api/team-tasks", method: "delete" },
 
+    // ── Pre-launch waitlist ──
+    joinWaitlist: { url: "/api/waitlist", method: "post" },
+    listWaitlist: { url: "/api/waitlist", method: "get" },
+
     // Payment (Stripe)
     createCheckoutSession: {
         url: "/api/payment/create-checkout-session",

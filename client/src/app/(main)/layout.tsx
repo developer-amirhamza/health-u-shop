@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Header1 from "./components/Header1";
 import IntroOverlay from "./components/IntroOverlay";
+import WaitlistPopup from "./components/WaitlistPopup";
 
 
 export default function MainLayout({
@@ -23,6 +24,7 @@ export default function MainLayout({
       {children}
       <Footer />
       <Chatbot/>
+      <WaitlistPopup />
     </>
   );
 }

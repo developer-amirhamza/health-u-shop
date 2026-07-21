@@ -23,6 +23,7 @@ import subscriptionRouter from "./routes/subscription.routes"
 import phase3Router from "./routes/phase3.routes"
 import healthRouter from "./routes/health.routes"
 import teamTaskRouter from "./routes/teamTask.routes"
+import waitlistRouter from "./routes/waitlist.routes"
 
 config();
 const app = express();
@@ -60,6 +61,7 @@ app.use("/api/subscriptions", subscriptionRouter);
 app.use("/api/phase3", phase3Router);
 app.use("/api/health", healthRouter);
 app.use("/api/team-tasks", teamTaskRouter);
+app.use("/api/waitlist", waitlistRouter);
 
 
 

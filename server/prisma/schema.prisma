@@ -467,3 +467,24 @@ model TeamTask {
   @@index([status])
   @@index([createdAt])
 }
+
+// Pre-launch waitlist signup (marketing popup). Master record per the launch
+// plan: identity + postcode (sales evidence), country (export interest),
+// buyer type (segmenting + B2B routing), consent timestamp (Spam Act 2003),
+// and UTM source for ad attribution.
+model WaitlistEntry {
+  id        String    @id @default(dbgenerated("gen_random_uuid()"))
+  name      String
+  email     String    @unique
+  postcode  String
+  country   String    @default("Australia")
+  // USER | CARER | PHARMACY | AGED_CARE | NDIS_PROVIDER | DISTRIBUTOR
+  buyerType String
+  consent   Boolean   @default(false)
+  consentAt DateTime?
+  utm       String?
+  createdAt DateTime  @default(now())
+
+  @@index([buyerType])
+  @@index([createdAt])
+}
