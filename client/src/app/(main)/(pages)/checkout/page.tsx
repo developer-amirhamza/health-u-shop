@@ -11,7 +11,8 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 
 interface FormData {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   addressLine: string;
@@ -29,7 +30,8 @@ const CheckoutPage = () => {
 
 
   const [form, setForm] = useState<FormData>({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
     addressLine: "",
@@ -44,7 +46,8 @@ const CheckoutPage = () => {
     if (user) {
       setForm(prev => ({
         ...prev,
-        name: user?.name || "",
+        firstName: user?.firstName || "",
+        lastName: user?.lastName || "",
         email: user?.email || "",
         phone: user?.mobile || "",
       }));
@@ -73,8 +76,8 @@ const CheckoutPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { name, email, phone, addressLine, city, state, pincode, country } = form;
-    if (!name || !email || !phone || !addressLine || !city || !state || !pincode || !country) {
+    const { firstName,lastName, email, phone, addressLine, city, state, pincode, country } = form;
+    if (!firstName  || !email || !phone || !addressLine || !city || !state || !pincode || !country) {
       toast.error("Please fill all fields");
       return;
     }
@@ -83,7 +86,8 @@ const CheckoutPage = () => {
     setIsSubmitting(true);
     try {
       await dispatch(createCheckoutSession({
-        name,
+        firstName,
+        lastName,
         email,
         phone,
         shippingAddress,
@@ -153,16 +157,30 @@ const CheckoutPage = () => {
         <div className="w-full bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-neutral-800 mb-4">Billing Details</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="">
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-1">Full Name</label>
+              <label className="block text-sm font-medium text-neutral-700 mb-1">First Name</label>
               <input
                 type="text"
-                name="name"
-                value={form.name}
+                name="firstName"
+                value={form.firstName}
                 onChange={handleInputChange}
                 required
-                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary-hover"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-neutral-700 mb-1">Last Name</label>
+              <input
+                type="text"
+                name="lastName"
+                value={form.lastName}
+                onChange={handleInputChange}
+                required
+                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary-hover"
+              />
+            </div>
+
             </div>
             <div>
               <label className="block text-sm font-medium text-neutral-700 mb-1">Email Address</label>
@@ -172,7 +190,7 @@ const CheckoutPage = () => {
                 value={form.email}
                 onChange={handleInputChange}
                 required
-                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary-hover"
               />
             </div>
             <div>
@@ -183,7 +201,7 @@ const CheckoutPage = () => {
                 value={form.phone}
                 onChange={handleInputChange}
                 required
-                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary-hover"
               />
             </div>
             <div className="border-t pt-4 mt-2">
@@ -198,7 +216,7 @@ const CheckoutPage = () => {
                     value={form.addressLine}
                     onChange={handleInputChange}
                     required
-                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary-hover"
                   />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -211,7 +229,7 @@ const CheckoutPage = () => {
                       value={form.city}
                       onChange={handleInputChange}
                       required
-                      className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary-hover"
                     />
                   </div>
                   <div>
@@ -223,7 +241,7 @@ const CheckoutPage = () => {
                       value={form.state}
                       onChange={handleInputChange}
                       required
-                      className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary-hover"
                     />
                   </div>
                 </div>
@@ -237,7 +255,7 @@ const CheckoutPage = () => {
                       value={form.pincode}
                       onChange={handleInputChange}
                       required
-                      className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary-hover"
                     />
                   </div>
                   <div>
@@ -249,7 +267,7 @@ const CheckoutPage = () => {
                       value={form.country}
                       onChange={handleInputChange}
                       required
-                      className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary-hover"
                     />
                   </div>
                 </div>
@@ -283,7 +301,7 @@ const CheckoutPage = () => {
             <button
               onClick={handleSubmit}
               disabled={isSubmitting || orderStatus === "loading"}
-              className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition disabled:bg-gray-400"
+              className="w-full mt-4 bg-secondary hover:bg-secondary-hover text-white font-semibold py-2 px-4 rounded-md transition disabled:bg-gray-400"
             >
               {isSubmitting || orderStatus === "loading" ? "Processing..." : "Proceed to Payment"}
             </button>

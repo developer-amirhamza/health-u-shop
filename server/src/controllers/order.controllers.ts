@@ -109,7 +109,7 @@ export const placeOrder = async (req: AuthRequest, res: Response) => {
                     orderNumber,
                     shippingAddress,
                     firstName,
-                lastName,
+                    lastName,
                     phone,
                     email,                           // snapshot (user's email or guest's email)
                     subtotal,

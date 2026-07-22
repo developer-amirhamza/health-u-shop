@@ -62,7 +62,7 @@ const initialState: OrderState = {
 // Create Stripe Checkout Session
 export const createCheckoutSession = createAsyncThunk(
     "order/createCheckoutSession",
-    async (checkoutData: {name:string, email: string; phone: string; shippingAddress: string; successUrl?: string; cancelUrl?: string }, { rejectWithValue }) => {
+    async (checkoutData: {firstName:string,lastName?:string, email: string; phone: string; shippingAddress: string; successUrl?: string; cancelUrl?: string }, { rejectWithValue }) => {
         try {
             const response = await Axios({
                 ...SummeryApi.createCheckoutSession,
