@@ -378,6 +378,11 @@ model Order {
   paymentMethod         String      @default("Stripe")
   paymentStatus         String      @default("Pending")
   orderStatus           String      @default("Pending")
+  // NDIS / Home Care Package funding info when the order is paid from a
+  // participant's funding rather than by card. Shape depends on paymentMethod:
+  //   NDIS: { participantName, ndisNumber, dob, fundingType, approved }
+  //   HCP:  { participantName, hcpNumber, providerEmail, approved }
+  fundingDetails        Json?
   statusHistory         Json?
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt

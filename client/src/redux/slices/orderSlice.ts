@@ -43,26 +43,39 @@ const initialState: OrderState = {
     stripeUrl: null,
 };
 
-// Place COD order
-// export const placeOrder = createAsyncThunk(
-//     "order/placeOrder",
-//     async (orderData: { email: string; phone: string; shippingAddress: string; paymentMethod?: string }, { rejectWithValue }) => {
-//         try {
-//             const response = await Axios({
-//                 ...SummeryApi.placeOrder,
-//                 data: orderData,
-//             });
-//             return response.data?.data; // returns created order
-//         } catch (error: any) {
-//             return rejectWithValue(error.response?.data?.message || "Failed to place order");
-//         }
-//     }
-// );
+// Place an order WITHOUT instant card payment — used for NDIS / Home Care
+// Package funding orders (paymentMethod "NDIS" | "HCP"), which are completed
+// against the participant's funding and settled by the team afterwards.
+export const placeOrder = createAsyncThunk(
+    "order/placeOrder",
+    async (
+        orderData: {
+            firstName?: string;
+            lastName?: string;
+            email: string;
+            phone: string;
+            shippingAddress: string;
+            paymentMethod: string;
+            fundingDetails?: any;
+        },
+        { rejectWithValue }
+    ) => {
+        try {
+            const response = await Axios({
+                ...SummeryApi.placeOrder,
+                data: orderData,
+            });
+            return response.data?.data; // returns created order
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || "Failed to place order");
+        }
+    }
+);
 
 // Create Stripe Checkout Session
 export const createCheckoutSession = createAsyncThunk(
     "order/createCheckoutSession",
-    async (checkoutData: {firstName:string,lastName?:string, email: string; phone: string; shippingAddress: string; successUrl?: string; cancelUrl?: string }, { rejectWithValue }) => {
+    async (checkoutData: {name:string, email: string; phone: string; shippingAddress: string; successUrl?: string; cancelUrl?: string }, { rejectWithValue }) => {
         try {
             const response = await Axios({
                 ...SummeryApi.createCheckoutSession,
@@ -124,6 +137,19 @@ const orderSlice = createSlice({
                 state.stripeUrl = action.payload;
             })
             .addCase(createCheckoutSession.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.payload as string;
+            })
+            // placeOrder (NDIS / HCP funding orders)
+            .addCase(placeOrder.pending, (state) => {
+                state.status = "loading";
+                state.error = null;
+            })
+            .addCase(placeOrder.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.currentOrder = action.payload;
+            })
+            .addCase(placeOrder.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload as string;
             })

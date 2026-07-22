@@ -30,6 +30,7 @@ interface Order {
     paymentMethod: string;
     paymentStatus: string;
     orderStatus: string;
+    fundingDetails?: any;
     createdAt: string;
     updatedAt: string;
     items: OrderItem[];
@@ -247,6 +248,21 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                                     <span className="text-gray-600">Payment Method:</span>
                                     <span className="font-medium text-gray-900">{order.paymentMethod}</span>
                                 </div>
+                                {order.fundingDetails && (order.paymentMethod === "NDIS" || order.paymentMethod === "HCP") && (
+                                    <div className="mt-2 rounded-md border border-purple-200 bg-purple-50 p-2 space-y-1">
+                                        <p className="font-semibold text-purple-800">
+                                            {order.paymentMethod === "NDIS" ? "NDIS funding details" : "Home Care Package details"}
+                                        </p>
+                                        {Object.entries(order.fundingDetails).map(([k, v]) => (
+                                            <div key={k} className="flex justify-between gap-3">
+                                                <span className="text-gray-600 capitalize">{k.replace(/([A-Z])/g, " $1")}:</span>
+                                                <span className="font-medium text-gray-900 text-right break-all">
+                                                    {typeof v === "boolean" ? (v ? "Approved ✓" : "Not approved") : String(v)}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                                 <div className="flex justify-between">
                                     <span className="text-gray-600">Created:</span>
                                     <span className="font-medium text-gray-900">

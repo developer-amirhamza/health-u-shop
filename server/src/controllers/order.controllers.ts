@@ -28,7 +28,7 @@ const generateOrderNumber = async () => {
 
 export const placeOrder = async (req: AuthRequest, res: Response) => {
     try {
-        const {firstName, lastName, phone, shippingAddress, paymentMethod = "COD", } = req.body;
+        const {firstName, lastName, phone, shippingAddress, paymentMethod = "COD", fundingDetails } = req.body;
         const token = await getCartToken(req, res);
         const userId = req.userId;
 
@@ -51,6 +51,30 @@ export const placeOrder = async (req: AuthRequest, res: Response) => {
 
         if (!phone || !shippingAddress) {
             return errorHandler(res, 404, "Phone and Shipping address are required!");
+        }
+
+        // Funding orders (NDIS / Home Care Package) are completed WITHOUT an
+        // instant card payment — validate the required funding info up front so
+        // the order carries everything the team needs to claim the funds.
+        let paymentStatus: string | undefined;
+        if (paymentMethod === "NDIS") {
+            const f = fundingDetails || {};
+            if (!f.participantName || !f.ndisNumber || !f.dob || !f.fundingType) {
+                return errorHandler(res, 400, "Please complete all NDIS participant details.");
+            }
+            if (!f.approved) {
+                return errorHandler(res, 400, "Please approve payment from the participant's NDIS funding.");
+            }
+            paymentStatus = "Awaiting NDIS funding";
+        } else if (paymentMethod === "HCP") {
+            const f = fundingDetails || {};
+            if (!f.participantName || !f.hcpNumber || !f.providerEmail) {
+                return errorHandler(res, 400, "Please complete all Home Care Package details.");
+            }
+            if (!f.approved) {
+                return errorHandler(res, 400, "Please approve payment from the participant's HCP funding.");
+            }
+            paymentStatus = "Awaiting HCP funding";
         }
 
         // Validate stock BEFORE creating the order — reject the whole order if
@@ -109,12 +133,16 @@ export const placeOrder = async (req: AuthRequest, res: Response) => {
                     orderNumber,
                     shippingAddress,
                     firstName,
-                    lastName,
+                lastName,
                     phone,
                     email,                           // snapshot (user's email or guest's email)
                     subtotal,
                     total,
                     paymentMethod,
+                    // Funding orders are marked awaiting their funding source;
+                    // other methods keep the schema default ("Pending").
+                    ...(paymentStatus ? { paymentStatus } : {}),
+                    ...(fundingDetails ? { fundingDetails } : {}),
                     userId: userId || null,
                     items: { create: orderItemsData },
                 },
