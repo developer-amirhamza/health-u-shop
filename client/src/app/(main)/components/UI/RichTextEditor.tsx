@@ -3,8 +3,11 @@ import React from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
+import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import TextAlign from '@tiptap/extension-text-align';
+import { LuUndo2 } from "react-icons/lu";
+import { GrRedo } from "react-icons/gr";
 import {
   FaBold,
   FaItalic,
@@ -20,9 +23,11 @@ import {
   FaAlignCenter,
   FaAlignRight,
   FaAlignJustify,
+  FaLink,
+  FaUnlink,
 } from 'react-icons/fa';
 import { RiImageAddFill } from 'react-icons/ri';
-import { MdFormatClear } from 'react-icons/md';
+import { MdAddLink, MdFormatClear, MdLinkOff } from 'react-icons/md';
 
 interface RichTextEditorProps {
   value: string;
@@ -57,6 +62,21 @@ const MenuBar = ({ editor }: { editor: any }) => {
     }
   };
 
+  // Add / edit a link on the current selection. Pre-fills the existing URL when
+  // the cursor is already inside a link; an empty value removes the link.
+  const setLink = () => {
+    const previousUrl = editor.getAttributes('link').href;
+    const url = window.prompt('Enter URL (e.g. https://example.com)', previousUrl || '');
+    if (url === null) return; // cancelled
+    if (url.trim() === '') {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run();
+      return;
+    }
+    // Default bare domains to https:// so the link actually works.
+    const href = /^(https?:|mailto:|tel:|\/)/i.test(url.trim()) ? url.trim() : `https://${url.trim()}`;
+    editor.chain().focus().extendMarkRange('link').setLink({ href }).run();
+  };
+
   return (
     <div className="bg-gray-100 p-2 flex flex-wrap gap-1 border-b sticky top-0 z-10">
       {/* Dropdown for Paragraph / Headings */}
@@ -85,9 +105,6 @@ const MenuBar = ({ editor }: { editor: any }) => {
       </button>
       <button type="button" onClick={() => editor.chain().focus().toggleStrike().run()} className={buttonClass(editor.isActive('strike'))}>
         <FaStrikethrough />
-      </button>
-      <button type="button" onClick={() => editor.chain().focus().toggleCode().run()} className={buttonClass(editor.isActive('code'))}>
-        <FaCode />
       </button>
 
       <div className="w-px h-6 bg-gray-300 mx-1" />
@@ -122,11 +139,25 @@ const MenuBar = ({ editor }: { editor: any }) => {
       <div className="w-px h-6 bg-gray-300 mx-1" />
 
       {/* Code block & Horizontal rule */}
-      <button type="button" onClick={() => editor.chain().focus().toggleLi().run()} className={buttonClass(editor.isActive('codeBlock'))}>
-        <FaCode />
-      </button>
+
       <button type="button" onClick={() => editor.chain().focus().setHorizontalRule().run()} className={buttonClass(false)}>
         <FaMinus />
+      </button>
+
+      <div className="w-px h-6 bg-gray-300 mx-1" />
+
+      {/* Link / Unlink */}
+      <button type="button" onClick={setLink} className={buttonClass(editor.isActive('link'))} title="Add / edit link">
+        <MdAddLink />
+      </button>
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().unsetLink().run()}
+        disabled={!editor.isActive('link')}
+        className={`${buttonClass(false)} disabled:opacity-40 disabled:cursor-not-allowed`}
+        title="Remove link"
+      >
+        <MdLinkOff />
       </button>
 
       <div className="w-px h-6 bg-gray-300 mx-1" />
@@ -149,10 +180,10 @@ const MenuBar = ({ editor }: { editor: any }) => {
         <MdFormatClear />
       </button>
       <button type="button" onClick={() => editor.chain().focus().undo().run()} className={buttonClass(false)}>
-        <FaUndo />
+        <LuUndo2 />
       </button>
       <button type="button" onClick={() => editor.chain().focus().redo().run()} className={buttonClass(false)}>
-        <FaRedo />
+        <GrRedo />
       </button>
     </div>
   );
@@ -161,8 +192,16 @@ const MenuBar = ({ editor }: { editor: any }) => {
 const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      // StarterKit v3 bundles a Link extension — disable it so we can register
+      // our own configured instance below (no duplicate-extension warning).
+      StarterKit.configure({ link: false } as any),
       Image,
+      Link.configure({
+        openOnClick: false, // don't navigate away while editing
+        autolink: true, // turn typed URLs into links automatically
+        linkOnPaste: true,
+        HTMLAttributes: { rel: 'noopener noreferrer nofollow', target: '_blank' },
+      }),
       Placeholder.configure({
         placeholder: 'Write your blog content here...',
       }),
@@ -182,7 +221,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
   return (
     <div className="border rounded-lg overflow-hidden  bg-white">
       <MenuBar editor={editor} />
-      <EditorContent editor={editor} className="prose prose-lg max-w-none p-4 min-h-[300px]" />
+      <EditorContent editor={editor} className="prose prose-lg max-w-none p-4 min-h-75" />
     </div>
   );
 };
