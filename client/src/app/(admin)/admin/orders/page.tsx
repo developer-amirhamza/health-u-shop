@@ -274,9 +274,9 @@ const AdminOrdersPage = () => {
     }
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="container  mx-auto p-4">
             {/* Header */}
-            <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
+            <div className="mb-6 flex flex-wrap mt-3 items-start justify-between gap-3">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-800 mb-2">Orders Management</h1>
                     <p className="text-gray-600">Manage and track all customer orders</p>

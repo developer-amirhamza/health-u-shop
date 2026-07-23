@@ -388,11 +388,12 @@ model Order {
   updatedAt             DateTime    @updatedAt
   stripeSessionId       String?     @unique
   stripePaymentIntentId String?
-  firstName                  String?
+  firstName             String?
   lastName              String?
   items                 OrderItem[]
   user                  User?       @relation(fields: [userId], references: [id])
-
+  orderNote             String?
+  adminNote             String?
   @@map("orders")
 }
 

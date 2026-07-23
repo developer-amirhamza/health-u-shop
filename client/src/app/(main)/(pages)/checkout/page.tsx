@@ -21,6 +21,7 @@ interface FormData {
   state: string;
   pincode: string;
   country: string;
+  // orderNote:string;
 }
 
 // Payment methods. CARD keeps the existing Stripe redirect; NDIS and HCP
@@ -36,6 +37,7 @@ const CheckoutPage = () => {
   const { stripeUrl, status: orderStatus, error } = useSelector((state: RootState) => state.orderSlice);
   const user = useSelector((state: RootState) => state.userSlice.user);
 
+
   const [form, setForm] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -46,9 +48,11 @@ const CheckoutPage = () => {
     state: "",
     pincode: "",
     country: "",
+    // orderNote:"",
   });
 
   const [payMethod, setPayMethod] = useState<PayMethod>("CARD");
+  const [orderNote, setOrderNote] = useState("")
 
   // NDIS participant funding details
   const [ndis, setNdis] = useState({
@@ -142,7 +146,7 @@ const CheckoutPage = () => {
     try {
       if (payMethod === "CARD") {
         await dispatch(
-          createCheckoutSession({ firstName, lastName, email, phone, shippingAddress } as any)
+          createCheckoutSession({ firstName, lastName, email, phone, shippingAddress,orderNote } as any)
         ).unwrap();
         // The stripeUrl effect handles the redirect.
       } else {
@@ -153,6 +157,7 @@ const CheckoutPage = () => {
             email,
             phone,
             shippingAddress,
+            orderNote:orderNote || "",
             paymentMethod: payMethod,
             fundingDetails: payMethod === "NDIS" ? ndis : hcp,
           })
@@ -342,7 +347,7 @@ const CheckoutPage = () => {
                 <label className="flex items-start gap-2 pt-1">
                   <input type="checkbox" className="mt-1 accent-purple-600" checked={ndis.approved} onChange={(e) => setNdis({ ...ndis, approved: e.target.checked })} />
                   <span className="text-xs text-neutral-700">
-                    <b>Authorised Person / Guardian Approval:</b> I approve this order to be paid using my / the participant's NDIS funding.
+                    <b>Authorized Person / Guardian Approval:</b> I approve this order to be paid using my / the participant's NDIS funding.
                   </span>
                 </label>
               </div>
@@ -372,7 +377,7 @@ const CheckoutPage = () => {
                 <label className="flex items-start gap-2 pt-1">
                   <input type="checkbox" className="mt-1 accent-amber-600" checked={hcp.approved} onChange={(e) => setHcp({ ...hcp, approved: e.target.checked })} />
                   <span className="text-xs text-neutral-700">
-                    <b>Authorised Person / Guardian Approval:</b> I approve this order to be paid using my / the participant's HCP funding.
+                    <b>Authorized Person / Guardian Approval:</b> I approve this order to be paid using my / the participant's HCP funding.
                   </span>
                 </label>
               </div>
@@ -380,9 +385,26 @@ const CheckoutPage = () => {
           </form>
         </div>
 
+        <div className="w-full lg:max-w-md grid gap-6 ">
+           <div className="w-full lg:max-w-md bg-white rounded-md shadow p-5  " >
+          {/* Admin Note about the order */}
+            <div className="">
+                <label className="block text-xl font-semibold text-gray-700 mb-2">
+                    Order Note
+                </label>
+                <textarea name="orderNote" id="orderNote"
+                  value={orderNote}
+                    onChange={(e) => setOrderNote(e.target.value)}
+                    placeholder="Write a note (optional)"
+                    className="w-full px-3  border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary disabled:opacity-50"
+                />
+            </div>
+        </div>
+
         {/* Order Summary */}
         <div className="w-full lg:max-w-md bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-neutral-800 mb-4">Order Summary</h2>
+
           <div className="space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-neutral-600">Subtotal</span>
@@ -421,6 +443,7 @@ const CheckoutPage = () => {
             <p className="text-center text-[11px] text-neutral-400">🔒 100% secure • Tax included where applicable</p>
             {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
           </div>
+        </div>
         </div>
       </div>
     </section>

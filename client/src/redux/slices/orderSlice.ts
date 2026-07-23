@@ -54,6 +54,7 @@ export const placeOrder = createAsyncThunk(
             lastName?: string;
             email: string;
             phone: string;
+            orderNote: string;
             shippingAddress: string;
             paymentMethod: string;
             fundingDetails?: any;
@@ -75,7 +76,7 @@ export const placeOrder = createAsyncThunk(
 // Create Stripe Checkout Session
 export const createCheckoutSession = createAsyncThunk(
     "order/createCheckoutSession",
-    async (checkoutData: {name:string, email: string; phone: string; shippingAddress: string; successUrl?: string; cancelUrl?: string }, { rejectWithValue }) => {
+    async (checkoutData: { name?: string; firstName?: string; lastName?: string; email: string; phone: string; shippingAddress: string; orderNote?: string; successUrl?: string; cancelUrl?: string }, { rejectWithValue }) => {
         try {
             const response = await Axios({
                 ...SummeryApi.createCheckoutSession,
@@ -130,8 +131,8 @@ const orderSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(createCheckoutSession.pending, (state) => {
-                state.status = "loading";
-            })
+            state.status = "loading";
+        })
             .addCase(createCheckoutSession.fulfilled, (state, action) => {
                 state.status = "succeeded";
                 state.stripeUrl = action.payload;

@@ -6,6 +6,7 @@ import Axios from "@/utils/Axios";
 import { SummeryApi } from "@/app/common/SummeryApi";
 import AxiosToastError from "@/utils/AxiosToastError";
 import toast from "react-hot-toast";
+import { MdNoteAlt } from "react-icons/md";
 
 interface OrderItem {
     id: string;
@@ -30,6 +31,8 @@ interface Order {
     paymentMethod: string;
     paymentStatus: string;
     orderStatus: string;
+    orderNote?: string;
+    adminNote?: string;
     fundingDetails?: any;
     createdAt: string;
     updatedAt: string;
@@ -54,11 +57,12 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
 }) => {
     const [orderStatus, setOrderStatus] = useState(order.orderStatus);
     const [paymentStatus, setPaymentStatus] = useState(order.paymentStatus);
+    const [adminNote, setAdminNote] = useState(order.adminNote);
     const [loading, setLoading] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
     const handleUpdate = async () => {
-        if (orderStatus === order.orderStatus && paymentStatus === order.paymentStatus) {
+        if (orderStatus === order.orderStatus && paymentStatus === order.paymentStatus && adminNote === order.adminNote) {
             toast.error("No changes to update");
             return;
         }
@@ -71,6 +75,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                 data: {
                     orderStatus,
                     paymentStatus,
+                    adminNote
                 },
             });
 
@@ -88,10 +93,10 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-            <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full my-8">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-110  min-w-full p-4 overflow-y-auto">
+            <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mt-30 ">
                 {/* Header */}
-                <div className="flex justify-between items-center p-6 border-b border-gray-200 bg-gray-50">
+                <div className="flex justify-between w-full items-center p-6 border-b  border-gray-200 bg-gray-50">
                     <div>
                         <h2 className="text-2xl font-bold text-gray-800">Order Details</h2>
                         <p className="text-gray-600 text-sm">{order.orderNumber}</p>
@@ -114,7 +119,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                             <div className="space-y-3">
                                 <div className="flex items-start gap-3">
                                     <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                                        <span className="text-blue-600 font-semibold">👤</span>
+                                        <span className="text-secondary font-semibold">👤</span>
                                     </div>
                                     <div className="flex-1">
                                         <p className="text-xs text-gray-500 uppercase">Name</p>
@@ -123,7 +128,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                                 </div>
 
                                 <div className="flex items-start gap-3">
-                                    <FaEnvelope className="w-4 h-4 text-blue-600 mt-1 shrink-0" />
+                                    <FaEnvelope className="w-4 h-4 text-secondary mt-1 shrink-0" />
                                     <div className="flex-1">
                                         <p className="text-xs text-gray-500 uppercase">Email</p>
                                         <p className="text-sm font-medium text-gray-900">{order.email}</p>
@@ -131,7 +136,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                                 </div>
 
                                 <div className="flex items-start gap-3">
-                                    <FaPhone className="w-4 h-4 text-blue-600 mt-1 shrink-0" />
+                                    <FaPhone className="w-4 h-4 text-secondary mt-1 shrink-0" />
                                     <div className="flex-1">
                                         <p className="text-xs text-gray-500 uppercase">Phone</p>
                                         <p className="text-sm font-medium text-gray-900">{order.phone}</p>
@@ -139,7 +144,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                                 </div>
 
                                 <div className="flex items-start gap-3">
-                                    <FaMapMarkerAlt className="w-4 h-4 text-blue-600 mt-1 shrink-0" />
+                                    <FaMapMarkerAlt className="w-4 h-4 text-secondary mt-1 shrink-0" />
                                     <div className="flex-1">
                                         <p className="text-xs text-gray-500 uppercase">Shipping Address</p>
                                         <p className="text-sm font-medium text-gray-900">{order.shippingAddress}</p>
@@ -148,10 +153,30 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                             </div>
                         </div>
 
+
+
+                        {order?.adminNote &&
+                        <div className="border border-gray-200 rounded-lg px-4 py-2">
+                            <div className="flex items-start gap-3">
+                                <MdNoteAlt className="w-4 h-4 text-secondary mt-1 shrink-0"/>
+                                <h3 className="text-lg font-semibold text-gray-500 ">Admin Note</h3>
+                            </div>
+                             <p className="text-sm font-medium text-text">{order?.adminNote}</p>
+                        </div> }
+
+                        {order?.orderNote &&
+                        <div className="border border-gray-200 rounded-lg px-4 py-2">
+                            <div className="flex items-start gap-3">
+                                <MdNoteAlt className="w-4 h-4 text-secondary mt-1 shrink-0"/>
+                                <h3 className="text-lg font-semibold text-gray-500 ">Customer Note</h3>
+                            </div>
+                            <p className="text-sm font-medium text-text ">{order?.orderNote}</p>
+                        </div>}
+
                         {/* Order Items */}
                         <div className="border border-gray-200 rounded-lg p-4">
                             <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                                <FaBox className="text-blue-600" />
+                                <FaBox className="text-secondary" />
                                 Order Items ({order.items?.length || 0})
                             </h3>
                             <div className="space-y-3 max-h-64 overflow-y-auto">
@@ -174,6 +199,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                                 ))}
                             </div>
                         </div>
+
                     </div>
 
                     {/* Right Column - Status & Summary */}
@@ -214,7 +240,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                                     value={orderStatus}
                                     onChange={(e) => setOrderStatus(e.target.value)}
                                     disabled={loading}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary disabled:opacity-50"
                                 >
                                     <option value="Pending">Pending</option>
                                     <option value="Processing">Processing</option>
@@ -233,13 +259,27 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                                     value={paymentStatus}
                                     onChange={(e) => setPaymentStatus(e.target.value)}
                                     disabled={loading}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary disabled:opacity-50"
                                 >
                                     <option value="Pending">Pending</option>
                                     <option value="Completed">Completed</option>
                                     <option value="Failed">Failed</option>
                                     <option value="Cancelled">Cancelled</option>
                                 </select>
+                            </div>
+
+                            {/* Admin Note about the order */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Admin Note
+                                </label>
+                                <textarea name="adminNote" id="adminNote"
+                                 value={adminNote}
+                                    onChange={(e) => setAdminNote(e.target.value)}
+                                    disabled={loading}
+                                    placeholder="Write a note"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary disabled:opacity-50"
+                                />
                             </div>
 
                             {/* Order Details */}
@@ -275,7 +315,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                             {!isEditing ? (
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
+                                    className="w-full px-4 py-2 bg-secondary text-white rounded-lg hover:bg-blue-700 transition font-medium"
                                 >
                                     Edit Status
                                 </button>

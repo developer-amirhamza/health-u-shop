@@ -28,7 +28,7 @@ const generateOrderNumber = async () => {
 
 export const placeOrder = async (req: AuthRequest, res: Response) => {
     try {
-        const {firstName, lastName, phone, shippingAddress, paymentMethod = "COD", fundingDetails } = req.body;
+        const { firstName, lastName, phone, orderNote, shippingAddress, paymentMethod = "COD", fundingDetails } = req.body;
         const token = await getCartToken(req, res);
         const userId = req.userId;
 
@@ -133,7 +133,8 @@ export const placeOrder = async (req: AuthRequest, res: Response) => {
                     orderNumber,
                     shippingAddress,
                     firstName,
-                lastName,
+                    lastName,
+                    orderNote,
                     phone,
                     email,                           // snapshot (user's email or guest's email)
                     subtotal,
@@ -152,6 +153,11 @@ export const placeOrder = async (req: AuthRequest, res: Response) => {
 
         await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
 
+        const orderWithNotes = order as typeof order & {
+            orderNote?: string | null;
+            adminNote?: string | null;
+        };
+
         // Send order confirmation email with PDF invoice (non-blocking)
         if (email) {
             const invoiceData = {
@@ -161,6 +167,7 @@ export const placeOrder = async (req: AuthRequest, res: Response) => {
                 lastName: order.lastName || lastName,
                 email,
                 phone: order.phone,
+                orderNote: orderWithNotes.orderNote || orderNote,
                 shippingAddress: order.shippingAddress,
                 paymentMethod: order.paymentMethod,
                 items: order.items.map((i) => ({
@@ -233,7 +240,7 @@ export const getOrdersByOrderNumber = async (req: Request, res: Response) => {
 export const getAllOrdersByAdmin = async (req: Request, res: Response) => {
     try {
         const orders = await prisma.order.findMany({
-            include: { items: true, user: { select: { id: true,  firstName:true, lastName:true, email: true } } },
+            include: { items: true, user: { select: { id: true, firstName: true, lastName: true, email: true } } },
             orderBy: { createdAt: "desc" }
         });
         // No orders yet is a normal state for a fresh store, not an error.
@@ -248,14 +255,15 @@ export const updateOrderByAdmin = async (req: AuthRequest, res: Response) => {
         const { orderId } = req.query;
         if (!orderId) return errorHandler(res, 400, "orderId is required");
 
-        const { orderStatus, paymentStatus } = req.body;
+        const { orderStatus, paymentStatus, adminNote } = req.body;
         if (!orderStatus && !paymentStatus) {
             return errorHandler(res, 400, "Provide at least one of orderStatus or paymentStatus");
         }
 
-        const data: { orderStatus?: string; paymentStatus?: string } = {};
+        const data: { orderStatus?: string; paymentStatus?: string; adminNote?: string; } = {};
         if (orderStatus) data.orderStatus = orderStatus;
         if (paymentStatus) data.paymentStatus = paymentStatus;
+        if (adminNote) data.adminNote = adminNote;
 
         const updatedOrder = await prisma.order.update({
             where: { id: orderId as string },
@@ -280,6 +288,11 @@ export const downloadInvoiceByAdmin = async (req: AuthRequest, res: Response) =>
         });
         if (!order) return errorHandler(res, 404, "Order not found");
 
+        const orderWithNotes = order as typeof order & {
+            orderNote?: string | null;
+            adminNote?: string | null;
+        };
+
         const pdf = await generateInvoicePdf({
             orderNumber: order.orderNumber,
             createdAt: order.createdAt,
@@ -287,6 +300,8 @@ export const downloadInvoiceByAdmin = async (req: AuthRequest, res: Response) =>
             lastName: order.lastName || "",
             email: order.email,
             phone: order.phone,
+            orderNote: orderWithNotes.orderNote || "",
+            adminNote: orderWithNotes.adminNote || "",
             shippingAddress: order.shippingAddress,
             paymentMethod: order.paymentMethod,
             items: order.items.map((i) => ({

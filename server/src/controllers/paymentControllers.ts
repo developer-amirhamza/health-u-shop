@@ -38,7 +38,7 @@ const subscribedUnitPrice = (item: CartItemWithProduct) => {
 
 export const createCheckoutSession = async (req: AuthRequest, res: Response) => {
     try {
-        const { firstName, lastName, successUrl, cancelUrl, email, phone, shippingAddress } = req.body;
+        const { firstName, lastName, successUrl, cancelUrl, email, phone, shippingAddress, orderNote } = req.body;
         const token: any = getCartToken(req, res);
         const userId = req.userId;
 
@@ -97,6 +97,7 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response) => 
                 firstName: firstName ?? null,
                 lastName: lastName ?? null,
                 shippingAddress: shippingAddress || '',
+                orderNote: orderNote ?? null,
                 subtotal: subtotal,
                 discount: discount,
                 total: subtotal,
