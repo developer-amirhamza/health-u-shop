@@ -24,15 +24,46 @@ export const adminNavItems = [
         icon: AiFillDashboard,
     },
     {
-        label: "Products",
-        icon: AiFillProduct,
-        path: "/admin/products",
+        label: "Team Tasks",
+        icon: MdTaskAlt,
+        path: "/admin/tasks",
+    },
+    {
+        label: "Waitlist",
+        icon: MdOutlinePendingActions,
+        path: "/admin/waitlist",
+    },
+    {
+        label: "All Users",
+        icon: FaUsersGear,
+        path: "/admin/users"
+    },
+    {
+        label: "Applications",
+        icon: FaUsersGear,
+        path: "/admin/applications",
+    },
+    {
+        label: "Reports",
+        icon: AiFillDashboard,
+        path: "/admin/reports",
+    },
+    {
+        label: "Pricing",
+        icon: RiPriceTag2Fill,
+        path: "/admin/pricing",
     },
     {
         label: "Orders",
         icon: FaCartFlatbedSuitcase,
         path: "/admin/orders"
     },
+    {
+        label: "Products",
+        icon: AiFillProduct,
+        path: "/admin/products",
+    },
+
     {
         label: "Blogs",
         icon: GrArticle,
@@ -54,41 +85,14 @@ export const adminNavItems = [
         icon: RiArticleFill,
         path: "/admin/articles",
     },
-    {
-        label: "All Users",
-        icon: FaUsersGear,
-        path: "/admin/users"
-    },
-    {
-        label: "Applications",
-        icon: FaUsersGear,
-        path: "/admin/applications",
-    },
-    {
-        label: "Pricing",
-        icon: RiPriceTag2Fill,
-        path: "/admin/pricing",
-    },
+
     {
         label: "Enquiries",
         icon: FaNewspaper,
         path: "/admin/enquiries",
     },
-    {
-        label: "Team Tasks",
-        icon: MdTaskAlt,
-        path: "/admin/tasks",
-    },
-    {
-        label: "Waitlist",
-        icon: MdOutlinePendingActions,
-        path: "/admin/waitlist",
-    },
-    {
-        label: "Reports",
-        icon: AiFillDashboard,
-        path: "/admin/reports",
-    },
+
+
     {
         label: "Reviews",
         icon: MdReviews,

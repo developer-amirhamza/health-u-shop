@@ -6,8 +6,10 @@ import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import TextAlign from '@tiptap/extension-text-align';
-import { LuUndo2 } from "react-icons/lu";
+import { LuAlignJustify, LuUndo2 } from "react-icons/lu";
 import { GrRedo } from "react-icons/gr";
+import { TfiQuoteRight } from "react-icons/tfi";
+import { PiTextAlignCenter, PiTextAlignLeft, PiTextAlignRight, PiTextBBold, PiTextItalic, PiTextStrikethrough } from "react-icons/pi";
 import {
   FaBold,
   FaItalic,
@@ -28,6 +30,8 @@ import {
 } from 'react-icons/fa';
 import { RiImageAddFill } from 'react-icons/ri';
 import { MdAddLink, MdFormatClear, MdLinkOff } from 'react-icons/md';
+import { AiOutlineMinus } from 'react-icons/ai';
+import { BsListUl } from 'react-icons/bs';
 
 interface RichTextEditorProps {
   value: string;
@@ -38,7 +42,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
   if (!editor) return null;
 
   const buttonClass = (isActive: boolean) =>
-    `p-2 rounded transition-colors ${
+    `p-1 rounded transition-colors ${
       isActive ? 'bg-gray-300 text-gray-900' : 'text-gray-700 hover:bg-gray-200'
     }`;
 
@@ -98,42 +102,42 @@ const MenuBar = ({ editor }: { editor: any }) => {
 
       {/* Text formatting */}
       <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={buttonClass(editor.isActive('bold'))}>
-        <FaBold />
+        <PiTextBBold />
       </button>
       <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()} className={buttonClass(editor.isActive('italic'))}>
-        <FaItalic />
+        <PiTextItalic />
       </button>
       <button type="button" onClick={() => editor.chain().focus().toggleStrike().run()} className={buttonClass(editor.isActive('strike'))}>
-        <FaStrikethrough />
+        <PiTextStrikethrough />
       </button>
 
       <div className="w-px h-6 bg-gray-300 mx-1" />
 
       {/* Text alignment */}
       <button type="button" onClick={() => editor.chain().focus().setTextAlign('left').run()} className={buttonClass(editor.isActive({ textAlign: 'left' }))}>
-        <FaAlignLeft />
+        <PiTextAlignLeft />
       </button>
       <button type="button" onClick={() => editor.chain().focus().setTextAlign('center').run()} className={buttonClass(editor.isActive({ textAlign: 'center' }))}>
-        <FaAlignCenter />
+        <PiTextAlignCenter />
       </button>
       <button type="button" onClick={() => editor.chain().focus().setTextAlign('right').run()} className={buttonClass(editor.isActive({ textAlign: 'right' }))}>
-        <FaAlignRight />
+        <PiTextAlignRight />
       </button>
       <button type="button" onClick={() => editor.chain().focus().setTextAlign('justify').run()} className={buttonClass(editor.isActive({ textAlign: 'justify' }))}>
-        <FaAlignJustify />
+        <LuAlignJustify />
       </button>
 
       <div className="w-px h-6 bg-gray-300 mx-1" />
 
       {/* Lists & Blockquote */}
       <button type="button" onClick={() => editor.chain().focus().toggleBulletList().run()} className={buttonClass(editor.isActive('bulletList'))}>
-        <FaListUl />
+        <BsListUl />
       </button>
       <button type="button" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={buttonClass(editor.isActive('orderedList'))}>
         <FaListOl />
       </button>
       <button type="button" onClick={() => editor.chain().focus().toggleBlockquote().run()} className={buttonClass(editor.isActive('blockquote'))}>
-        <FaQuoteRight />
+        <TfiQuoteRight />
       </button>
 
       <div className="w-px h-6 bg-gray-300 mx-1" />
@@ -141,7 +145,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
       {/* Code block & Horizontal rule */}
 
       <button type="button" onClick={() => editor.chain().focus().setHorizontalRule().run()} className={buttonClass(false)}>
-        <FaMinus />
+        <AiOutlineMinus />
       </button>
 
       <div className="w-px h-6 bg-gray-300 mx-1" />
@@ -200,7 +204,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
         openOnClick: false, // don't navigate away while editing
         autolink: true, // turn typed URLs into links automatically
         linkOnPaste: true,
-        HTMLAttributes: { rel: 'noopener noreferrer nofollow', target: '_blank' },
+         // Linked text renders blue + bold everywhere the stored HTML is shown.
+        HTMLAttributes: {
+          rel: 'noopener noreferrer nofollow',
+          target: '_blank',
+          class: 'text-blue-600 font-bold underline',
+        },
       }),
       Placeholder.configure({
         placeholder: 'Write your blog content here...',
@@ -221,7 +230,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
   return (
     <div className="border rounded-lg overflow-hidden  bg-white">
       <MenuBar editor={editor} />
-      <EditorContent editor={editor} className="prose prose-lg max-w-none p-4 min-h-75" />
+       <EditorContent editor={editor} className="prose prose-lg max-w-none p-4 min-h-75" />
     </div>
   );
 };

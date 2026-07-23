@@ -19,6 +19,7 @@ import AxiosToastError from "@/utils/AxiosToastError";
 import { setLogout } from "@/redux/slices/userSlices";
 import AdminPermission from "./AdminPermission";
 import { SummeryApi } from "@/app/common/SummeryApi";
+import { TbHomeMove } from "react-icons/tb";
 interface Props {
     sidebar: any;
 }
@@ -55,7 +56,15 @@ const AdminHeader: React.FC<Props> = ({ sidebar }) => {
                 <IoMenuSharp className="text-2xl" />
             </button>
             <div className="flex w-full h-full items-center justify-between px-4">
-                <Image className="max-h-10 object-scale-down max-w-fit" src={Logo} alt="" />
+                {/* <Image className="max-h-10 object-scale-down max-w-fit" src={Logo} alt="" /> */}
+
+                <button
+                onClick={()=> router.push("/")}
+                className="cursor-pointer min-h-full p-4 flex text-[#c9b89a] hover:bg-white/10 transition-colors"
+            >
+                <TbHomeMove className="text-2xl" />
+            </button>
+
                 <ul className="flex items-center gap-5 px-2">
                     <li className="relative cursor-pointer text-gray-300 hover:text-white transition-colors">
                         <FaRegBell size={19} />

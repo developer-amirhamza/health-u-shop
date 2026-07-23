@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
 import Axios from "@/utils/Axios";
 import { SummeryApi } from "@/app/common/SummeryApi";
@@ -7,6 +8,10 @@ import AxiosToastError from "@/utils/AxiosToastError";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
 import { RootState } from "@/redux/store";
+
+// Same WYSIWYG editor used for blogs — gives task descriptions a real link
+// button (select text → add link). Loaded client-side only (TipTap needs it).
+const RichTextEditor = dynamic(() => import("@/app/(main)/components/UI/RichTextEditor"), { ssr: false });
 
 interface TeamTask {
     id: string;
@@ -204,13 +209,15 @@ export default function AdminTasksPage() {
                         placeholder="Title…"
                         className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full"
                     />
-                    <textarea
-                        value={form.description}
-                        onChange={(e) => setForm({ ...form, description: e.target.value })}
-                        placeholder="Details (optional)…"
-                        rows={3}
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full"
-                    />
+                    <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1">
+                            Details (optional) — select text and use the 🔗 link button to add a hyperlink
+                        </label>
+                        <RichTextEditor
+                            value={form.description}
+                            onChange={(html) => setForm({ ...form, description: html })}
+                        />
+                    </div>
                     <div>
                         <button onClick={handleCreate} disabled={saving}
                             className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-5 py-2 rounded-lg disabled:opacity-50">
@@ -273,9 +280,12 @@ export default function AdminTasksPage() {
                                         <input value={editForm.title}
                                             onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
                                             className="border border-gray-300 rounded px-2 py-1.5 text-sm w-full bg-white" />
-                                        <textarea value={editForm.description} rows={3}
-                                            onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                                            className="border border-gray-300 rounded px-2 py-1.5 text-sm w-full bg-white" />
+                                        <div className="bg-white rounded">
+                                            <RichTextEditor
+                                                value={editForm.description}
+                                                onChange={(html) => setEditForm({ ...editForm, description: html })}
+                                            />
+                                        </div>
                                         <div className="flex gap-2">
                                             <button onClick={() => handleSaveEdit(task)} disabled={busyId === task.id}
                                                 className="bg-green-600 text-white text-xs font-semibold px-3 py-1.5 rounded disabled:opacity-50">Save</button>
@@ -289,7 +299,10 @@ export default function AdminTasksPage() {
                                             {task.title}
                                         </h3>
                                         {task.description && (
-                                            <p className="text-sm text-gray-600 mt-1 whitespace-pre-wrap">{task.description}</p>
+                                            <div
+                                                className="text-sm text-gray-600 mt-1 prose prose-sm max-w-none [&_a]:text-blue-600 [&_a]:font-bold [&_a]:hover:underline"
+                                                dangerouslySetInnerHTML={{ __html: task.description }}
+                                            />
                                         )}
                                     </div>
                                 )}

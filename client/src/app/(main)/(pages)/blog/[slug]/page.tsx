@@ -59,7 +59,7 @@ const BlogDetailPage = () => {
           ))}
         </div>
       )}
-      <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: blog.content }} />
+      <div className="prose max-w-none [&_a]:text-blue-600 [&_a]:font-bold [&_a]:hover:underline" dangerouslySetInnerHTML={{ __html: blog.content }} />
     </article>
   );
 };
