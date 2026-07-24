@@ -39,7 +39,7 @@ const subscribedUnitPrice = (item: CartItemWithProduct) => {
 export const createCheckoutSession = async (req: AuthRequest, res: Response) => {
     try {
         const { firstName, lastName, successUrl, cancelUrl, email, phone, shippingAddress, orderNote } = req.body;
-        const token: any = getCartToken(req, res);
+        const token = await getCartToken(req, res);
         const userId = req.userId;
 
         // A guest must supply an email so we can send their order confirmation.

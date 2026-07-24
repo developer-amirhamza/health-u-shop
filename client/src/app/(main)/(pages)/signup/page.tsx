@@ -10,6 +10,8 @@ import Axios from '@/utils/Axios';
 import { SummeryApi } from '@/app/common/SummeryApi';
 import fetchUserDetails from '@/utils/fetchUserDetaills';
 import { setUserDetails } from '@/redux/slices/userSlices';
+import { fetchCart } from '@/redux/slices/cartSlice';
+import { AppDispatch } from '@/redux/store';
 import AxiosToastError from '@/utils/AxiosToastError';
 import Link from 'next/link';
 
@@ -23,7 +25,7 @@ const SingUp = () => {
     const [formData, setFormData] = useState(initialFormData);
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter()
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<AppDispatch>()
     const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({
@@ -49,9 +51,17 @@ const SingUp = () => {
                     data: formData,
                 })
                 if (response.data?.success) {
-                    localStorage.setItem("accessToken", response.data?.accessToken);
+                    localStorage.setItem("accessToken", response.data?.data?.accessToken);
+                    // Merge any guest cart into the new account (auth via the
+                    // accessToken cookie the signin just set); never block signup.
+                    try {
+                        await Axios({ ...SummeryApi.mergeCart, withCredentials: true });
+                    } catch {
+                        /* no guest cart to merge — ignore */
+                    }
                     const userDetails = await fetchUserDetails();
                     dispatch(setUserDetails(userDetails?.data))
+                    dispatch(fetchCart())
                     setFormData(initialFormData)
                     router.push("/")
                 }

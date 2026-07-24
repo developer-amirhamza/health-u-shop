@@ -50,7 +50,14 @@ const SignIn = () => {
                 // Store tokens in localStorage
                 localStorage.setItem("accessToken", response?.data?.data?.accessToken);
                 localStorage.setItem("refreshToken", response?.data?.data?.refreshToken);
-                console.log(response?.data.data.accessToken,"login")
+                // Merge the guest cart (identified by the cartToken cookie) into
+                // this account BEFORE re-fetching, so items added while logged
+                // out aren't lost. Failure here must never block the login.
+                try {
+                    await Axios({ ...SummeryApi.mergeCart, withCredentials: true });
+                } catch {
+                    /* no guest cart to merge, or already merged — ignore */
+                }
                 dispatch(fetchUser())
                 dispatch(fetchCart())
                 setFormData(initialFormData);

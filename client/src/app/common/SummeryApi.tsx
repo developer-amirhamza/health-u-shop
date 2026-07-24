@@ -97,7 +97,7 @@ export const SummeryApi = {
         method: "delete"
     },
     mergeCart: {
-        url: "/api/cart/merge",
+        url: "/api/cart/merge-cart",
         method: "post",
     },
 
