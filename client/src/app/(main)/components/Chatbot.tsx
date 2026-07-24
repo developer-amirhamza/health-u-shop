@@ -175,7 +175,7 @@ const Chatbot = () => {
             <button
                 onClick={() => setOpen(true)}
                 aria-label="Chat with Bestiee"
-                className="fixed bottom-5 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-secondary text-white shadow-lg hover:bg-blue-700 transition-colors"
+                className="fixed bottom-5 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-secondary text-white shadow-lg hover:bg-secondary-hover transition-colors"
             >
                 <RiChat3Fill size={26} />
             </button>
@@ -221,7 +221,7 @@ const Chatbot = () => {
                                         <div
                                             className={`rounded-2xl px-3.5 py-2 text-sm leading-snug ${
                                                 m.sender === "bot"
-                                                    ? "bg-[#5b6fd6] text-white rounded-bl-sm"
+                                                    ? "bg-primary-hover text-text rounded-bl-sm"
                                                     : "bg-white border border-gray-200 text-gray-800 rounded-br-sm"
                                             }`}
                                         >
@@ -236,7 +236,7 @@ const Chatbot = () => {
                                                     key={p.id}
                                                     href={`/product/${validURLConvert(p.title)}_${p.id}`}
                                                     onClick={() => setOpen(false)}
-                                                    className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2 hover:border-blue-400 transition-colors"
+                                                    className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2 hover:border-primary-hover transition-colors"
                                                 >
                                                     {p.images?.[0] && (
                                                         // eslint-disable-next-line @next/next/no-img-element
@@ -284,7 +284,7 @@ const Chatbot = () => {
                         ))}
                         {searching && (
                             <div className="flex justify-start">
-                                <div className="rounded-2xl px-3.5 py-2 text-sm bg-[#5b6fd6] text-white rounded-bl-sm">
+                                <div className="rounded-2xl px-3.5 py-2 text-sm bg-primary-hover text-white rounded-bl-sm">
                                     Searching…
                                 </div>
                             </div>
@@ -304,7 +304,7 @@ const Chatbot = () => {
                         <button
                             onClick={handleSend}
                             aria-label="Send"
-                            className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary text-white hover:bg-blue-700 transition-colors shrink-0"
+                            className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary text-white hover:bg-secondary transition-colors shrink-0"
                         >
                             <RiSendPlaneFill size={14} />
                         </button>

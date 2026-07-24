@@ -49,7 +49,7 @@ const MyOrdersPage = () => {
                 <p className="text-red-500">Failed to load orders: {error}</p>
                 <button
                     onClick={() => dispatch(fetchMyOrders())}
-                    className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+                    className="mt-4 bg-secondary text-white px-4 py-2 rounded"
                 >
                     Try Again
                 </button>
@@ -61,7 +61,7 @@ const MyOrdersPage = () => {
         return (
             <div className="text-center py-20">
                 <p className="text-neutral-500 text-lg">You haven't placed any orders yet.</p>
-                <a href="/products" className="text-blue-600 underline mt-2 inline-block">
+                <a href="/products" className="text-secondary underline mt-2 inline-block">
                     Start Shopping
                 </a>
             </div>
@@ -69,7 +69,7 @@ const MyOrdersPage = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8 my-12">
+        <div className="container mx-auto px-4 py-8 mb-6 my-12">
             <h1 className="text-2xl font-bold text-neutral-800 mb-6">My Orders</h1>
             <div className="space-y-6">
                 {orders.map((order:any) => {

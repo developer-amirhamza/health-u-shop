@@ -11,7 +11,8 @@ import Axios from "@/utils/Axios";
 import AxiosToastError from "@/utils/AxiosToastError";
 
 const initialFormData = {
-  name: "",
+  firstName: "",
+  lastName: "",
   email: "",
   phone: "",
   message: "",
@@ -52,7 +53,7 @@ const ContactUs = () => {
     }
   };
 
-  const validInput = formData.name && formData.email && formData.message;
+  const validInput = formData.firstName && formData.email && formData.message;
 
   const inputClass =
     "w-full p-3 border border-black/10 rounded-lg outline-none bg-background text-text text-sm focus:border-secondary transition-colors";
@@ -81,14 +82,14 @@ const ContactUs = () => {
               <ContactRow
                 icon={<IoCall size={18} />}
                 label="Phone"
-                value="1300 243 253"
-                href="tel:1300243253"
+                value="0481 707 758"
+                href="tel:0481707758"
               />
               <ContactRow
                 icon={<IoMail size={18} />}
                 label="Email"
-                value="care@aidble.com.au"
-                href="mailto:care@aidble.com.au"
+                value="hello@mybestiee.com.au"
+                href="mailto:hello@mybestiee.com.au"
               />
               <ContactRow
                 icon={<IoLocationSharp size={18} />}
@@ -103,19 +104,19 @@ const ContactUs = () => {
 
               <div className="flex items-center gap-3 mt-2 pt-5 border-t border-black/10">
                 <Link
-                  href="https://www.facebook.com/healthuau/"
+                  href="https://www.facebook.com/bestieeau/"
                   className="w-9 h-9 rounded-full bg-secondary hover:bg-secondary-hover text-white flex items-center justify-center transition-colors"
                 >
                   <FaFacebookF size={14} />
                 </Link>
                 <Link
-                  href="https://www.instagram.com/healthu_au/"
+                  href="https://www.instagram.com/bestieeau/"
                   className="w-9 h-9 rounded-full bg-secondary hover:bg-secondary-hover text-white flex items-center justify-center transition-colors"
                 >
                   <FaInstagram size={14} />
                 </Link>
                 <Link
-                  href="https://www.linkedin.com/company/health-u-australia/"
+                  href="https://www.linkedin.com/company/bestieeau/"
                   className="w-9 h-9 rounded-full bg-secondary hover:bg-secondary-hover text-white flex items-center justify-center transition-colors"
                 >
                   <FaLinkedinIn size={14} />
@@ -147,15 +148,27 @@ const ContactUs = () => {
               className="bg-white shadow-card rounded-2xl border border-black/5 p-7 flex flex-col gap-4"
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="Full name">
+                <Field label="First Name">
                   <input
                     className={inputClass}
                     type="text"
-                    name="name"
-                    id="name"
-                    value={formData.name}
+                    name="firstName"
+                    id="firstName"
+                    value={formData.firstName}
                     onChange={handleChange}
-                    placeholder="Your name"
+                    placeholder="Your First Name"
+                    required
+                  />
+                </Field>
+                <Field label="Last Name">
+                  <input
+                    className={inputClass}
+                    type="text"
+                    name="lastName"
+                    id="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Your Last Name"
                     required
                   />
                 </Field>

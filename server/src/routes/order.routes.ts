@@ -1,13 +1,15 @@
 import { Router } from "express";
 import { downloadInvoiceByAdmin, getAllOrdersByAdmin, getMyOrders, getOrdersByOrderNumber, placeOrder, updateOrderByAdmin } from "../controllers/order.controllers";
-import { auth } from "../middlewares/auth";
+import { auth, optionalAuth } from "../middlewares/auth";
 import { admin } from "../middlewares/admin";
 
 
 const router = Router();
 
 
-router.post("/place-order", auth, placeOrder);
+// Guests (identified by cart cookie + email) and signed-in users can both
+// place an order. The controller requires an email when there's no userId.
+router.post("/place-order", optionalAuth, placeOrder);
 router.get("/my-orders", auth, getMyOrders);
 router.get("/lookup", getOrdersByOrderNumber);
 

@@ -42,6 +42,12 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response) => 
         const token: any = getCartToken(req, res);
         const userId = req.userId;
 
+        // A guest must supply an email so we can send their order confirmation.
+        if (!userId && !email) {
+            return errorHandler(res, 400, "Email is required to check out as a guest.");
+        }
+
+
         // Log cart retrieval
         const cart = await getOrCreateCart(token, userId);
 
